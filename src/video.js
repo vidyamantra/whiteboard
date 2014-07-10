@@ -80,7 +80,7 @@
                     cthis.localStream = stream;
 
                     whBoard.attachMediaStream(vcan.videoChat.localVideo, stream);
-                    if (whBoard.clentLen == 1) {
+                    if (whBoard.clientLen == 1) {
                         cthis.sendMessage('got user media');
                     }
 

@@ -816,6 +816,7 @@
                 }
             },
             setUserStatus: function(storageHasTeacher, storageHasReclaim) {
+                //TODO storageHasTeacher check with null rather than style of now.
                 if (!storageHasTeacher && !storageHasReclaim) {
                     whBoard.utility.removeToolBox();
                     whBoard.utility.setClass('vcanvas', 'student');
@@ -842,7 +843,12 @@
                         localStorage.removeItem('orginalTeacherId');
                         if (localStorage.getItem('teacherId') != null) {
                             localStorage.removeItem('teacherId');
+                            //whBoard.utility.removeToolBox();
                         }
+                        if(localStorage.getItem('reclaim') != null){
+                            localStorage.removeItem('reclaim');
+                        }
+                        whBoard.utility.removeToolBox();
                     }
                 }
             },

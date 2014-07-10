@@ -47,10 +47,12 @@ $.when(
         whBoard.utility.setUserStatus(storageHasTeacher, storageHasReclaim);
         whBoard.utility.removeOtherUserExist(wbUser.role);
 
-        if(storageHasReclaim){
+        if(whBoard.utility.chkValueInLocalStorage('reclaim')){
             var cmdToolsWrapper = document.getElementById(whBoard.commandToolsWrapperId);
-            while(cmdToolsWrapper.hasChildNodes()){
-                cmdToolsWrapper.removeChild(cmdToolsWrapper.lastChild);
+            if(cmdToolsWrapper != null){
+                while(cmdToolsWrapper.hasChildNodes()){
+                    cmdToolsWrapper.removeChild(cmdToolsWrapper.lastChild);
+                }
             }
             whBoard.utility.createReclaimButton(cmdToolsWrapper);
         }
