@@ -461,8 +461,8 @@
                     cthis.video.init();
                     vApp.adpt = new vApp.adapter();
                     
-                    navigator =  vApp.adpt.init(navigator);
-                    navigator.getUserMedia(session, this.handleUserMedia, this.handleUserMediaError);
+                    var cNavigator =  vApp.adpt.init(navigator);
+                    cNavigator.getUserMedia(session, this.handleUserMedia, this.handleUserMediaError);
                 },
                
                 //equivalent to initializeRecorder
@@ -507,10 +507,10 @@
                 handleUserMediaError: function(error) {
                     vApp.wb.view.disappearBox('WebRtc');
                     console.log('navigator.getUserMedia error: ', error);
-                },
+                }
             }
             
-        }
+        };
         window.media = media;
     
     
