@@ -6,9 +6,14 @@
 
 (
     function (window){
+        //prevStream = false;
     var screenShare = function (config){
+        
         return {
+            prevStream : false,
             init : function (ssc){
+               
+                this.ssByClick =  true;
                 //this.ssc = ssc;   
                 this.manualStop = false;
                 if(vApp.wb.gObj.uRole == 't'){
@@ -76,17 +81,16 @@
                 window.postMessage({ type: 'getScreen'}, '*');
             },
             
-            unShareScreen : function (){
-                console.log("suman bogati2");
-                //document.getElementById(vApp.previous).style.display = 'none';
-                
+            unShareScreen : function (){    
                 this.video.src = "";
                 this.localtempCont.clearRect(0, 0, this.localtempCanvas.width, this.localtempCanvas.height);
                 clearInterval(vApp.clear);
                 this.prevImageSlices = [];
-                this.manualStop = true;
                 
-                this.currentStream.stop(); 
+                if(this.hasOwnProperty('currentStream')){
+                    this.currentStream.stop(); 
+                }
+                
                 io.send({'unshareScreen' : true});
             },
             
@@ -95,6 +99,14 @@
             },
 
             initializeRecorder : function (stream){
+//                if(typeof prevStream != 'undefined'){
+//                    myFlag = false;
+//                }
+
+                if(this.prevStream){
+                    this.ssByClick = false;
+                }
+                
                 if(this.hasOwnProperty('currentStream')){
                     this.unShareScreen();
                 }
@@ -102,16 +114,33 @@
                 this.video = document.getElementById(this.local+"Video");
 
                 this.currentStream = stream;
-                var that = this;
+                 var that = this;
 
                 vApp.adpt.attachMediaStream(this.video, stream);
-                
+                this.prevStream = true;
+               
                 this.currentStream.onended = function (name){
-                    if(!that.manualStop){
-                        that.unShareScreen();
+                    if(that.ssByClick){
+                        that.video.src = "";
+                        that.localtempCont.clearRect(0, 0, that.localtempCanvas.width, that.localtempCanvas.height);
+                        clearInterval(vApp.clear);
+                        that.prevImageSlices = [];
+                        io.send({'unshareScreen' : true});
+                        that.prevStream = false;
+                    }else{
+                        that.ssByClick = true;
                     }
+                    
+                    //that.currentStream.stop();
+//                    that.video.src = "";
+//                    that.localtempCont.clearRect(0, 0, that.localtempCanvas.width, that.localtempCanvas.height);
+//                    clearInterval(vApp.clear);
+                    //this.stop();
+                    
+//                    if(!that.manualStop){
+//                        that.unShareScreen();
+//                    }
                 }
-
                 //var elements = $('#videoContainer');
                 var container = {};
                 container.width = window.innerWidth;
@@ -182,23 +211,8 @@
                         if(sl ==  resA * resB){
                             if(sendobj.length > 0){
                                 var encodedString = LZString.compressToBase64(JSON.stringify(sendobj));
-                                
-                               var contDimension = that.getContainerDimension();
-                               
-//                               if(typeof previousDim != 'undefined'){
-//                                   if(previousDim.width != contDimension.width){
-//                                       
-//                                        io.send({'ssbyimage' : encodedString, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}   });        }
-//                                    else {
-//                                        io.send({'ssbyimage' : encodedString, d : {w:that.width, h:that.height}});
-//                                   }
-//                                  
-//                                    previousDim = contDimension; 
-//                               }else{
-//                                    io.send({'ssbyimage' : encodedString, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}   });         previousDim = contDimension;
-//                               }
-                                
-                            io.send({'ssbyimage' : encodedString, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}   });       
+                                var contDimension = that.getContainerDimension();
+                                io.send({'ssbyimage' : encodedString, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}   });       
                               
                                 sendobj=[];
                                

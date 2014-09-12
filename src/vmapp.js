@@ -100,12 +100,13 @@
               
               
               makeAppReady : function (app, cusEvent){
-              
-                        
                   if(app == 'whiteboardtool'){
-                        
+                      if(typeof this.ss == 'object'){
+                            this.ss.prevStream = false;   
+                       } 
+                      
+                       
                         if(typeof this.previous != 'undefined'){
-                            
                             if(typeof cusEvent != 'undefined' && cusEvent == "byclick"){
                                 io.send({'dispWhiteboard' : true});
                             }
