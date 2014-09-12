@@ -5,8 +5,9 @@
 
 (
     function (window){
-        window.whBoard.lang.getString = function (string){
-            return window.whBoard.lang.message[string];
+        var getString = function (string){
+            return window.vApp.lang.message[string];
         }
+        window.getString = getString;
     }
 )(window);

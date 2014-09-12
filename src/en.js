@@ -1,6 +1,8 @@
 (
     function(window) {
-        window.whBoard.lang.message = {
+        
+        var message = {
+            
             'notSupportCanvas': 'This browser does not support Canvas. Please update your browser with the latest version' +
                     'For more information about Canvas, click on the link given here <a href="http://en.wikipedia.org/wiki/Canvas_element/">Canvas</a>',
             'notSupportGetUserMedia': 'The browser does not support getUserMedia for webRtc. Please update your browser with the latest version'
@@ -52,5 +54,6 @@
             'msgStudentForReload' : "After resizing the window, there can be a problem over the drawn objects, <br />  So, please realod the page for better results ",
             'reload' : "Reload"
         };
+        window.message = message;
     }
 )(window);

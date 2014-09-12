@@ -209,7 +209,7 @@ a[title]:hover:after {
 #vcanvas{
     float:left; 
     border:#ccc 1px solid;
-    margin-top:10px;
+    /*margin-top:10px;*/
  }
 
 #commandToolsWrapper{
@@ -387,7 +387,7 @@ a[title]:hover:after {
 #receivedPacketsLabel, #receivePackPsCont, #sentPacketsLabel, #sentPacketsLabel, #sendPackPsCont, #blankDiv, #perSecData{border-bottom:#ccc 1px solid; color:#595A5D;}
 
 
-#errorWebSocket, #errorWebRtc, #errorCanvas{background-color: #F2DEDE; border-color: #FDB9C3; color: #B94A48; font-size: 14px; border-radius: 5px; border-width:1px;}
+#errorWebSocket, #errorWebRtc, #errorCanvas, #errorPeerConnect{background-color: #F2DEDE; border-color: #FDB9C3; color: #B94A48; font-size: 14px; border-radius: 5px; border-width:1px;}
 
 #errorWebSocketPara a, #errorWebRtcPara a, #errorCanvasPara a{color:#B94A48; font-weight: 600; font-size: 13px; text-decoration:none;}
 
@@ -719,4 +719,245 @@ a[title]:hover:after {
 #serverErrorCont{
     border: 2px solid #9E1333;
     background: #F2DFE3;
+}
+
+//version 2
+
+#vAppCont{
+    height : 100%;
+}
+
+#vAppWhiteboardCont{
+    height : 100%;
+    width : 100%;
+}
+
+#widgetRightSide{
+   float:left; 
+   width : 260px;
+   border :1px solid #ccc;
+/*   height : 95%;*/
+/*   border-left : none;*/
+}
+
+#allVideosCont{
+/*    border: 1px solid navy;*/
+}
+
+
+#chatContainer{
+/*    width : 95%;*/
+/*    border : 1px solid gold;*/
+}
+
+/*video, #teacherCanvas, #video2 {
+    width : 75px;
+    height : 56px; 
+}*/
+
+.userVideo{
+    width : 75px;
+    height : 56px; 
+}
+
+#tempVideo{
+    display : none; 
+}
+/*#tempVideo{
+    display : block; 
+}
+video {
+    display : none;
+}*/
+
+video, canvas, #allVideosCont {
+   float:left;
+}
+
+video, canvas{
+    margin:3px;
+    margin-bottom : 2px
+}
+
+#chatContainer{
+/*    clear : both;*/
+}
+
+video:hover,  canvas:hover{
+    content : attr('uname');
+}
+
+.videoWrapper{
+    float:left;
+    z-index : 50;
+    position : relative;
+}
+
+.videoSubWrapper{
+    z-index : 1000;
+}
+
+.videoSubWrapper[data-uname]:hover:after{
+    content: attr(data-uname);
+    padding: 2px 5px 2px 5px;
+    color: rgba(232,2,83, 1);
+    position: absolute;
+    margin-left:-40px;
+    left: 40;
+    top : 60%;
+    white-space: nowrap;
+    border-radius: 15px ;
+    background: rgba(240,245,240,0.6);
+    font-size:80%;
+    letter-spacing: 110%;
+    
+}
+
+#allVideosCont{
+    position : relative;
+}
+
+#commonChatBoard {
+    clear : both;
+    width : 100%;
+    height :92%;
+    
+    /* border:2px solid orange; */
+}
+
+#textInputBox {
+    width : 100%;
+    height : 6%;
+    padding : 5px 3px 5px 3px;
+    resize:none;
+}
+
+
+/****** Chat ****/
+.userName{
+    font-weight : bold;
+}
+
+#chatBox{
+    font-size : 80%;
+    border-top:2px solid #ccc;
+
+}
+
+#chatBox .userMsg{
+    letter-spacing: 0.03em;
+    word-break : break-all;
+    /* For Firefox */
+    white-space: pre-wrap;
+    word-break: break-all;
+
+    /* For Chrome and IE */
+    word-wrap: break-word;
+}
+
+#chatBox{
+    padding : 5px;
+}
+
+#chatBox #commonChatBoard {
+    overflow-y : auto;
+}
+
+.msgCont2{
+    margin-bottom :5px;
+}
+
+#textInputBox{
+/*    resize:none;*/
+}
+
+#chatContainer{
+    width : 100%;
+    margin-top : 10px;
+    clear : both;
+    
+    /* float:left; */
+    
+    margin-top : 5px;
+}
+
+#mainContainer{
+    clear : both;
+}
+
+
+#vAppOptionsCont{
+    width : 35px;
+    float :left;
+    
+}
+
+#vAppOptionsCont .appOptions{
+    border-bottom: 1px solid #ccc;
+    padding-bottom:5px;
+}
+
+#vAppOptionsCont:first-child{
+    margin-top: 45px;
+    border-top: 1px solid #ccc;
+    padding : 5px 2px;
+    
+}
+
+#vAppWhiteboardCont{
+    /*
+    display : none;
+    */
+}
+
+/*#vAppscreenShareLocalTemp {
+   display : none;
+}*/
+
+vAppscreenShareLocalTemp{
+    
+}
+
+#vAppscreenShare {
+    float : left;
+    border : 1px solid #ccc;
+    height : 100%;
+}
+
+.vmApp{
+    border-right : none;
+}
+
+.vmApp canvas, .vmApp video {
+/*    width : 100%;*/
+}
+
+
+.appOptions img{
+    width : 28px;
+    height : 30px;
+}
+
+#widgetRightSide{
+    
+/*    display : none;*/
+}
+
+
+#vAppscreenShareLocal{
+    margin: 4px 7px 0 7px;
+    border: 1px solid #ccc;
+}
+
+#vAppscreenShareLocalVideo{
+    
+}
+
+/*#vAppscreenShareLocal{
+    width : 1200px;
+    height : 1000px;
+}*/
+
+#vAppscreenShareLocalTempVideo {
+    display:none;
 }

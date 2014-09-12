@@ -4,19 +4,19 @@
   */
 (
     function(window) {
-        var whBoard = window.whBoard;
-        whBoard._replay = function() {
+        
+        _replay = function() {
             return {
                 init: function(repMode) {
-                    var vcan = whBoard.vcan;
+                    var vcan = vApp.wb.vcan;
                     this.objs = vcan.getStates('replayObjs');
                     this.objNo = 0;
                     this.repMode = repMode;
                     this.callBkfunc = "";
                 },
                 renderObj: function(myfunc) {
-                    whBoard.drawMode = true;
-                    wbRep = whBoard.replay;
+                    vApp.wb.drawMode = true;
+                    wbRep = vApp.wb.replay;
                     if (typeof wbRep.objs[wbRep.objNo] == 'undefined') {
                         console.log("is this happend");
                         return;
@@ -27,8 +27,8 @@
                     }
 
                     if (wbRep.objs[wbRep.objNo].hasOwnProperty('cmd')) {
-                        whBoard.gObj.displayedObjId = wbRep.objs[wbRep.objNo].uid;
-                        whBoard.toolInit(wbRep.objs[wbRep.objNo].cmd, 'fromFile', true);
+                        vApp.wb.gObj.displayedObjId = wbRep.objs[wbRep.objNo].uid;
+                        vApp.wb.toolInit(wbRep.objs[wbRep.objNo].cmd, 'fromFile', true);
                     } else {
                         var event = "";
                         if (wbRep.objs[wbRep.objNo].ac == 'd') {
@@ -47,29 +47,42 @@
                             var eventObj = {detail: {cevent: {x: currObj.x, y: currObj.y}}};
                         }
 
-                        whBoard.gObj.displayedObjId = wbRep.objs[wbRep.objNo].uid;
+                        vApp.wb.gObj.displayedObjId = wbRep.objs[wbRep.objNo].uid;
                         var eventConstruct = new CustomEvent(event, eventObj); //this is not supported for ie9 and older ie browsers
                         vcan.main.canvas.dispatchEvent(eventConstruct);
                     }
 
                     if (typeof wbRep.callBkfunc == 'function') {
-                        if (wbRep.objs[wbRep.objs.length - 1].uid == whBoard.gObj.displayedObjId) {
+                        if (wbRep.objs[wbRep.objs.length - 1].uid == vApp.wb.gObj.displayedObjId) {
                             wbRep.callBkfunc('callBkfunc');
                         }
                     }
 
                     if (typeof wbRep.objs[wbRep.objNo + 1] == 'object') {
-                        whBoard.replayTime = wbRep.objs[wbRep.objNo + 1].mt - wbRep.objs[wbRep.objNo].mt;
-
-                        wbRep.objNo++;
+                        
                         if (typeof wbRep.repMode != 'undefined' && wbRep.repMode == 'fromBrowser') {
-                            whBoard.replayTime = 0;
+                            vApp.wb.replayTime = 0;
+                        }else{
+//                            vApp.wb.replayTime = wbRep.objs[wbRep.objNo + 1].mt - wbRep.objs[wbRep.objNo].mt;
+                            
+                            if(wbRep.objNo == 0){
+                                vApp.wb.replayTime =  wbRep.objs[wbRep.objNo].mt - vApp.wb.pageEnteredTime;
+                            }else{
+                                vApp.wb.replayTime = wbRep.objs[wbRep.objNo + 1].mt - wbRep.objs[wbRep.objNo].mt;
+                            }
+                           // vApp.wb.replayTime =  vApp.wb.pageEnteredTime - wbRep.objs[wbRep.objNo].mt;
                         }
-                        setTimeout(wbRep.renderObj, whBoard.replayTime);
+                 
+                        wbRep.objNo++;
+                        
+                        console.log("replay time " + vApp.wb.replayTime);
+                        setTimeout(wbRep.renderObj, vApp.wb.replayTime);
                     }
                     return;
                 }
             }
         }
+        
+        window._replay = _replay;
     }
 )(window);

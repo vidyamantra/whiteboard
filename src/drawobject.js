@@ -5,15 +5,18 @@
 
 (
     function(window) {
-        var whBoard = window.whBoard;
-
-        /**
+       
+        //var vApp = window.vApp;
+         /**
          * this class has methods by which the user can draw the particular object at different mouse event
          * @param objType is the particular object type which has to be drawn
          * @canvas canvas is the canvas element on which the object would be drawn 
          * @thisobj is current tool object 
          */
-        whBoard.draw_object = function(objType, canvas, thisobj) {
+        
+        var draw_object = function(objType, canvas, thisobj) {
+            var wb = this; 
+            
             var tool = thisobj;
             thisobj.started = false;
 
@@ -30,17 +33,17 @@
              */
             tool.mousedown = function(ev, cobj) {
                 if (ev.detail.hasOwnProperty('cevent')) {
-                    ev.clientX = ev.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                    ev.clientY = ev.detail.cevent.y + (whBoard.vcan.main.offset.y);
-                    ev.x = ev.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                    ev.y = ev.detail.cevent.x + (whBoard.vcan.main.offset.y);
-                    ev.pageX = ev.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                    ev.pageY = ev.detail.cevent.y + (whBoard.vcan.main.offset.y);
+                    ev.clientX = ev.detail.cevent.x + (wb.vcan.main.offset.x);
+                    ev.clientY = ev.detail.cevent.y + (wb.vcan.main.offset.y);
+                    ev.x = ev.detail.cevent.x + (wb.vcan.main.offset.x);
+                    ev.y = ev.detail.cevent.x + (wb.vcan.main.offset.y);
+                    ev.pageX = ev.detail.cevent.x + (wb.vcan.main.offset.x);
+                    ev.pageY = ev.detail.cevent.y + (wb.vcan.main.offset.y);
                     ev.currX = ev.detail.cevent.x;
                     ev.currY = ev.detail.cevent.y;
                 }
 
-                var vcan = whBoard.vcan;
+                var vcan = wb.vcan;
                 lastmousemovetime = null;
                 if (typeof (Storage) !== "undefined") {
                     //localStorage.repObjs = "";
@@ -51,40 +54,40 @@
                 var currState = vcan.getStates('action');
                 if (currState == 'create') {
                     var currTime = new Date().getTime();
-                    if (objType != 'text' && whBoard.tool.cmd != 't_clearall') {
+                    if (objType != 'text' && wb.tool.cmd != 't_clearall') {
                         var currTransformState = vcan.getStates('currentTransform');
                         if (currTransformState == "" || currTransformState == null) {
                             //	if(!ev.detail.hasOwnProperty('cevent') && objType != 'freeDrawing'){
                             if (!ev.detail.hasOwnProperty('cevent')) {
                                 //var currTime = new Date().getTime();
-                                vcan.calculatePackets(currTime, 'd', tool.startPosX, tool.startPosY);
+                                vcan.optimize.calculatePackets(currTime, 'd', tool.startPosX, tool.startPosY);
                             }
                             tool.started = true;
                         }
                     } else {
-                        whBoard.obj.drawTextObj.muser = false;
-                        if (!ev.detail.hasOwnProperty('cevent') && whBoard.tool.cmd != 't_clearall') { //creating for other browser
-                            if (whBoard.utility.clickOutSidebox(whBoard.obj.drawTextObj.textWriteMode)) {
-                                vcan.calculatePackets(currTime, 'd', tool.startPosX, tool.startPosY);
+                        wb.obj.drawTextObj.muser = false;
+                        if (!ev.detail.hasOwnProperty('cevent') && wb.tool.cmd != 't_clearall') { //creating for other browser
+                            if (wb.utility.clickOutSidebox(wb.obj.drawTextObj.textWriteMode)) {
+                                vcan.optimize.calculatePackets(currTime, 'd', tool.startPosX, tool.startPosY);
                             }
                         } else {
-                            whBoard.obj.drawTextObj.muser = true;
+                            wb.obj.drawTextObj.muser = true;
                         }
 
                         if (ev.detail.hasOwnProperty('cevent')) {
                             if (ev.detail.cevent.hasOwnProperty('mtext')) {
-                                whBoard.obj.drawTextObj.textUtility(tool.startPosX, tool.startPosY, ev.detail.cevent.mtext);
+                                wb.obj.drawTextObj.textUtility(tool.startPosX, tool.startPosY, ev.detail.cevent.mtext);
                             } else {
-                                whBoard.obj.drawTextObj.textUtility(tool.startPosX, tool.startPosY);
+                                wb.obj.drawTextObj.textUtility(tool.startPosX, tool.startPosY);
                             }
                         } else {
-                            whBoard.obj.drawTextObj.textUtility(tool.startPosX, tool.startPosY);
+                            wb.obj.drawTextObj.textUtility(tool.startPosX, tool.startPosY);
                         }
                     }
                 }
 
-                if (objType == 'freeDrawing' && whBoard.obj.freeDrawObj.freesvg == true) {
-                    whBoard.obj.freeDrawObj.drawStart(ev);
+                if (objType == 'freeDrawing' && wb.obj.freeDrawObj.freesvg == true) {
+                    wb.obj.freeDrawObj.drawStart(ev);
                 }
             };
 
@@ -96,26 +99,26 @@
              */
             tool.mousemove = function(ev, mouseup) {
                 if (ev.detail.hasOwnProperty('cevent')) {
-                    ev.clientX = ev.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                    ev.clientY = ev.detail.cevent.y + (whBoard.vcan.main.offset.y);
-                    ev.x = ev.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                    ev.y = ev.detail.cevent.x + (whBoard.vcan.main.offset.y);
-                    ev.pageX = ev.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                    ev.pageY = ev.detail.cevent.y + (whBoard.vcan.main.offset.y);
+                    ev.clientX = ev.detail.cevent.x + (wb.vcan.main.offset.x);
+                    ev.clientY = ev.detail.cevent.y + (wb.vcan.main.offset.y);
+                    ev.x = ev.detail.cevent.x + (wb.vcan.main.offset.x);
+                    ev.y = ev.detail.cevent.x + (wb.vcan.main.offset.y);
+                    ev.pageX = ev.detail.cevent.x + (wb.vcan.main.offset.x);
+                    ev.pageY = ev.detail.cevent.y + (wb.vcan.main.offset.y);
                     ev.currX = ev.detail.cevent.x;
                     ev.currY = ev.detail.cevent.y;
                 }
-                if (tool.started && whBoard.tool.cmd != 't_clearall') { //command code inserted after found the problem
+                if (tool.started && wb.tool.cmd != 't_clearall') { //command code inserted after found the problem
                     //this function should be conveted into appended with freedrawing module.
-                    if (whBoard.obj.freeDrawObj != undefined && whBoard.obj.freeDrawObj.freesvg == true) {
-                        if (whBoard.obj.freeDrawObj.fdObj.isCurrentlyDrawing) {
-                            whBoard.obj.freeDrawObj.wb_draw(ev);
+                    if (wb.obj.freeDrawObj != undefined && wb.obj.freeDrawObj.freesvg == true) {
+                        if (wb.obj.freeDrawObj.fdObj.isCurrentlyDrawing) {
+                            wb.obj.freeDrawObj.wb_draw(ev);
 
                             if (!ev.detail.hasOwnProperty('cevent')) {
                                 if (typeof mouseup == 'undefined') {
                                     if (((typeof lastmousemovetime == 'undefined') || (lastmousemovetime == null))) {
                                         lastmousemovetime = new Date().getTime();
-                                        vcan.calculatePackets(lastmousemovetime, 'm', ev.currX, ev.currY);
+                                        vcan.optimize.calculatePackets(lastmousemovetime, 'm', ev.currX, ev.currY);
                                     }
                                 }
 
@@ -127,12 +130,12 @@
                                     presentmousemovetime = new Date().getTime();
                                     if ((presentmousemovetime - lastmousemovetime) >= 2000) {	 // Optimized
                                         for (var i = 0; i < dataChunk.length; i++) {
-                                            whBoard.uid++;
-                                            dataChunk[i].uid = whBoard.uid;
+                                            wb.uid++;
+                                            dataChunk[i].uid = wb.uid;
                                             vcan.main.replayObjs.push(dataChunk[i]);
                                         }
-                                        whBoard.utility.beforeSend({'repObj': dataChunk});
-                                        whBoard.utility.updateSentPackets(dataChunk);
+                                        wb.utility.beforeSend({'repObj': dataChunk});
+                                        wb.utility.updateSentPackets(dataChunk);
                                         localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
                                         dataChunk = [];
                                         lastmousemovetime = new Date().getTime();
@@ -145,28 +148,28 @@
                         endPosX = ev.currX;
                         endPosY = ev.currY;
 
-                        if (whBoard.prvObj != '') {
-                            whBoard.canvas.removeObject(whBoard.prvObj);
+                        if (wb.prvObj != '') {
+                            wb.canvas.removeObject(wb.prvObj);
                         }
 
-                        var currObject = whBoard.makeobj(tool.startPosX, tool.startPosY, endPosX, endPosY, objType);
-                        var rCurrObject = whBoard.canvas.readyObject(currObject);
-                        whBoard.canvas.addObject(rCurrObject);
+                        var currObject = wb.makeobj(tool.startPosX, tool.startPosY, endPosX, endPosY, objType);
+                        var rCurrObject = wb.canvas.readyObject(currObject);
+                        wb.canvas.addObject(rCurrObject);
                         rCurrObject.coreObj.usrCurrAction = 'create';
 
                         var currTime = new Date().getTime();
 
                         if ((typeof lastmousemovetime == 'undefined') || (lastmousemovetime == null)) {
                             lastmousemovetime = new Date().getTime();
-                            if (!ev.detail.hasOwnProperty('cevent') && objType != 'text' && whBoard.tool.cmd != 't_clearall') {
-                                vcan.calculatePackets(currTime, 'm', endPosX, endPosY);
+                            if (!ev.detail.hasOwnProperty('cevent') && objType != 'text' && wb.tool.cmd != 't_clearall') {
+                                vcan.optimize.calculatePackets(currTime, 'm', endPosX, endPosY);
                             }
                         }
                         presentmousemovetime = new Date().getTime();
 
                         if ((presentmousemovetime - lastmousemovetime) >= 2000) { // Optimized
-                            if (!ev.detail.hasOwnProperty('cevent') && objType != 'text' && whBoard.tool.cmd != 't_clearall') {
-                                vcan.calculatePackets(currTime, 'm', endPosX, endPosY);
+                            if (!ev.detail.hasOwnProperty('cevent') && objType != 'text' && wb.tool.cmd != 't_clearall') {
+                                vcan.optimize.calculatePackets(currTime, 'm', endPosX, endPosY);
                             }
                             lastmousemovetime = new Date().getTime();
                         }
@@ -174,17 +177,17 @@
                         /**** 
                          *
                          * This would I have disbaled can be critical
-                         * whBoard.replay.replayObjs.push(currObject);
+                         * wb.replay.replayObjs.push(currObject);
                          *
                          ****/
 
-                        whBoard.prvObj = rCurrObject.coreObj;
+                        wb.prvObj = rCurrObject.coreObj;
 
                     }
                 } else {
-                    if (whBoard.vcan.main.action != 'move' || ((vcan.main.currentTransform == "" || vcan.main.currentTransform == null) && whBoard.vcan.main.action == "move")) {
+                    if (wb.vcan.main.action != 'move' || ((vcan.main.currentTransform == "" || vcan.main.currentTransform == null) && wb.vcan.main.action == "move")) {
                         //io.send({'createArrow': true, x: ev.currX, y: ev.currY});
-                        whBoard.utility.beforeSend({'createArrow': true, x: ev.currX, y: ev.currY});
+                        wb.utility.beforeSend({'createArrow': true, x: ev.currX, y: ev.currY});
                     }
 
                 }
@@ -196,12 +199,12 @@
              */
             tool.mouseup = function(ev, cobj) {
                 if (ev.detail.hasOwnProperty('cevent')) {
-                    ev.clientX = ev.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                    ev.clientY = ev.detail.cevent.y + (whBoard.vcan.main.offset.y);
-                    ev.x = ev.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                    ev.y = ev.detail.cevent.x + (whBoard.vcan.main.offset.y);
-                    ev.pageX = ev.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                    ev.pageY = ev.detail.cevent.y + (whBoard.vcan.main.offset.y);
+                    ev.clientX = ev.detail.cevent.x + (wb.vcan.main.offset.x);
+                    ev.clientY = ev.detail.cevent.y + (wb.vcan.main.offset.y);
+                    ev.x = ev.detail.cevent.x + (wb.vcan.main.offset.x);
+                    ev.y = ev.detail.cevent.x + (wb.vcan.main.offset.y);
+                    ev.pageX = ev.detail.cevent.x + (wb.vcan.main.offset.x);
+                    ev.pageY = ev.detail.cevent.y + (wb.vcan.main.offset.y);
                     ev.currX = ev.detail.cevent.x;
                     ev.currY = ev.detail.cevent.y;
                 }
@@ -214,12 +217,12 @@
                     tool.mousemove(ev, 'up');
                     if (!ev.detail.hasOwnProperty('cevent') && objType != 'freeDrawing') {
                         var currTime = new Date().getTime();
-                        vcan.calculatePackets(currTime, 'u', endPosX, endPosY);
+                        vcan.optimize.calculatePackets(currTime, 'u', endPosX, endPosY);
                     }
 
-                    if ((whBoard.obj.freeDrawObj != undefined && whBoard.obj.freeDrawObj.freesvg == true)) {
-                        if (whBoard.obj.freeDrawObj.fdObj.isCurrentlyDrawing) {
-                            whBoard.obj.freeDrawObj.finalizeDraw(ev);
+                    if ((wb.obj.freeDrawObj != undefined && wb.obj.freeDrawObj.freesvg == true)) {
+                        if (wb.obj.freeDrawObj.fdObj.isCurrentlyDrawing) {
+                            wb.obj.freeDrawObj.finalizeDraw(ev);
                         }
 
                         if (!ev.detail.hasOwnProperty('cevent')) {
@@ -228,30 +231,31 @@
                                 var obj = vcan.makeStackObj(currTime, 'u', endPosX, endPosY);
                                 dataChunk.push(obj);
                                 for (var i = 0; i < dataChunk.length; i++) {
-                                    whBoard.uid++;
-                                    dataChunk[i].uid = whBoard.uid;
+                                    wb.uid++;
+                                    dataChunk[i].uid = wb.uid;
                                     vcan.main.replayObjs.push(dataChunk[i]);
                                 }
-                                whBoard.utility.beforeSend({'repObj': dataChunk});
+                                wb.utility.beforeSend({'repObj': dataChunk});
                                 localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
-                                whBoard.utility.updateSentPackets(dataChunk);
+                                wb.utility.updateSentPackets(dataChunk);
                                 dataChunk = [];
                             }
                         }
                     }
 
-                    if (whBoard.prvObj != '') {
-                        whBoard.prvObj = ""; //this should be into proper way
+                    if (wb.prvObj != '') {
+                        wb.prvObj = ""; //this should be into proper way
                     }
 
-                    whBoard.prvObj = "";
+                    wb.prvObj = "";
                     tool.started = false;
                 }
 
-                if (whBoard.vcan.wb.sentPack) {
-                    whBoard.vcan.wb.sentPack = false;
+                if (wb.vcan.wb.sentPack) {
+                    wb.vcan.wb.sentPack = false;
                 }
             };
         }
+        window.draw_object = draw_object;
     }
 )(window);

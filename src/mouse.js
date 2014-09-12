@@ -87,24 +87,24 @@
                         if (!e.detail.hasOwnProperty('cevent')) {
                             var currTime = new Date().getTime();
                             var obj = vcan.makeStackObj(currTime, 'd', (e.clientX - vcan.main.offset.x), (e.clientY - vcan.main.offset.y));
-                            whBoard.uid++;
-                            console.log('uid ' + whBoard.uid);
-                            obj.uid = whBoard.uid;
+                            vApp.wb.uid++;
+                            console.log('uid ' + vApp.wb.uid);
+                            obj.uid = vApp.wb.uid;
                             vcan.main.replayObjs.push(obj);
-                            whBoard.utility.beforeSend({'repObj': [obj]});
-                            whBoard.utility.updateSentPackets(obj);
+                            vApp.wb.utility.beforeSend({'repObj': [obj]});
+                            vApp.wb.utility.updateSentPackets(obj);
                         }
 
                         //these code run when user is trying to create particular object.
                     } else if (vcan.main.action == 'create') {
                         if (e.detail.hasOwnProperty('cevent')) {
-                            e.clientX = e.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                            e.clientY = e.detail.cevent.y + (whBoard.vcan.main.offset.y);
+                            e.clientX = e.detail.cevent.x + (vApp.wb.vcan.main.offset.x);
+                            e.clientY = e.detail.cevent.y + (vApp.wb.vcan.main.offset.y);
 
-                            e.x = e.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                            e.y = e.detail.cevent.x + (whBoard.vcan.main.offset.y);
-                            e.pageX = e.detail.cevent.x + (whBoard.vcan.main.offset.x);
-                            e.pageY = e.detail.cevent.y + (whBoard.vcan.main.offset.y);
+                            e.x = e.detail.cevent.x + (vApp.wb.vcan.main.offset.x);
+                            e.y = e.detail.cevent.x + (vApp.wb.vcan.main.offset.y);
+                            e.pageX = e.detail.cevent.x + (vApp.wb.vcan.main.offset.x);
+                            e.pageY = e.detail.cevent.y + (vApp.wb.vcan.main.offset.y);
                             e.currX = e.detail.cevent.x;
                             e.currY = e.detail.cevent.y;
                         }
@@ -112,7 +112,7 @@
                         var foundTarget = vcan.events().findTarget(e),
                                 pointer = vcan.utility.getReltivePoint(e);
 
-                        if (foundTarget && foundTarget.type == 'text' && whBoard.tool.cmd == 't_text') {
+                        if (foundTarget && foundTarget.type == 'text' && vApp.wb.tool.cmd == 't_text') {
                             foundTarget.setupCurrentTransform(e);
                         }
                     }
@@ -160,21 +160,21 @@
                                 }
 
                                 if (!e.detail.hasOwnProperty('cevent')) {
-                                    vcan.doOptiMize(e);
+                                    vcan.optimize.doOptiMize(e);
                                 }
                             } else if (obj.currentTransform.action === 'scale') {
                                 if (!e.detail.hasOwnProperty('cevent')) {
-                                    vcan.doOptiMize(e);
+                                    vcan.optimize.doOptiMize(e);
                                 }
                                 vcan.interact.scaleObject(x, y);
                             } else if (obj.currentTransform.action === 'scaleX') {
                                 if (!e.detail.hasOwnProperty('cevent')) {
-                                    vcan.doOptiMize(e);
+                                    vcan.optimize.doOptiMize(e);
                                 }
                                 vcan.interact.scaleObject(x, y, 'x');
                             } else if (obj.currentTransform.action === 'scaleY') {
                                 if (!e.detail.hasOwnProperty('cevent')) {
-                                    vcan.doOptiMize(e);
+                                    vcan.optimize.doOptiMize(e);
                                 }
                                 vcan.interact.scaleObject(x, y, 'y');
                             } else {
@@ -206,7 +206,7 @@
 
                                     var tempTarget = vcan.interact.translateObject(x, y);
                                     if (!e.detail.hasOwnProperty('cevent')) {
-                                        vcan.doOptiMize(e);
+                                        vcan.optimize.doOptiMize(e);
                                     }
 
                                     tempTarget.setActive(true);
@@ -279,7 +279,7 @@
                             var pointer = vcan.utility.actualPointer(e);
                             var currTime = new Date().getTime();
                             if (!e.detail.hasOwnProperty('cevent')) {
-                               vcan.calculatePackets(currTime, 'u', (e.clientX - vcan.main.offset.x), (e.clientY - vcan.main.offset.y));
+                               vcan.optimize.calculatePackets(currTime, 'u', (e.clientX - vcan.main.offset.x), (e.clientY - vcan.main.offset.y));
                             }
 
                             //if (vcan.main.dragMode == true) {
@@ -293,7 +293,7 @@
                             }
                         } else {
                             if (!e.detail.hasOwnProperty('cevent')) {
-                                vcan.calculatePackets(currTime, 'u', (e.clientX - vcan.main.offset.x), (e.clientY - vcan.main.offset.y));
+                                vcan.optimize.calculatePackets(currTime, 'u', (e.clientX - vcan.main.offset.x), (e.clientY - vcan.main.offset.y));
                             }
                         }
                         vcan.wb.sentPack = true;

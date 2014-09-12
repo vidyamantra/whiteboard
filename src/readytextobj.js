@@ -4,8 +4,7 @@
   */
 (
     function(window) {
-        var whBoard = window.whBoard;
-        whBoard.readyTextObj = function() {
+      var  readyTextObj = function() {
             return {
                 init: function(boxCont) {
                     //this.textId =  0;
@@ -32,7 +31,7 @@
                     this.startPosX = startPosX;
                     this.startPosY = startPosY;
                     //alert('is there anything for you');
-                    var vcan = whBoard.vcan;
+                    var vcan = vApp.wb.vcan;
                     var ctx = vcan.main.canvas.getContext('2d');
                     var obj = {};
                     this.textWriteMode++;
@@ -42,15 +41,15 @@
                         this.currObject = vcan.main.currentTransform.target;
                         if (this.currObject != undefined && this.currObject.type == 'text') {
                             obj = {width: 300, height: 100, x: this.currObject['oCoords'].tl.x, y: this.currObject['oCoords'].tl.y, text: this.currObject.text};
-                            if (!whBoard.utility.clickOutSidebox(this.textWriteMode)) {
-                                //whBoard.obj.drawTextObj.drawTextBoxWrapper(ctx, obj,  this.currObject.id);
-                                whBoard.obj.drawTextObj.drawTextBoxWrapper(obj, this.currObject.id);
+                            if (!vApp.wb.utility.clickOutSidebox(this.textWriteMode)) {
+                                //vApp.wb.obj.drawTextObj.drawTextBoxWrapper(ctx, obj,  this.currObject.id);
+                                vApp.wb.obj.drawTextObj.drawTextBoxWrapper(obj, this.currObject.id);
                             }
                             vcan.main.currentTransform = "";
                         }
 
-                        if (whBoard.utility.clickOutSidebox(this.textWriteMode)) {
-                            whBoard.obj.drawTextObj.renderText(this.prvCurrTransform, this.prvModTextObj, ctx);
+                        if (vApp.wb.utility.clickOutSidebox(this.textWriteMode)) {
+                            vApp.wb.obj.drawTextObj.renderText(this.prvCurrTransform, this.prvModTextObj, ctx);
                         }
 
                         if (this.currObject != undefined && this.currObject.type == 'text') {
@@ -63,22 +62,22 @@
 
                     } else {
 
-                        if (whBoard.utility.clickOutSidebox(this.textWriteMode)) {
+                        if (vApp.wb.utility.clickOutSidebox(this.textWriteMode)) {
                             //alert('suman bogati khan');
                             if (typeof mtext != 'undefined') {
-                                whBoard.obj.drawTextObj.renderText(this.currObject, this.prvModTextObj, ctx, mtext);
+                                vApp.wb.obj.drawTextObj.renderText(this.currObject, this.prvModTextObj, ctx, mtext);
                             } else {
-                                whBoard.obj.drawTextObj.renderText(this.currObject, this.prvModTextObj, ctx);
+                                vApp.wb.obj.drawTextObj.renderText(this.currObject, this.prvModTextObj, ctx);
                             }
 
                         } else {
                             this.totalBox++;
                             var obj = {x: startPosX, y: startPosY, width: 300, height: 100};
-                            //whBoard.obj.drawTextObj.drawTextBoxWrapper(ctx, obj,  this.totalBox);
+                            //vApp.wb.obj.drawTextObj.drawTextBoxWrapper(ctx, obj,  this.totalBox);
                             if (typeof mtext == 'undefined') {
-                                whBoard.obj.drawTextObj.drawTextBoxWrapper(obj, this.totalBox);
+                                vApp.wb.obj.drawTextObj.drawTextBoxWrapper(obj, this.totalBox);
                             } else {
-                                whBoard.obj.drawTextObj.drawTextBoxWrapper(obj, this.totalBox, mtext);
+                                vApp.wb.obj.drawTextObj.drawTextBoxWrapper(obj, this.totalBox, mtext);
                             }
 
                         }
@@ -93,7 +92,7 @@
                  * @returns nothing
                  */
                 drawTextBoxWrapper: function(obj, boxNumber, mtext) {
-                    var vcan = whBoard.vcan;
+                    var vcan = vApp.wb.vcan;
                     var divNode = document.createElement('div');
                     divNode.id = "box" + boxNumber;
                     divNode.className = "textBoxContainer";
@@ -126,9 +125,9 @@
                  * @returns nothing
                  */
                 renderText: function(currObject, prvModTextObj, ctx, mtext) {
-                    var vcan = whBoard.vcan;
+                    var vcan = vApp.wb.vcan;
                     if (this.prevTextObj != '') {
-                        if (!whBoard.utility.IsObjEmpty(currObject)) {
+                        if (!vApp.wb.utility.IsObjEmpty(currObject)) {
                             for (var i = 0; i < vcan.main.children.length; i++) {
                                 if (currObject.id == vcan.main.children[i].id) {
                                     vcan.main.children.splice(i, 1);
@@ -138,7 +137,7 @@
                             }
                         }
 
-                        if (!whBoard.utility.IsObjEmpty(currObject)) {
+                        if (!vApp.wb.utility.IsObjEmpty(currObject)) {
                             if (typeof mtext != 'undefined') {
                                 this.finalizeText(ctx, this.prevTextObj, prvModTextObj, mtext);
                             } else {
@@ -152,7 +151,7 @@
                             }
                         }
 
-                        whBoard.obj.drawTextObj.wmode = false;
+                        vApp.wb.obj.drawTextObj.wmode = false;
                     }
                 },
                 /**
@@ -164,7 +163,7 @@
                  * @returns nothing
                  */
                 finalizeText: function(ctx, txtWrapper, prvModObj, mtext) {
-                    var vcan = whBoard.vcan;
+                    var vcan = vApp.wb.vcan;
                     var prvNode = document.getElementById(txtWrapper.id);
                     var userText = "";
                     if (typeof mtext == 'undefined') {
@@ -206,33 +205,35 @@
                         mp: {x: txtWrapper.measure.x, y: txtWrapper.measure.y}
                     };
 
-                    if (whBoard.obj.drawTextObj.muser == false) {
+                    if (vApp.wb.obj.drawTextObj.muser == false) {
                         var obj = {'mt': currTime, 'ac': 'd', 'x': this.startPosX, 'y': this.startPosY, 'mtext': textObj.text};
-                        whBoard.uid++;
-                        obj.uid = whBoard.uid;
+                        vApp.wb.uid++;
+                        obj.uid = vApp.wb.uid;
                         vcan.main.replayObjs.push(obj);
                         localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
                         // io.send({'repObj': [obj]});
-                        whBoard.utility.beforeSend({'repObj': [obj]});
-                        whBoard.utility.updateSentPackets(obj);
+                        vApp.wb.utility.beforeSend({'repObj': [obj]});
+                        vApp.wb.utility.updateSentPackets(obj);
                     }
 
-                    var text = whBoard.canvas.readyObject(textObj);
+                    var text = vApp.wb.canvas.readyObject(textObj);
                     var tempObj = text.coreObj;
-                    whBoard.canvas.addObject(text);
+                    vApp.wb.canvas.addObject(text);
 
                     var lastTxtObj = vcan.main.children[vcan.main.children.length - 1];
                     lastTxtObj.mt = currTime;
                     //this.keyTyped = [];.
                     prvNode.parentNode.removeChild(txtWrapper);
                     vcan.renderAll();
-                    if (whBoard.sentPackets > 0) {
-                        if(document.getElementById(whBoard.sentPackDiv) != null){
-                            document.getElementById(whBoard.sentPackDiv).innerHTML = whBoard.sentPackets;
+                    if (vApp.wb.sentPackets > 0) {
+                        if(document.getElementById(vApp.wb.sentPackDiv) != null){
+                            document.getElementById(vApp.wb.sentPackDiv).innerHTML = vApp.wb.sentPackets;
                         }
                     }
                 }
             }
         }
+        
+        window.readyTextObj = readyTextObj;
     }
 )(window);

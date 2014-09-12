@@ -6,83 +6,89 @@
 
 (
     function(window) {
-        var whBoard = window.whBoard;
-        whBoard.RTCPeerConnection = null;
-        var attachMediaStream = null;
-        var reattachMediaStream = null;
-        window.webrtcDetectedBrowser = null;
+        var adapter = function (){
+            return {
+                RTCPeerConnection : null,
+                webrtcDetectedBrowser : null,
+                
+                init : function (navigator){
+                    if (vApp.wb.system.wbRtc.peerCon == true && vApp.wb.system.wbRtc.userMedia == true) {
+                        if (navigator.mozGetUserMedia) {
+                            
+                            window.webrtcDetectedBrowser = "firefox";
+                            this.RTCPeerConnection = mozRTCPeerConnection;
+                            this.RTCSessionDescription = mozRTCSessionDescription;
+                            this.RTCIceCandidate = mozRTCIceCandidate;
+                            navigator.getUserMedia = navigator.mozGetUserMedia;
 
-        if (whBoard.system.wbRtc.peerCon == true && whBoard.system.wbRtc.userMedia == true) {
-            if (navigator.mozGetUserMedia) {
-                console.log("This appears to be Firefox");
-                window.webrtcDetectedBrowser = "firefox";
-                whBoard.RTCPeerConnection = mozRTCPeerConnection;
-                whBoard.RTCSessionDescription = mozRTCSessionDescription;
-                whBoard.RTCIceCandidate = mozRTCIceCandidate;
-                navigator.getUserMedia = navigator.mozGetUserMedia;
+                            this.attachMediaStream = function(element, stream) {
+                                this.videoAdd = true;
+                                console.log("Attaching media stream");
+                                element.mozSrcObject = stream;
+                                element.play();
+                            };
 
-                whBoard.attachMediaStream = function(element, stream) {
-                    whBoard.videoAdd = true;
-                    console.log("Attaching media stream");
-                    element.mozSrcObject = stream;
-                    element.play();
-                };
+                            reattachMediaStream = function(to, from) {
+                                console.log("Reattaching media stream");
+                                to.mozSrcObject = from.mozSrcObject;
+                                to.play();
+                            };
 
-                reattachMediaStream = function(to, from) {
-                    console.log("Reattaching media stream");
-                    to.mozSrcObject = from.mozSrcObject;
-                    to.play();
-                };
+                            // Fake get{Video,Audio}Tracks
+                            MediaStream.prototype.getVideoTracks = function() {
+                                return [];
+                            };
 
-                // Fake get{Video,Audio}Tracks
-                MediaStream.prototype.getVideoTracks = function() {
-                    return [];
-                };
+                            MediaStream.prototype.getAudioTracks = function() {
+                                return [];
+                            };
 
-                MediaStream.prototype.getAudioTracks = function() {
-                    return [];
-                };
-            } else if (navigator.webkitGetUserMedia) {
-                console.log("This appears to be Chrome");
-                window.webrtcDetectedBrowser = "chrome";
-                whBoard.RTCPeerConnection = webkitRTCPeerConnection;
-                whBoard.RTCSessionDescription = RTCSessionDescription;
-                whBoard.RTCIceCandidate = RTCIceCandidate;
-                navigator.getUserMedia = navigator.webkitGetUserMedia;
+                        } else if (navigator.webkitGetUserMedia) {
+                            console.log("This appears to be Chrome");
+                            window.webrtcDetectedBrowser = "chrome";
+                            this.RTCPeerConnection = webkitRTCPeerConnection;
+                            this.RTCSessionDescription = RTCSessionDescription;
+                            this.RTCIceCandidate = RTCIceCandidate;
+                            navigator.getUserMedia = navigator.webkitGetUserMedia;
 
-                whBoard.attachMediaStream = function(element, stream) {
-                    element.src = window.URL.createObjectURL(stream);
-                    whBoard.videoAdd = true;
-                };
+                            this.attachMediaStream = function(element, stream) {
+                                element.src = window.URL.createObjectURL(stream);
+                                this.videoAdd = true;
+                            };
 
-                reattachMediaStream = function(to, from) {
-                    to.src = from.src;
-                };
+                            reattachMediaStream = function(to, from) {
+                                to.src = from.src;
+                            };
 
-                // The representation of tracks in a stream is changed in M26
-                // Unify them for earlier Chrome versions in the coexisting period
-                if (!webkitMediaStream.prototype.getVideoTracks) {
-                    webkitMediaStream.prototype.getVideoTracks = function() {
-                        return this.videoTracks;
-                    };
-                    webkitMediaStream.prototype.getAudioTracks = function() {
-                        return this.audioTracks;
-                    };
+                            // The representation of tracks in a stream is changed in M26
+                            // Unify them for earlier Chrome versions in the coexisting period
+                            if (!webkitMediaStream.prototype.getVideoTracks) {
+                                webkitMediaStream.prototype.getVideoTracks = function() {
+                                    return this.videoTracks;
+                                };
+                                webkitMediaStream.prototype.getAudioTracks = function() {
+                                    return this.audioTracks;
+                                };
+                            }
+
+                            // New syntax of get streams method in M26
+                            if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
+                                webkitRTCPeerConnection.prototype.getLocalStreams = function() {
+                                    return this.localStreams;
+                                };
+                                webkitRTCPeerConnection.prototype.getRemoteStreams = function() {
+                                    return this.remoteStreams;
+                                };
+                            }
+                        } else {
+                            console.log("Browser does not appear to be WebRTC-capable");
+                        }
+
+                    }
+                    return navigator;
                 }
-
-                // New syntax of get streams method in M26
-                if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
-                    webkitRTCPeerConnection.prototype.getLocalStreams = function() {
-                        return this.localStreams;
-                    };
-                    webkitRTCPeerConnection.prototype.getRemoteStreams = function() {
-                        return this.remoteStreams;
-                    };
-                }
-            } else {
-                console.log("Browser does not appear to be WebRTC-capable");
             }
-
         }
+        window.adapter = adapter;
     }
 )(window);

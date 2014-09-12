@@ -9,3 +9,5 @@ _DS*
 .*-e
 todo.txt
 
+/screenSharing/nbproject/private/
+/desktopSelector

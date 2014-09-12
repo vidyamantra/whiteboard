@@ -38,8 +38,9 @@ include('auth.php') ;
 
 <?php
 //the www path for whiteboard
-$whiteboard_path = "http://192.168.1.118/whiteboard/";
-include('js.php') ;
+$whiteboard_path = "https://192.168.1.108/whiteboard/";
+//include('js.php');
+include('js.debug.php');
 //$PAGE->requires->js(new moodle_url($CFG->wwwroot .'/mod/onetoone/whiteboard/js/c190214.js'));
 
 //$PAGE->requires->js(new moodle_url($CFG->wwwroot .'/mod/onetoone/whiteboard/js/min.js'));
@@ -47,6 +48,8 @@ include('js.php') ;
 
 $r = 's';
 $sid = 12;
+$uname = "student2";
+
 //$r = 's';
 ?>
 	
@@ -61,28 +64,15 @@ $sid = 12;
 	
 	window.io = io;
     //the www path for whiteboard
-    var whiteboardPath =  'http://192.168.1.118/whiteboard/';
+    var whiteboardPath =  'https://192.168.1.108/whiteboard/';
 	</script>
 
-   <div id="vcanvas" class="socketon teacher" style="width: 961px;">
+<div id="vAppCont">
+<div id="vAppWhiteboard" class="vmApp">
+
+   <div id="vcanvas" class="socketoff student" style="width: 961px;">
     <div id="containerWb">
       
-    </div>
-
-    <div id="videos">
-      <div id="videoContainer" style="z-index: 2;">
-        <div id="videoMinMize">
-          <a href="#" title="" data-title="Minmize The Video" class="tooltip">&nbsp;</a>
-        </div>
-
-        <div class="dynDiv_resizeDiv_tl" style="cursor: nw-resize;"></div>
-
-        <div class="dynDiv_moveParentDiv" style="cursor: move;">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-
-        <div class="clear"></div>
-      </div>
     </div>
 
     <div id="mainContainer">
@@ -162,5 +152,45 @@ $sid = 12;
 
     <div class="clear"></div>
   </div>
+</div>
+
+ <div id="widgetRightSide">
+    <div id="allVideosCont">
+        <canvas id="tempVideo"> </canvas> 
+
+        <div class="videoWrapper" >
+            <div class="videoSubWrapper" data-uname = "<?php echo $uname; ?>">
+                <video id="myVideo3"  autoplay>    </video>
+            </div>
+        </div>
+    </div>
+
+    <div id="chatContainer">
+
+    </div>
+    <button id="recordButton">Record Start</button>
+</div> 
+        
+</div>
+    
+<!--<div id="vAppScreenShareCont">
+   <div id="videoContainer">     
+       <video id="localVideo" autoplay=""> </video>    
+   </div> 
+
+    <div id="canvasCont1"> 
+       <canvas id="mycanvas">
+       </canvas>
+    </div>
+
+    <div id="canvasCont2"> 
+       <canvas id="mycanvas2">
+       </canvas>
+    </div>
 
 
+   <br />
+   <br />
+    <button id="shareScreen">Share Screen</button>
+
+</div>-->

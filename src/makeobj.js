@@ -4,7 +4,7 @@
   */
 (
     function(window) {
-        var whBoard = window.whBoard;
+//        vApp.wb = window.vApp.wb;
 
         /**
          * this function makes the properties for particular object like start and end point for line, width,height,x,y made for rectangle
@@ -15,7 +15,7 @@
          *  @param objType particular ocanvas object type eg:- rectangle, oval etc
          *  returns the object wrapped along with the properties  
          */
-        whBoard.makeobj = function(startPosX, startPosY, endPosX, endPosY, objType) {
+     var   makeobj = function(startPosX, startPosY, endPosX, endPosY, objType) {
             //TODO this should be deleted after check properly there is no use of obj.mp object.
             var obj = {mp: {}};
             obj.mp.x = endPosX;
@@ -75,6 +75,6 @@
             }
             return obj;
         }
-
+       window.makeobj = makeobj;
     }
 )(window);

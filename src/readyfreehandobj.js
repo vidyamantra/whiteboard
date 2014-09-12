@@ -3,14 +3,14 @@
  * @author  Suman Bogati <http://www.vidyamantra.com>
   */(
     function(window) {
-        var whBoard = window.whBoard;
+     //   vApp.wb = window.vApp.wb;
 
         /**
          * this class initializes the functions 
          * thorugh which the free hand object is drawn
          */
         //NOTE:- have changed during the unit testing
-        whBoard.readyFreeHandObj = function(borderColor, lineWidth) {
+        var readyFreeHandObj = function(borderColor, lineWidth) {
             return {
                 /**
                  * this function does intialize the value which is required for drawing the object 
@@ -31,9 +31,9 @@
                  */
 
                 drawStart: function(ev) {
-                    var vcan = whBoard.vcan;
+                    var vcan = vApp.wb.vcan;
                     //if(vcan.main.freesvg == true){
-                    if (whBoard.obj.freeDrawObj.freesvg == true) {
+                    if (vApp.wb.obj.freeDrawObj.freesvg == true) {
                         var ctx = vcan.main.canvas.getContext('2d');
                         //borderColor = "red";
                         //this.fdObj = vcan.main.freeHandDrawing(ev, {borderColor: borderColor});
@@ -57,22 +57,23 @@
                     this.fdObj.fhRendering(pointer);
                 },
                 finalizeDraw: function(ev) {
-                    var vcan = whBoard.vcan;
+                    var vcan = vApp.wb.vcan;
                     //TODO this(finalizeDrawingPath) should be called over the object.
                     //prvObj =  vcan.main.freeDraw.finalizeDrawingPath();
 
-                    whBoard.prvObj = this.fdObj.finalizeDrawingPath(whBoard.canvas);
+                    vApp.wb.prvObj = this.fdObj.finalizeDrawingPath(vApp.wb.canvas);
                     var lastChild = vcan.main.children[vcan.main.children.length - 1];
-                    lastChild.mt = whBoard.utility.stringToNumber(whBoard.prvObj.path[whBoard.prvObj.path.length - 1][3]);
+                    lastChild.mt = vApp.wb.utility.stringToNumber(vApp.wb.prvObj.path[vApp.wb.prvObj.path.length - 1][3]);
 
                     /**** 
                      *
                      * This would I have disbaled can be critical
-                     * whBoard.repObj.replayObjs.push(whBoard.prvObj);
+                     * vApp.wb.repObj.replayObjs.push(vApp.wb.prvObj);
                      *
                      ****/
                 }
             };
         }
+        window.readyFreeHandObj = readyFreeHandObj;
     }
 )(window);

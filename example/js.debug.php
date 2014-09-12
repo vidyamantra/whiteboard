@@ -1,13 +1,15 @@
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <!--<script type="text/javascript" src="<?php echo $whiteboard_path;?>build/wb.min.js"></script>-->
 
+
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/vmapp.js"></script>
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/vcan.js"></script>
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>bundle/io/src/iolib.js"></script>
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/vcan.js"></script>
-<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/script.js"></script>
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/whboard.js"></script>
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/wb_utility.js"></script>
 
@@ -39,12 +41,30 @@
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/keyboard.js"></script>
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/adapter.js"></script>
-<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/video.js"></script>
+
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/com.js"></script>
+
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/resampler.js"></script>
+
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/media.js"></script>
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/bridge.js"></script>
 
-<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/video_resize.js"></script>
+
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/optimization.js"></script>
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/response.js"></script>
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/lzstring.js"></script>
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/g711.js"></script>
+
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/getscreen.js"></script>
+
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/chat.js"></script>
+
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/ss_utility.js"></script>
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/dirtycorner.js"></script>
+
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/vutility.js"></script>
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/screenshare.js"></script>
+
 <script type="text/javascript" src="../index.js"></script>
        
