@@ -168,69 +168,67 @@ $.when(
                     return;
                 }
             }else if(e.message.hasOwnProperty('ssbyimage')){
+
                 if(vApp.wb.gObj.uRole == 's'){
-                    if(!vApp.ss.hasOwnProperty('vac')){
-                        //vApp.previous = vApp.wbConfig.id;
-                        vApp.previous = vApp.wbConfig.id;
-//                        
-//                        vApp.ss = new window.screenShare(vApp.ssConfig);
-//                        vApp.ss.vac = true;
-//                        vApp.ss.dc = window.dirtyCorner;
-//                        vApp.ss.sutil = window.sutil;
-//                        vApp.ss.init();
-//                        
-//                        vApp.ss.vac = true;
-//                        
-                        vApp.makeAppReady("screensharetool");
+                    var stool;
+                    app = e.message.st; 
+                    
+                    if(e.message.st == 'ss'){
+                        stool = "screensharetool";
+                    }else{
+                        stool = "wholescreensharetool";
+                    }
+
+                    if(typeof vApp[app] != 'object'){
                         
-                        vApp.ss.vac = true;
+                        vApp.makeAppReady(stool);
+                        vApp[app].vac = true;
                         
-                        vApp.ss.localCanvas = document.getElementById(vApp.ss.local+"Video");
-                        vApp.ss.localCont = vApp.ss.localCanvas.getContext('2d');
+                        vApp[app].localCanvas = document.getElementById(vApp[app].local+"Video");
+                        vApp[app].localCont = vApp[app].localCanvas.getContext('2d');
                         
-                        vApp.ss.localCanvas.width = e.message.d.w;
-                        vApp.ss.localCanvas.height = e.message.d.h;
+                        vApp[app].localCanvas.width = e.message.d.w;
+                        vApp[app].localCanvas.height = e.message.d.h;
                         
                         if(e.message.hasOwnProperty('vc')){
-                            var vc  = document.getElementById(vApp.ss.local);
+                            var vc  = document.getElementById(vApp[app].local);
                             vc.style.width = e.message.vc.w + "px";
                             vc.style.height = e.message.vc.h + "px";
                         }
                     }else{
-                        var wboard = document.getElementById(vApp.wb.id);
-                        if(wboard != null && wboard.style.display == 'block'){
-                            wboard.style.display = 'none';
-                            document.getElementById(vApp.ss.id).style.display = 'block';
+                        var prvScreen = document.getElementById(vApp.previous);
+                        if(prvScreen != null){
+                            prvScreen.style.display = 'none';
+                            document.getElementById(vApp[app].id).style.display = 'block';
                         }
                     }
                     
                     if(typeof prvWidth != 'undefined' && e.message.d.w != prvWidth){
-                        vApp.ss.localCanvas.width = e.message.d.w;
-                        vApp.ss.localCanvas.height = e.message.d.h;
+                        vApp[app].localCanvas.width = e.message.d.w;
+                        vApp[app].localCanvas.height = e.message.d.h;
                         if(e.message.hasOwnProperty('vc')){
-                            var vc  = document.getElementById(vApp.ss.local);
+                            //alert("suman bogati");
+                            var vc  = document.getElementById(vApp[app].local);
                             vc.style.width = e.message.vc.w + "px";
                             vc.style.height = e.message.vc.h + "px";
+                            
                         }
                     }
                     
+                    prvWidth = e.message.d.w;
+                    prvHeight = e.message.d.h;
                     
-                     prvWidth = e.message.d.w;
-                     prvHeight = e.message.d.h;
-                    
-                    vApp.ss.drawImages(e.message.ssbyimage);
-                    
-                    vApp.previous =  vApp.ss.id;
+                    vApp[app].drawImages(e.message.ssbyimage);
+                    vApp.previous =  vApp[app].id;
                     
                 }
                 
-                
-               //drawLoop(e.message.ssbyimage);
                return;
            }else if(e.message.hasOwnProperty('unshareScreen')){
+                var app  =  e.message.st;
                 if(e.fromUser.userid != wbUser.id){
-                    vApp.ss.prevImageSlices = [];
-                    vApp.ss.removeStream(); 
+                    vApp[app].prevImageSlices = [];
+                    vApp[app].removeStream();
                 }
                 return;
            }else if(e.message.hasOwnProperty('audioSamp')){

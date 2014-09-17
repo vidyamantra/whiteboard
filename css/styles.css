@@ -904,21 +904,8 @@ video:hover,  canvas:hover{
     
 }
 
-#vAppWhiteboardCont{
-    /*
-    display : none;
-    */
-}
 
-/*#vAppscreenShareLocalTemp {
-   display : none;
-}*/
-
-vAppscreenShareLocalTemp{
-    
-}
-
-#vAppscreenShare {
+#vAppscreenShare, #vAppWholeScreenShare {
     float : left;
     border : 1px solid #ccc;
     height : 100%;
@@ -938,13 +925,8 @@ vAppscreenShareLocalTemp{
     height : 30px;
 }
 
-#widgetRightSide{
-    
-/*    display : none;*/
-}
 
-
-#vAppscreenShareLocal{
+.Local {
     margin: 4px 7px 0 7px;
     border: 1px solid #ccc;
 }
@@ -953,11 +935,8 @@ vAppscreenShareLocalTemp{
     
 }
 
-/*#vAppscreenShareLocal{
-    width : 1200px;
-    height : 1000px;
-}*/
 
-#vAppscreenShareLocalTempVideo {
+
+#vAppscreenShareLocalTempVideo, #vAppwholescreenShareLocalTempVideo  {
     display:none;
 }

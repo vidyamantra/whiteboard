@@ -37,7 +37,7 @@ include('auth.php');
 
 <?php
 //the www path for whiteboard
-$whiteboard_path = "https://192.168.1.108/whiteboard/";
+$whiteboard_path = "https://192.168.1.107/whiteboard/";
 include('js.debug.php');
 //include('js.php');
 //$PAGE->requires->js(new moodle_url($CFG->wwwroot .'/mod/onetoone/whiteboard/js/c190214.js'));
@@ -62,7 +62,7 @@ $uname = "raju shree";
 	<?php echo "wbUser.role='".$r."';"; ?>
 	
 	window.io = io;
-    window.whiteboardPath =  'https://192.168.1.108/whiteboard/';
+    window.whiteboardPath =  'https://192.168.1.107/whiteboard/';
     
     //these below script should be into audio object
     

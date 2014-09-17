@@ -22,6 +22,10 @@
                   bufView[i] = str.charCodeAt(i);
                 }
                 return bufView;
+            },
+            
+            PrvAndCurrIsWss : function (previous){
+//                return (previous == 'vAppWholeScreenShare' && appName == 'wholescreensharetool') ? true : false;
             }
         };
         

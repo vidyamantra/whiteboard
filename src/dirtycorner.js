@@ -67,13 +67,13 @@
                 doClearCanvas : function(){
                     context2.clearRect(0, 0, canvas2.width, canvas2.height)
                 },
-                getImageSlices : function(resA, resB){
+                getImageSlices : function(resA, resB, cApp){
                     //resB ==  y
                     //resA ==  x
                     var imgSlicesArr = [];
                     var totLen = resA * resB;
-                    var width =  Math.round( vApp.ss.localtempCanvas.width / resB);
-                    var height = Math.round( vApp.ss.localtempCanvas.height / resA);
+                    var width =  Math.round( cApp.localtempCanvas.width / resB);
+                    var height = Math.round( cApp.localtempCanvas.height / resA);
 
                     for(var i=0; i<totLen; i++){
                         var eachSlice  = this._getSingleSliceImg(i, width, height, resA, resB);

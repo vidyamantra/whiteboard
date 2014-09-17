@@ -11,13 +11,14 @@
         
         return {
             prevStream : false,
-            init : function (ssc){
-               
+            init : function (screen){
+                //alert(ssc);
+                this.type = screen.type;
                 this.ssByClick =  true;
                 //this.ssc = ssc;   
                 this.manualStop = false;
                 if(vApp.wb.gObj.uRole == 't'){
-                    this.readyTostart();
+                    this.readyTostart(screen.app);
                 }else{
                     this._init();
                 }
@@ -25,22 +26,28 @@
             
             //called when user select the screen
             _init : function (){
-                
-                if(vApp.previous != vApp.ssConfig.id){
+               
+                //if(vApp.previous != vApp.ssConfig.id){
+                if(vApp.previous != config.id){
                     document.getElementById(vApp.previous).style.display = 'none';    
-                    vApp.previous = vApp.ssConfig.id;
+                    vApp.previous = config.id;
                 }
-                var ss = document.getElementById(vApp.ssConfig.id);
+                
+                var ss = document.getElementById(config.id);
                 if(ss != null){
                     ss.style.display = 'block';
                 }
-
-                if(!vApp.ss.hasOwnProperty('id')){
-                    //if(vApp.wb.gObj.uRole == 't'){
-                        
-                        vApp.ss.dc = window.dirtyCorner;
-                        vApp.ss.sutil = window.sutil;
-                    //}
+                
+                
+             //   if(!vApp.ss.hasOwnProperty('id')){
+                // if UI is already created
+                if(!this.hasOwnProperty('id')){
+                   
+//                    vApp.ss.dc = window.dirtyCorner;
+//                    vApp.ss.sutil = window.sutil;
+                    
+                    this.dc = window.dirtyCorner;
+                    this.sutil = window.sutil;
                     
                     this.postFix = "Cont";
                     this.id =  config.hasOwnProperty('id') ? config.id  : "vAppscreenShare";
@@ -60,16 +67,20 @@
                     var beforeAppend = document.getElementById(vApp.rWidgetConfig.id);
                     document.getElementById(vApp.html.id).insertBefore(ssUI, beforeAppend);
                     
-                    
                     if(vApp.wb.gObj.uRole == 't'){
-                        this.localtempCanvas = document.getElementById(vApp.ss.localTemp+"Video");
+                        //this.localtempCanvas = document.getElementById(vApp.ss.localTemp+"Video");
+                        this.localtempCanvas = document.getElementById(this.localTemp+"Video");
                         this.localtempCont =  this.localtempCanvas.getContext('2d');
                     }
                 }
             },
 
-            readyTostart : function (){
-                this.getScreen();
+            readyTostart : function (app){
+                if(app == "screensharetool"){
+                    this.getScreen();
+                }else if(app == "wholescreensharetool"){
+                    this.wholeScreen(); 
+                }
             },
             
             onError : function (e){
@@ -81,6 +92,38 @@
                 window.postMessage({ type: 'getScreen'}, '*');
             },
             
+            wholeScreen : function (){
+                var  constraints = constraints || {audio: false, video: {
+                    mandatory: {
+                        chromeMediaSource: 'screen'
+                    },
+
+                    optional: [
+                        {maxWidth: window.screen.width},
+                        {maxHeight: window.screen.height},
+                        {maxFrameRate: 3}
+                    ]
+                
+                    }
+                };
+                
+                
+                if(typeof vApp.adpt != 'object'){
+                    vApp.adpt = new vApp.adapter();
+                }
+               
+                
+                navigator =  vApp.adpt.init(navigator);
+                navigator.getUserMedia(constraints, function (stream){
+                    vApp.wss._init();   
+                    vApp.wss.initializeRecorder.call(vApp.wss, stream);   
+                }, function (e){
+                    vApp.wss.onError.call(vApp.ss, e);   
+                });
+            
+            },
+            
+            
             unShareScreen : function (){    
                 this.video.src = "";
                 this.localtempCont.clearRect(0, 0, this.localtempCanvas.width, this.localtempCanvas.height);
@@ -91,7 +134,7 @@
                     this.currentStream.stop(); 
                 }
                 
-                io.send({'unshareScreen' : true});
+                io.send({'unshareScreen' : true, st : this.type});
             },
             
             removeStream : function(){
@@ -99,6 +142,7 @@
             },
 
             initializeRecorder : function (stream){
+                
 //                if(typeof prevStream != 'undefined'){
 //                    myFlag = false;
 //                }
@@ -107,8 +151,10 @@
                     this.ssByClick = false;
                 }
                 
-                if(this.hasOwnProperty('currentStream')){
-                    this.unShareScreen();
+                if(typeof vApp.prevApp != 'undefined'){
+                    if(vApp.prevApp.hasOwnProperty('currentStream')){
+                       vApp.prevApp.unShareScreen();
+                    }
                 }
                 
                 this.video = document.getElementById(this.local+"Video");
@@ -125,28 +171,20 @@
                         that.localtempCont.clearRect(0, 0, that.localtempCanvas.width, that.localtempCanvas.height);
                         clearInterval(vApp.clear);
                         that.prevImageSlices = [];
-                        io.send({'unshareScreen' : true});
+                        io.send({'unshareScreen' : true, st : that.type});
                         that.prevStream = false;
+                        that.prevApp = "";
                     }else{
                         that.ssByClick = true;
                     }
-                    
-                    //that.currentStream.stop();
-//                    that.video.src = "";
-//                    that.localtempCont.clearRect(0, 0, that.localtempCanvas.width, that.localtempCanvas.height);
-//                    clearInterval(vApp.clear);
-                    //this.stop();
-                    
-//                    if(!that.manualStop){
-//                        that.unShareScreen();
-//                    }
                 }
-                //var elements = $('#videoContainer');
+                
+                
                 var container = {};
                 container.width = window.innerWidth;
                 container.height = window.innerHeight - 140;
-                
-                var vidContainer = document.getElementById('vAppscreenShareLocal');
+
+                var vidContainer = document.getElementById(this.local);
                 
                 var dimension =  this.html.getDimension(container);
                 dimension.width = dimension.width - 100;
@@ -172,6 +210,9 @@
                     
                     that.localtempCanvas.width = that.width ;
                     that.localtempCanvas.height = that.height;
+                    
+                    vApp.prevApp = that;
+                    
                     that.initAfterImg();
                 }
             },
@@ -180,12 +221,11 @@
                 var resA = Math.round(this.height/12);
                 var resB = Math.round(this.width/12);
 
-                var imageSlices = this.dc.getImageSlices(resA, resB);
+                var imageSlices = this.dc.getImageSlices(resA, resB, this);
                 var that = this;
                 vApp.clear =  setInterval(
                     function (){
                         that.localtempCont.drawImage(that.video, 0, 0, that.width, that.height);
-                        console.log("this is happend first time ");
                         var sendobj = [];
                         for (sl=0; sl<(resA * resB); sl++) {
                             var d = imageSlices[sl];
@@ -212,10 +252,7 @@
                             if(sendobj.length > 0){
                                 var encodedString = LZString.compressToBase64(JSON.stringify(sendobj));
                                 var contDimension = that.getContainerDimension();
-                                io.send({'ssbyimage' : encodedString, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}   });       
-                              
-                                sendobj=[];
-                               
+                                io.send({'ssbyimage' : encodedString, 'st' : that.type, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}   });                                      sendobj=[];
                             }
                         }
                     },
@@ -238,30 +275,28 @@
             },
 
             drawSingleImage : function(imgDataArr, d){
-                var imgData = this.dc.decodeRGB(this.sutil.str2ab(imgDataArr), vApp.ss.localCont, d);
-                vApp.ss.localCont.putImageData(imgData, d.x, d.y);
+               // var imgData = this.dc.decodeRGB(this.sutil.str2ab(imgDataArr), vApp.ss.localCont, d);
+                  var imgData = this.dc.decodeRGB(this.sutil.str2ab(imgDataArr), this.localCont, d);
+                //vApp.ss.localCont.putImageData(imgData, d.x, d.y);
+                this.localCont.putImageData(imgData, d.x, d.y);
             },
 
             html : {
                 
                UI : function (user){
-                   
                    var mainCont =  vApp.vutil.createDOM("div", this.id, [this.className]);
-                   
-                   var locVidCont =  vApp.vutil.createDOM("div", this.local);
-                   
+                   var locVidCont =  vApp.vutil.createDOM("div", this.local, [this.label]);
                    
                    if((user == 't')){
                        var vidCont =  vApp.vutil.createDOM("video", this.local+"Video");
                        vidCont.setAttribute("autoplay", true);
+                       
                        css(locVidCont, "position:relative");
                        css(vidCont, "position : absolute; height : 99%");
                    }else{
                        var vidCont =  vApp.vutil.createDOM("canvas", this.local+"Video");
                    }
                    
-                   
-
                    //var vidCont =  vApp.vutil.createDOM("canvas", this.id+label+"Video");
 
                    locVidCont.appendChild(vidCont);

@@ -7,15 +7,14 @@
 (
   function (window){
       window.vmApp = function (){
-//          var wbConfig = { id : "vAppWhiteboard", classes : "appOptions"};
-//          var ssConfig = { id : "vAppscreenShare", classes : "appOptions"};
-          
           return {
               wbConfig : { id : "vAppWhiteboard", classes : "appOptions"},
               ssConfig : { id : "vAppscreenShare", classes : "appOptions"},
+              wssConfig :{ id : "vAppWholeScreenShare", classes : "appOptions"}, 
               rWidgetConfig : {id: 'widgetRightSide' },
               wb : "", 
               ss : "",
+              wss: "",
               rw : "",
               lang : {},
               init : function (urole){
@@ -32,7 +31,6 @@
                   
                   this.adapter = window.adapter;
                   this.makeAppReady("whiteboardtool");
-                  
               },
               
               html : {
@@ -49,6 +47,10 @@
                         
                     this.createDiv(vApp.wbConfig.id + "Tool", "whiteboard", appOptCont, vApp.wbConfig.classes);
                     this.createDiv(vApp.ssConfig.id + "Tool", "screenshare", appOptCont, vApp.ssConfig.classes);
+                    this.createDiv(vApp.wssConfig.id + "Tool", "wholescreenshare", appOptCont, vApp.wssConfig.classes);
+                    
+                    //this.createDiv(vApp.ssConfig.id + "Tool", "screenshare", appOptCont, vApp.ssConfig.classes);
+                    
                 },  
                 
                 createDiv: function(toolId, text, cmdToolsWrapper, cmdClass) {
@@ -100,6 +102,8 @@
               
               
               makeAppReady : function (app, cusEvent){
+                  
+                  
                   if(app == 'whiteboardtool'){
                       if(typeof this.ss == 'object'){
                             this.ss.prevStream = false;   
@@ -143,19 +147,28 @@
                             this.wb.response = window.response;
                         }
                         
-                        
-                        if(this.ss.hasOwnProperty('currentStream')){
-                            this.ss.unShareScreen();    
+                        if(typeof this.prevApp != 'undefined' && this.prevApp.hasOwnProperty('currentStream')){
+                            this.prevApp.unShareScreen();    
                         }
                         
                         this.previous = this.wbConfig.id;
                   }else if(app == "screensharetool"){
+                      
                         if(typeof this.ss != 'object'){
                             this.ss = new window.screenShare(vApp.ssConfig);
                         }
                         
-                        this.ss.init();  
+                        this.ss.init({type: 'ss', app : app});
+                        
                         //this.previous = vApp.ssConfig.id;
+                  }else if(app == "wholescreensharetool"){
+                      if(typeof this.wss != 'object'){
+                            this.wss = new window.screenShare(vApp.wssConfig);
+                      }
+                        
+                   // this.wss.init(app);
+                    
+                    this.wss.init({type: 'wss', app : app});
                   }
               },
               
@@ -173,12 +186,29 @@
               },
               
               initlizer : function (elem){
-                  var appName = elem.parentNode.id.split("vApp")[1].toLowerCase();
-                  this.makeAppReady(appName, "byclick");
+                   var appName = elem.parentNode.id.split("vApp")[1].toLowerCase();
+                   
+                   if(!this.PrvAndCurrIsWss(this.previous, appName)){
+                       this.makeAppReady(appName, "byclick");
+                   }else{
+                       alert("Already the whole screen is being shared.");
+                   }
+//                   
+//                   
+//                    if(this.previous == 'vAppWholeScreenShare' && appName == 'wholescreensharetool'){
+//                        alert("Already the whole screen is being shared.");
+//                    }else{
+//                        this.makeAppReady(appName, "byclick");
+//                    }
+                  
               },
               
               render : function(){
                   
+              },
+              
+              PrvAndCurrIsWss : function (previous, appName){
+                        return (previous == 'vAppWholeScreenShare' && appName == 'wholescreensharetool') ? true : false;
               },
               
                
