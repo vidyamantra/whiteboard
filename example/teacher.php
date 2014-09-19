@@ -47,6 +47,7 @@ include('js.debug.php');
 
 $r = 't';
 $sid = 12;
+$uid = 2;
 //$r = 's';
 
 $uname = "raju shree";
@@ -54,7 +55,7 @@ $uname = "raju shree";
 	
 <script type="text/javascript">
 	<?php echo "wbUser.name='$uname';"; ?>
-	<?php echo "wbUser.id='2';"; ?>
+	<?php echo "wbUser.id='".$uid."';"; ?>
 	<?php echo "wbUser.socketOn='1';"; ?>
 	<?php echo "wbUser.dataInfo='1';"; ?>
 	<?php echo "wbUser.room='215';"; ?>
@@ -190,76 +191,17 @@ $uname = "raju shree";
   </div>
 </div>
     
-     <div id="widgetRightSide">
-        <div id="allVideosCont">
-            <canvas id="tempVideo"> </canvas> 
-            <div class="videoWrapper" >
-                <div class="videoSubWrapper" data-uname = "<?php echo $uname; ?>">
-                    
-                    <video id="myVideo2"  autoplay>    </video>
-                    
-                </div>
+<div id="widgetRightSide">
+    <div id="allVideosCont">
+        <canvas id="tempVideo"> </canvas> 
+        <div class="videoWrapper" >
+            <div class="videoSubWrapper" data-uname = "<?php echo $uname; ?>" id="<?php echo 'user'.$uid; ?>">
+                <video id="video<?php echo $uid?>"  autoplay>    </video>
             </div>
-            
-
         </div>
+    </div>
 
-        <div id="chatContainer">
-            
-        </div>
-
-    </div>  
-    
-<!--    <div id="vAppScreenShareCont">
-        <div id="videoContainer">     
-            <video id="localVideo" autoplay=""> </video>    
-        </div> 
-
-         <div id="canvasCont1"> 
-            <canvas id="mycanvas">
-            </canvas>
-         </div>
-
-         <div id="canvasCont2"> 
-            <canvas id="mycanvas2">
-            </canvas>
-         </div>
-        
-        
-        <br />
-        <br />
-         <button id="shareScreen">Share Screen</button>
-    
-    </div>-->
-
-<script type="text/javascript">
-	<?php echo "wbUser.name='raju';"; ?>
-	<?php echo "wbUser.id='2';"; ?>
-	<?php echo "wbUser.socketOn='0';"; ?>
-	<?php echo "wbUser.dataInfo='0';"; ?>
-	<?php echo "wbUser.room='215';"; ?>
-	<?php echo "wbUser.sid='".$sid."';"; ?>
-	<?php echo "wbUser.role='".$r."';"; ?>
-        
-//	var session = {
-//		audio : false,
-//		video : {
-//		   mandatory: {
-//			   chromeMediaSource: 'screen',
-//			   maxWidth:  605,
-//			   maxHeight: 605
-//		   },
-//		   optional: []
-//		}
-//	};
-//
-//
-//   var recordRTC = null;
-//   init();
-   
-   
-</script>
-
-
-    
+    <div id="chatContainer">
+    </div>
+</div> 
 </div>

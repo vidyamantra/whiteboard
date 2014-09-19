@@ -64,11 +64,11 @@
           },
 
           multiMediaMsg : function(className) {
-              if (vApp.wb.system.mybrowser.name == 'Firefox') {
+              if (vApp.system.mybrowser.name == 'Firefox') {
                   var msg = vApp.lang.getString('wbrtcMsgFireFox');
                   this.displayMessage(msg, "fireFoxWebrtcCont", this.msgBoxClass + className);
 
-              } else if (vApp.wb.system.mybrowser.name == 'Chrome') {
+              } else if (vApp.system.mybrowser.name == 'Chrome') {
                   var msg = vApp.lang.getString('wbrtcMsgChrome');
                   this.displayMessage(msg, "chormeWebrtcCont", this.msgBoxClass + className);
               }
@@ -77,11 +77,11 @@
           canvasDrawMsg : function(className) {
               var mainContainer = document.getElementById('vcanvas');
               mainContainer.className = 'canvasMsgBoxParent';
-              if (vApp.wb.system.mybrowser.name == 'Firefox') {
+              if (vApp.system.mybrowser.name == 'Firefox') {
                   var msg = vApp.lang.getString('canvasDrawMsg');
                   this.displayMessage(msg, "canvasDrawMsgContFirefox", this.msgBoxClass + className, 'containerWb');
 
-              } else if (vApp.wb.system.mybrowser.name == 'Chrome') {
+              } else if (vApp.system.mybrowser.name == 'Chrome') {
                   var msg = vApp.lang.getString('canvasDrawMsg');
                   this.displayMessage(msg, "canvasDrawMsgContChrome", this.msgBoxClass + className, 'containerWb');
               }
@@ -182,11 +182,11 @@
 //        }
 //
 //        view.multiMediaMsg = function(className) {
-//            if (vApp.wb.system.mybrowser.name == 'Firefox') {
+//            if (vApp.system.mybrowser.name == 'Firefox') {
 //                var msg = vApp.lang.getString('wbrtcMsgFireFox');
 //                this.displayMessage(msg, "fireFoxWebrtcCont", this.msgBoxClass + className);
 //
-//            } else if (vApp.wb.system.mybrowser.name == 'Chrome') {
+//            } else if (vApp.system.mybrowser.name == 'Chrome') {
 //                var msg = vApp.lang.getString('wbrtcMsgChrome');
 //                this.displayMessage(msg, "chormeWebrtcCont", this.msgBoxClass + className);
 //            }
@@ -195,11 +195,11 @@
 //        view.canvasDrawMsg = function(className) {
 //            var mainContainer = document.getElementById('vcanvas');
 //            mainContainer.className = 'canvasMsgBoxParent';
-//            if (vApp.wb.system.mybrowser.name == 'Firefox') {
+//            if (vApp.system.mybrowser.name == 'Firefox') {
 //                var msg = vApp.lang.getString('canvasDrawMsg');
 //                this.displayMessage(msg, "canvasDrawMsgContFirefox", this.msgBoxClass + className, 'containerWb');
 //
-//            } else if (vApp.wb.system.mybrowser.name == 'Chrome') {
+//            } else if (vApp.system.mybrowser.name == 'Chrome') {
 //                var msg = vApp.lang.getString('canvasDrawMsg');
 //                this.displayMessage(msg, "canvasDrawMsgContChrome", this.msgBoxClass + className, 'containerWb');
 //            }
@@ -250,12 +250,13 @@
         })();
         
         view.window.resize = function() {
-            var res = vApp.wb.system.measureResoultion({'width': window.innerWidth, 'height': window.innerHeight});
+            var res = vApp.system.measureResoultion({'width': window.innerWidth, 'height': window.innerHeight});
             var vcanvas = document.getElementById('vcanvas');
             var  rightOffSet = vApp.wb.utility.getElementRightOffSet(vcanvas);
             res.width = res.width - rightOffSet; //60 for right edge
             vcanvas.style.width = res.width + 'px';
             vcan.renderAll();
+            
             if (typeof lastresizetime == 'undefined') {
                 lastresizetime = new Date().getTime();
                 vApp.wb.utility.beforeSend({'virtualWindow': {'resizeWindow': res}});
@@ -281,7 +282,7 @@
                 }
                 return;
             } else if (message.hasOwnProperty('resizeWindow')) {
-                myResolution = vApp.wb.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
+                myResolution = vApp.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
                 if (e.fromUser.userid != wbUser.id) {
                     var otherResolution = message.resizeWindow;
                     otherBrowser = otherResolution;
@@ -330,7 +331,7 @@
                     }
                     otherBrowser = message.browserRes;
                 } else {
-                    myBrowser = vApp.wb.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
+                    myBrowser = vApp.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
                 }
 
                 if (typeof myBrowser == 'object' && typeof otherBrowser == 'object') {

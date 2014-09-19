@@ -11,70 +11,29 @@ $.when(
         
         window.earlierWidth = window.innerWidth;
         window.earlierHeight = window.innerHeight;
+        window.wbUser = wbUser;
+        
         
         var vApp = new window.vmApp();
         window.vApp = vApp; //make available to vApp object to each file
-        vApp.init(wbUser.role);
         
-        vApp.wb.system.check();
-        vApp.wb.system.setCanvasDimension();
-        vApp.wb.utility.isSystemCompatible();
+        var appIs = "whiteboard";
         
-        if(!vApp.wb.utility.chkValueInLocalStorage('orginalTeacherId')){
-            vApp.wb.pageEnteredTime = new Date().getTime();
-            localStorage.setItem('pageEnteredTime',  vApp.wb.pageEnteredTime);
-        }else{
-            vApp.wb.pageEnteredTime = localStorage.getItem('pageEnteredTime');
-        }
+        //vApp.init(wbUser.role, "whiteboardtool");
         
-        if(window.vApp.wb.error.length > 2){
-            window.vApp.wb.error = [];
+        vApp.init(wbUser.role, appIs+ "tool");
+        
+        if(window.vApp.error.length > 2){
+            window.vApp.error = [];
             return;
         }
-
-        vApp.wb.gObj.myrepObj = [];
-        vApp.wb.gObj.replayObjs = []; // this should contain either into whiteboard or into van object
-        vApp.wb.gObj.myArr = [];
-
-        var orginalTeacherId = vApp.wb.utility.chkValueInLocalStorage('orginalTeacherId');
-
-        if(vApp.wb.utility.chkValueInLocalStorage('rcvdPackId')){
-            vApp.wb.gObj.rcvdPackId = parseInt(localStorage.rcvdPackId);
-        }else{
-            vApp.wb.gObj.rcvdPackId = 0;
-        }
         
-        vApp.wb.gObj.uid = wbUser.id;
-        vApp.wb.gObj.uRole = wbUser.role;
-        vApp.wb.gObj.uName = wbUser.name;
-        
-        
-        vApp.wb.utility.displayCanvas();
-        window.addEventListener('resize', vApp.wb.utility.lockCanvas);
-        window.addEventListener('click', function (){
-            vApp.wb.view.disappearBox('WebRtc')
-            vApp.wb.view.disappearBox('Canvas');
-            vApp.wb.view.disappearBox('drawArea');
-        });
-
-        var storageHasReclaim = vApp.wb.utility.chkValueInLocalStorage('reclaim');
-        var storageHasTeacher = vApp.wb.utility.chkValueInLocalStorage('teacherId');
-
-        vApp.wb.utility.setUserStatus(storageHasTeacher, storageHasReclaim);
-        vApp.wb.utility.removeOtherUserExist(wbUser.role);
-
-        if(vApp.wb.utility.chkValueInLocalStorage('reclaim')){
-            var cmdToolsWrapper = document.getElementById(vApp.wb.commandToolsWrapperId);
-            if(cmdToolsWrapper != null){
-                while(cmdToolsWrapper.hasChildNodes()){
-                    cmdToolsWrapper.removeChild(cmdToolsWrapper.lastChild);
-                }
-            }
-            vApp.wb.utility.createReclaimButton(cmdToolsWrapper);
+        if(appIs == "whiteboard"){
+            vApp.wb.utility.displayCanvas();
         }
 
         var userobj = {'userid':wbUser.id,'name':wbUser.name};
-        if(vApp.wb.system.webSocket){
+        if(vApp.system.webSocket){
             io.init({
                 'userid':wbUser.id, 
                 'sid':wbUser.sid,
@@ -87,8 +46,11 @@ $.when(
                 'fastchatroom_name':wbUser.room
                 });
         }
-
-        vApp.wb.utility.replayFromLocalStroage();
+        
+        if(appIs == "whiteboard"){
+            vApp.wb.utility.replayFromLocalStroage();
+        }
+        
 
         var oldData2 = vApp.wb.receivedPackets;
         setInterval(function (){
@@ -98,27 +60,25 @@ $.when(
             }
         }, 1000);
         
-        window.sidebarHeightInit = function (){
-            var sidebar = document.getElementById("widgetRightSide");
-            sidebar.style.height = (window.innerHeight) + "px"; 
-        }
+        vApp.vutil.sidebarHeightInit();        
+        //vApp.gObj.video = new window.vApp.wb.media();
         
-        window.sidebarHeightInit();        
-        vApp.wb.gObj.video = new window.vApp.wb.media();
-        vApp.wb.gObj.chat = new window.vApp.wb.vcan.chat();
-        vApp.wb.gObj.chat.init();
+        
+        vApp.gObj.video = new window.vApp.media();
+        vApp.gObj.chat = new window.vApp.chat();
+        vApp.gObj.chat.init();
         
         if(localStorage.getItem('audioStream') !=  null){
-            vApp.wb.gObj.video.audio.assignFromLocal();
+            vApp.gObj.video.audio.assignFromLocal();
         }
-        
-        vApp.wb.gObj.displayedObjId = 0;
         
         $(document).on("user_logout", function(e){
             removedMemberId = e.fromUser.userid;
+            vApp.gObj.video.video.removeUser(removedMemberId);
         });
 
         $(document).on("member_removed", function(e){
+            
             vApp.wb.utility.userIds = [];
             if(e.message.length == 1){
                 vApp.wb.utility.actionAfterRemovedUser();
@@ -146,81 +106,95 @@ $.when(
             vApp.wb.clientLen = e.message.length;
             var joinId = e.message[e.message.length - 1].userid;
            
-            if(joinId == vApp.wb.gObj.uid && vApp.wb.gObj.uRole != 't'){
-                var sp = (vApp.wb.gObj.chat.userChatList.length == 0 ) ? 0 : vApp.wb.gObj.chat.userChatList.length;
+            if(joinId == vApp.gObj.uid && vApp.gObj.uRole != 't'){
+                var sp = (vApp.gObj.chat.userChatList.length == 0 ) ? 0 : vApp.gObj.chat.userChatList.length;
                 vApp.wb.utility.beforeSend({'requestPacketBy' : joinId, sp: sp});
+                vApp.wb.utility.beforeSend({'requestImagesBy' : joinId});
             }
             
             vApp.wb.utility.beforeSend({'checkUser' : {'role':wbUser.role, 'id' : wbUser.id, 'e' : {'clientLen' :e.message.length, 'newUser' : e.newuser }}, 'joinId' : e.message[e.message.length - 1].userid});
             
         });
-
-        vApp.wb.utility.crateCanvasDrawMesssage();
-        vApp.wb.gObj.packQueue = [];
-        vApp.wb.gObj.virtualWindow = false;
         
+        
+        if(appIs == 'whiteboard'){
+            vApp.wb.utility.crateCanvasDrawMesssage();
+            vApp.wb.gObj.packQueue = [];
+            vApp.wb.gObj.virtualWindow = false;
+        }
+   
         $(document).on("newmessage", function(e){
             vApp.wb.view.removeElement('serverErrorCont');
-           //if(vApp.wb.gObj.video.reInitVideo(e.message, e.fromUser.userid)){ return true;}
+           //if(vApp.gObj.video.reInitVideo(e.message, e.fromUser.userid)){ return true;}
+            
             if(e.message.hasOwnProperty('dispWhiteboard')){
                 if(e.fromUser.userid != wbUser.id){
                     vApp.makeAppReady("whiteboardtool");
                     return;
                 }
             }else if(e.message.hasOwnProperty('ssbyimage')){
-
-                if(vApp.wb.gObj.uRole == 's'){
-                    var stool;
-                    app = e.message.st; 
-                    
-                    if(e.message.st == 'ss'){
-                        stool = "screensharetool";
-                    }else{
-                        stool = "wholescreensharetool";
-                    }
-
-                    if(typeof vApp[app] != 'object'){
-                        
-                        vApp.makeAppReady(stool);
-                        vApp[app].vac = true;
-                        
-                        vApp[app].localCanvas = document.getElementById(vApp[app].local+"Video");
-                        vApp[app].localCont = vApp[app].localCanvas.getContext('2d');
-                        
-                        vApp[app].localCanvas.width = e.message.d.w;
-                        vApp[app].localCanvas.height = e.message.d.h;
-                        
-                        if(e.message.hasOwnProperty('vc')){
-                            var vc  = document.getElementById(vApp[app].local);
-                            vc.style.width = e.message.vc.w + "px";
-                            vc.style.height = e.message.vc.h + "px";
+                
+                if(vApp.gObj.uRole == 's'){
+                   
+                   if(!e.message.hasOwnProperty('resimg')){
+                      drawImageAtStudent(e);
+                   }else{
+                       if(e.message.byRequest == vApp.gObj.uid){
+                            drawImageAtStudent(e);
                         }
-                    }else{
-                        var prvScreen = document.getElementById(vApp.previous);
-                        if(prvScreen != null){
-                            prvScreen.style.display = 'none';
-                            document.getElementById(vApp[app].id).style.display = 'block';
-                        }
-                    }
+                   }
                     
-                    if(typeof prvWidth != 'undefined' && e.message.d.w != prvWidth){
-                        vApp[app].localCanvas.width = e.message.d.w;
-                        vApp[app].localCanvas.height = e.message.d.h;
-                        if(e.message.hasOwnProperty('vc')){
-                            //alert("suman bogati");
-                            var vc  = document.getElementById(vApp[app].local);
-                            vc.style.width = e.message.vc.w + "px";
-                            vc.style.height = e.message.vc.h + "px";
-                            
-                        }
-                    }
+                   
                     
-                    prvWidth = e.message.d.w;
-                    prvHeight = e.message.d.h;
-                    
-                    vApp[app].drawImages(e.message.ssbyimage);
-                    vApp.previous =  vApp[app].id;
-                    
+//                    var stool;
+//                    app = e.message.st; 
+//                    
+//                    if(e.message.st == 'ss'){
+//                        stool = "screensharetool";
+//                    }else{
+//                        stool = "wholescreensharetool";
+//                    }
+//
+//                    if(typeof vApp[app] != 'object'){
+//                        
+//                        vApp.makeAppReady(stool);
+//                        vApp[app].vac = true;
+//                        
+//                        vApp[app].localCanvas = document.getElementById(vApp[app].local+"Video");
+//                        vApp[app].localCont = vApp[app].localCanvas.getContext('2d');
+//                        
+//                        vApp[app].localCanvas.width = e.message.d.w;
+//                        vApp[app].localCanvas.height = e.message.d.h;
+//                        
+//                        if(e.message.hasOwnProperty('vc')){
+//                            var vc  = document.getElementById(vApp[app].local);
+//                            vc.style.width = e.message.vc.w + "px";
+//                            vc.style.height = e.message.vc.h + "px";
+//                        }
+//                    }else{
+//                        var prvScreen = document.getElementById(vApp.previous);
+//                        if(prvScreen != null){
+//                            prvScreen.style.display = 'none';
+//                            document.getElementById(vApp[app].id).style.display = 'block';
+//                        }
+//                    }
+//                    
+//                    if(typeof prvWidth != 'undefined' && e.message.d.w != prvWidth){
+//                        vApp[app].localCanvas.width = e.message.d.w;
+//                        vApp[app].localCanvas.height = e.message.d.h;
+//                        if(e.message.hasOwnProperty('vc')){
+//                            var vc  = document.getElementById(vApp[app].local);
+//                            vc.style.width = e.message.vc.w + "px";
+//                            vc.style.height = e.message.vc.h + "px";
+//                        }
+//                    }
+//                    
+//                    prvWidth = e.message.d.w;
+//                    prvHeight = e.message.d.h;
+//                    
+//                    vApp[app].drawImages(e.message.ssbyimage);
+//                    vApp.previous =  vApp[app].id;
+//                    
                 }
                 
                return;
@@ -234,45 +208,56 @@ $.when(
            }else if(e.message.hasOwnProperty('audioSamp')){
                 if(e.fromUser.userid != wbUser.id){
                     var data_pack = e.message.audioSamp;
-                    vApp.wb.gObj.video.audio.play(data_pack, 0 , 0);
+                    vApp.gObj.video.audio.play(data_pack, 0 , 0);
                     
                 }
                 return;
             } if(e.message.hasOwnProperty('videoSlice')){
                 //if(e.fromUser.userid != wbUser.id){
-                    vApp.wb.gObj.video.playVideo(e.message.videoSlice);
+                    vApp.gObj.video.playVideo(e.message.videoSlice);
                     return;
                 //}
             } else if(e.message.hasOwnProperty('videoByImage')){
                 if(e.fromUser.userid != wbUser.id){
-                    if(!vApp.wb.gObj.video.existVideoContainer(e.message.user)){
-                        vApp.wb.gObj.video.video.createElement(e.message.user);
+                    if(!vApp.gObj.video.existVideoContainer(e.message.user)){
+                        vApp.gObj.video.video.createElement(e.message.user);
                     }
-                    vApp.wb.gObj.video.video.playWithoutSlice(e.message);
+                    vApp.gObj.video.video.playWithoutSlice(e.message);
                 }
                 return;
             } else if(e.message.hasOwnProperty('userMsg')){
-                vApp.wb.gObj.chat.display(e.message.userMsg, e.fromUser.userid);
+                vApp.gObj.chat.display(e.message.userMsg, e.fromUser.userid);
                 return;
-            } else if(e.message.hasOwnProperty('chatPackReqest')){
-                if(vApp.wb.gObj.uRole == "t"){
-                    vApp.wb.gObj.chat.sendPackets(e.message.chatPackReqest);
-                } 
-                return;
-            }  
+            } 
+//            else if(e.message.hasOwnProperty('chatPackReqest')){
+//                if(vApp.gObj.uRole == "t"){
+//                    vApp.gObj.chat.sendPackets(e.message.chatPackReqest);
+//                } 
+//                return;
+//            }  
             
-            if(e.message.hasOwnProperty('requestPacketBy')){
-                if(vApp.wb.gObj.uRole == "t"){
-                    var requestBy = e.message.requestPacketBy;
-                    vApp.wb.gObj.chat.sendPackets(requestBy, e.message.sp);
+            else if(e.message.hasOwnProperty('requestPacketBy')){
+                if(vApp.gObj.uRole == "t"){
+                    var requestBy = e.message.requestPacketBy; //request user
+                    vApp.gObj.chat.sendPackets(requestBy, e.message.sp);
                 }
                 return;
             }else if(e.message.hasOwnProperty('chatPackResponsed')){
-                if(e.message.byRequest == vApp.wb.gObj.uid){
-                    vApp.wb.gObj.chat.displayMissedChats(e.message.chatPackResponsed);
+                if(e.message.byRequest == vApp.gObj.uid){
+                    vApp.gObj.chat.displayMissedChats(e.message.chatPackResponsed);
                 }
                 return;
-            } else if(e.message.hasOwnProperty('vidInit')){
+            }else if(e.message.hasOwnProperty('requestImagesBy')){
+                if(vApp.gObj.uRole == "t" && (vApp.currApp == 'screensharetool' || vApp.currApp == 'wholescreensharetool')){
+                    var requestBy = e.message.requestImagesBy; //request user
+                    vApp.ss.sendPackets(requestBy);
+                }
+                return;
+            }else if(e.message.hasOwnProperty('imageResponsed')){
+                if(e.message.byRequest == vApp.gObj.uid){
+                    drawImageAtStudent(e);
+                }
+            }else if(e.message.hasOwnProperty('vidInit')){
 //                vApp.wb.response.videoInit(e.fromUser.userid, wbUser.id);
 //                return;
                 
@@ -280,7 +265,7 @@ $.when(
 //                vApp.wb.response.foundVideo(e.message.foundVideo,  e.fromUser.userid);
 //                return;
             }else if(e.message.hasOwnProperty('checkUser')){
-                var disconnect = vApp.wb.response.checkUser(e, wbUser.id, storageHasTeacher);
+                var disconnect = vApp.wb.response.checkUser(e, wbUser.id, vApp.wb.stHasTeacher);
                 if(typeof disconnect != 'undefined'){
                      if(disconnect == 'diconnect'){
                         return;
@@ -293,7 +278,7 @@ $.when(
                 vApp.wb.response.createPeer(e.message.createPeerObj[0], e.message.createPeerObj[1], wbUser.id);
             }else if(e.message.hasOwnProperty('isChannelReady')){
                 e.message.isChannelReady = true;
-               // vApp.wb.gObj.video.videoOnMsg(e.message, e.fromUser.userid);
+               // vApp.gObj.video.videoOnMsg(e.message, e.fromUser.userid);
             }else if(e.message.hasOwnProperty('video')){
                 vApp.wb.response.video(e.fromUser.userid, wbUser.id, e.message.video);
             }else{
@@ -308,7 +293,7 @@ $.when(
                 }
                 vApp.wb.gObj.myrepObj = vApp.wb.vcan.getStates('replayObjs');
                 if(e.message.hasOwnProperty('clearAll')){
-                    vApp.wb.response.clearAll(e.fromUser.userid , wbUser.id, e.message, orginalTeacherId);
+                    vApp.wb.response.clearAll(e.fromUser.userid , wbUser.id, e.message, vApp.wb.oTeacher);
                 }
 
                 if(e.fromUser.userid != wbUser.id){
@@ -338,7 +323,7 @@ $.when(
 
                 if(e.fromUser.userid != wbUser.id){
                     if(e.message.hasOwnProperty('createArrow')){
-                        vApp.wb.response.createArrow(e.message, orginalTeacherId);
+                        vApp.wb.response.createArrow(e.message, vApp.wb.oTeacher);
                     }else{
                         if(!e.message.hasOwnProperty('replayAll') && !e.message.hasOwnProperty('clearAll') && !e.message.hasOwnProperty('getMsPckt')
                                 && !e.message.hasOwnProperty('checkUser') && !e.message.hasOwnProperty('videoInt')
@@ -387,7 +372,7 @@ $.when(
                         }
                     }
 
-                    if(orginalTeacherId){
+                    if(vApp.wb.oTeacher){
                         if(e.fromUser.userid != wbUser.id ){
                             if(e.message.hasOwnProperty('createArrow')){
                                 vApp.wb.receivedPackets = vApp.wb.receivedPackets + (JSON.stringify(e.message).length);
@@ -415,5 +400,58 @@ $.when(
                 }
             }
         });
+        
+        function drawImageAtStudent(e){
+            var stool;
+            app = e.message.st; 
+
+            if(e.message.st == 'ss'){
+                stool = "screensharetool";
+            }else{
+                stool = "wholescreensharetool";
+            }
+
+            if(typeof vApp[app] != 'object'){
+
+                vApp.makeAppReady(stool);
+                vApp[app].vac = true;
+
+                vApp[app].localCanvas = document.getElementById(vApp[app].local+"Video");
+                vApp[app].localCont = vApp[app].localCanvas.getContext('2d');
+
+                vApp[app].localCanvas.width = e.message.d.w;
+                vApp[app].localCanvas.height = e.message.d.h;
+
+                if(e.message.hasOwnProperty('vc')){
+                    var vc  = document.getElementById(vApp[app].local);
+                    vc.style.width = e.message.vc.w + "px";
+                    vc.style.height = e.message.vc.h + "px";
+                }
+            }else{
+                var prvScreen = document.getElementById(vApp.previous);
+                if(prvScreen != null){
+                    prvScreen.style.display = 'none';
+                    document.getElementById(vApp[app].id).style.display = 'block';
+                }
+            }
+
+            if(typeof prvWidth != 'undefined' && e.message.d.w != prvWidth){
+                vApp[app].localCanvas.width = e.message.d.w;
+                vApp[app].localCanvas.height = e.message.d.h;
+                if(e.message.hasOwnProperty('vc')){
+                    var vc  = document.getElementById(vApp[app].local);
+                    vc.style.width = e.message.vc.w + "px";
+                    vc.style.height = e.message.vc.h + "px";
+                }
+            }
+
+            prvWidth = e.message.d.w;
+            prvHeight = e.message.d.h;
+
+            vApp[app].drawImages(e.message.ssbyimage);
+            vApp.previous =  vApp[app].id;
+                    
+        }
+        
    });
 });

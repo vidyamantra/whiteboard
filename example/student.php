@@ -50,11 +50,12 @@ $r = 's';
 $sid = 12;
 //$r = 's';
 $uname = "student1";
+$uid = 15;
 ?>
 	
 	<script type="text/javascript">
 	<?php echo "wbUser.name='student1';"; ?>
-	<?php echo "wbUser.id='12';"; ?>
+	<?php echo "wbUser.id='".$uid."';"; ?>
 	<?php echo "wbUser.socketOn='1';"; ?>
 	<?php echo "wbUser.dataInfo='1';"; ?>
 	<?php echo "wbUser.room='215';"; ?>
@@ -156,21 +157,23 @@ $uname = "student1";
   </div>
 </div>
     
+    
 <div id="widgetRightSide">
+    
     <div id="allVideosCont">
         <canvas id="tempVideo"> </canvas> 
         <div class="videoWrapper" >
-            <div class="videoSubWrapper" data-uname = "<?php echo $uname; ?>">
-                <video id="myVideo12"  autoplay>    </video>
+            <div class="videoSubWrapper" data-uname = "<?php echo $uname; ?>" id="<?php echo 'user'.$uid; ?>">
+                <video id="video<?php echo $uid?>"  autoplay>    </video>
             </div>
         </div>
-
     </div>
 
     <div id="chatContainer">
-
+      
     </div>
-    <button id="recordButton">Record Start</button>
+    
 </div> 
+        
   
 </div>

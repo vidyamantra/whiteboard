@@ -7,7 +7,7 @@
 (
     function(window) {
         //vApp.wb = window.vApp.wb;
-        vcan.chat = function (){
+        var chat = function (){
             return {
                 init : function(){
                    this.mainWrapperId = "chatContainer";
@@ -36,7 +36,7 @@
                    chatBox.appendChild(commonChatBd);
                    chatBox.appendChild(this.inputBox);
                    document.getElementById(this.mainWrapperId).appendChild(chatBox);
-                   window.sidebarHeightInit();        
+                   vApp.vutil.sidebarHeightInit();        
                 },
                 
                 loadChatFromLocal : function (){
@@ -59,7 +59,7 @@
                        //removing new line from string 
                        message = message.replace(/(\r\n|\n|\r)/gm,"");
                        if(message.length > 0 && message != ""){
-                            var user = {id : vApp.wb.gObj.uid, name : vApp.wb.gObj.uName, msg : message};
+                            var user = {id : vApp.gObj.uid, name : vApp.gObj.uName, msg : message};
                             vApp.wb.utility.beforeSend({"userMsg": user});
                             cthis.value = "";
                        }
@@ -98,10 +98,12 @@
                     this.stickScrollbarAtBottom();
                 },
                 
-                requestMissedPackets : function (start, end){
-                    this.requestUser = true;
-                    vApp.wb.utility.beforeSend({"chatPackReqest": [start, end]});
-                },
+//                requestMissedPackets : function (start, end){
+//                    alert('suman');
+//                    debugger;
+//                    this.requestUser = true;
+//                    vApp.wb.utility.beforeSend({"chatPackReqest": [start, end]});
+//                },
                 
                 //TODO userChatList is not a good name.
                 sendPackets : function (user, sp){
@@ -133,6 +135,10 @@
                 }                    
             }
         }
+        
+        window.chat = chat;
+        
+        
     }
 )(window);
 

@@ -30,7 +30,45 @@
                 }
 
                 return elem;
-            }
+            },
+            
+            ab2str : function(buf) {
+                    return String.fromCharCode.apply(null, new Uint8ClampedArray(buf));
+            },
+            
+            str2ab : function(str) {
+                var buf = new ArrayBuffer(str.length); // 2 bytes for each char
+                var bufView = new Uint8ClampedArray(buf);
+                for (var i=0, strLen=str.length; i<strLen; i++) {
+                  bufView[i] = str.charCodeAt(i);
+                }
+                return bufView;
+            },
+            
+            sidebarHeightInit : function (){
+                 var sidebar = document.getElementById("widgetRightSide");
+                sidebar.style.height = (window.innerHeight) + "px";
+            },
+            
+             isSystemCompatible: function() {
+                if (window.vApp.error.length > 0) {
+                    for (var i = 0; i < window.vApp.error.length; i++) {
+                        var error = window.vApp.error[i];
+                        if (error.hasOwnProperty('msg')) {
+                            vApp.wb.view.displayMessage(error.msg, error.id, error.className);
+                        }
+                    }
+                }
+            },
+            
+            chkValueInLocalStorage : function(property) {
+                if (localStorage.getItem(property) === null) {
+                    return false;
+                } else {
+                    return localStorage[property];
+                }
+            },
+            
         }
         window.vutil = vutil;
     }

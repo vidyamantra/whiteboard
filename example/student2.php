@@ -49,13 +49,13 @@ include('js.debug.php');
 $r = 's';
 $sid = 12;
 $uname = "student2";
-
+$uid = 3;
 //$r = 's';
 ?>
 	
 	<script type="text/javascript">
 	<?php echo "wbUser.name='student2';"; ?>
-	<?php echo "wbUser.id='3';"; ?>
+	<?php echo "wbUser.id=$uid;"; ?>
 	<?php echo "wbUser.socketOn='1';"; ?>
 	<?php echo "wbUser.dataInfo='1';"; ?>
 	<?php echo "wbUser.room='215';"; ?>
@@ -154,13 +154,12 @@ $uname = "student2";
   </div>
 </div>
 
- <div id="widgetRightSide">
+<div id="widgetRightSide">
     <div id="allVideosCont">
         <canvas id="tempVideo"> </canvas> 
-
         <div class="videoWrapper" >
-            <div class="videoSubWrapper" data-uname = "<?php echo $uname; ?>">
-                <video id="myVideo3"  autoplay>    </video>
+            <div class="videoSubWrapper" data-uname = "<?php echo $uname; ?>" id="<?php echo 'user'.$uid; ?>">
+                <video id="video<?php echo $uid?>"  autoplay>    </video>
             </div>
         </div>
     </div>
@@ -168,29 +167,7 @@ $uname = "student2";
     <div id="chatContainer">
 
     </div>
-    <button id="recordButton">Record Start</button>
+    
 </div> 
         
 </div>
-    
-<!--<div id="vAppScreenShareCont">
-   <div id="videoContainer">     
-       <video id="localVideo" autoplay=""> </video>    
-   </div> 
-
-    <div id="canvasCont1"> 
-       <canvas id="mycanvas">
-       </canvas>
-    </div>
-
-    <div id="canvasCont2"> 
-       <canvas id="mycanvas2">
-       </canvas>
-    </div>
-
-
-   <br />
-   <br />
-    <button id="shareScreen">Share Screen</button>
-
-</div>-->

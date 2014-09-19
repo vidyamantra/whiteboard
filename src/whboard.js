@@ -33,13 +33,20 @@
                 lt: '',
                 commandToolsWrapperId: 'commandToolsWrapper',
                 //these are top level object
-                error: [],
-                view: {}, // For display important message to user
-                lang: {},
-                system: {},
-                gObj: {}, // For store the global oject
-                bridge: {},
-                user: {},
+//                error: [],
+                view:  {}, // For display important message to user
+                lang:  {},
+                system:{},
+                user : {},
+                gObj: {
+                    myrepObj : [],
+                    replayObjs : [],
+                    myArr : [],
+                    displayedObjId : 0,
+                }, // For store the global oject
+                
+                
+                
                 /**
                  * This function basically does create the canvas on which 
                  * the user draws the various object
@@ -58,7 +65,7 @@
                     //onkeydown event is working into all browser.
                     canvasObj.onkeydown = vApp.wb.utility.keyOperation;
 
-                    vApp.wb.system.setCanvasDimension();
+                    vApp.system.setCanvasDimension();
                     if (typeof (Storage) !== "undefined") {
                         if (localStorage.repObjs) {
                             var replayObjs = JSON.parse(localStorage.repObjs);
@@ -75,8 +82,56 @@
                             document.getElementById(vApp.wb.sentPackDiv).innerHTML = vApp.wb.sentPackets;  //update total packets
                         }
                     }, 1000);
-
+                    
+                 this._init();
                 },
+                
+                _init : function (){
+                    if(!vApp.vutil.chkValueInLocalStorage('orginalTeacherId')){
+                        vApp.wb.pageEnteredTime = new Date().getTime();
+                        localStorage.setItem('pageEnteredTime',  vApp.wb.pageEnteredTime);
+                    }else{
+                        vApp.wb.pageEnteredTime = localStorage.getItem('pageEnteredTime');
+                    }
+
+                    vApp.wb.oTeacher = vApp.vutil.chkValueInLocalStorage('orginalTeacherId');
+
+                    if(vApp.vutil.chkValueInLocalStorage('rcvdPackId')){
+                        vApp.wb.gObj.rcvdPackId = parseInt(localStorage.rcvdPackId);
+                    }else{
+                        vApp.wb.gObj.rcvdPackId = 0;
+                    }
+
+                   // vApp.wb.utility.displayCanvas();
+
+                    window.addEventListener('resize', vApp.wb.utility.lockCanvas);
+
+                    window.addEventListener('click', function (){
+                        vApp.wb.view.disappearBox('WebRtc')
+                        vApp.wb.view.disappearBox('Canvas');
+                        vApp.wb.view.disappearBox('drawArea');
+                    });
+
+                    var storageHasReclaim = vApp.vutil.chkValueInLocalStorage('reclaim');
+                    
+                    this.stHasTeacher = vApp.vutil.chkValueInLocalStorage('teacherId');
+                    
+                    vApp.wb.utility.setUserStatus(this.stHasTeacher, storageHasReclaim);
+
+                    //vApp.wb.utility.removeOtherUserExist(wbUser.role);
+
+                    if(vApp.vutil.chkValueInLocalStorage('reclaim')){
+                        var cmdToolsWrapper = document.getElementById(vApp.wb.commandToolsWrapperId);
+                        if(cmdToolsWrapper != null){
+                            while(cmdToolsWrapper.hasChildNodes()){
+                                cmdToolsWrapper.removeChild(cmdToolsWrapper.lastChild);
+                            }
+                        }
+                        vApp.wb.utility.createReclaimButton(cmdToolsWrapper);
+                    }
+                },
+                
+                
                 /**
                  * this function called the image function
                  * for initialize the arrow
@@ -177,9 +232,7 @@
                     cmdToolsWrapper.appendChild(canvas);
                     document.getElementById('containerWb').appendChild(cmdToolsWrapper);
                 },
-                setCanvasDimension: function(canvas) {
-
-                },
+                
                 /**
                  * this does call the initializer function for particular object    
                  * @param expects the mouse down event.
@@ -231,7 +284,7 @@
                         if (document.getElementById('canvas') == null) {
                             vApp.wb.createCanvas();
                         }
-                        var orginalTeacherId = vApp.wb.utility.chkValueInLocalStorage('orginalTeacherId');
+                        var orginalTeacherId = vApp.vutil.chkValueInLocalStorage('orginalTeacherId');
                         vApp.wb.dataInfo = parseInt(wbUser.dataInfo);
                         if (orginalTeacherId && vApp.wb.dataInfo == 1) {
                             if (!vApp.wb.utility.alreadyExistPacketContainer()) {
@@ -296,7 +349,7 @@
                             return;
                         }
 
-                        //vApp.wb.gObj.video.updateVideoInfo();
+                        //vApp.gObj.video.updateVideoInfo();
                         vApp.wb.utility.t_clearallInit();
                         vApp.wb.utility.makeDefaultValue();
                         vApp.wb.utility.beforeSend({'clearAll': true});
@@ -379,8 +432,8 @@
                         var audioRepTime = vApp.wb.recordStarted - vApp.wb.pageEnteredTime;
                         setTimeout(
                             function (){
-                                if(typeof vApp.wb.gObj.video != 'undefined'){
-                                    vApp.wb.gObj.video.audio.replay( 0, 0);
+                                if(typeof vApp.gObj.video != 'undefined'){
+                                    vApp.gObj.video.audio.replay( 0, 0);
                                 }
                             },
                             audioRepTime

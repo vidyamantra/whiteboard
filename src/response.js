@@ -24,12 +24,12 @@
                     canvasWrapper.className = 'student';
                     localStorage.setItem('canvasDrwMsg', true);
 
-                    if (!vApp.wb.utility.chkValueInLocalStorage('orginialTeacherId')) {
+                    if (!vApp.vutil.chkValueInLocalStorage('orginialTeacherId')) {
                         vApp.wb.utility.setCommandToolHeights(toolHeight, 'decrement');
                     }
 
                 } else {
-                    if (vApp.wb.utility.chkValueInLocalStorage('orginialTeacherId')) {
+                    if (vApp.vutil.chkValueInLocalStorage('orginialTeacherId')) {
                         var toolHeight = localStorage.getItem('toolHeight');
                         vApp.wb.utility.setCommandToolHeights(toolHeight, 'increment');
                     }
@@ -49,7 +49,7 @@
                     vApp.wb.utility.assignRole(id);
                     vApp.wb.utility.uniqueArrOfObjsToTeacher();
 
-                    if (!vApp.wb.utility.chkValueInLocalStorage('canvasDrwMsg')) {
+                    if (!vApp.vutil.chkValueInLocalStorage('canvasDrwMsg')) {
                         window.vApp.wb.view.canvasDrawMsg('Canvas');
                         window.vApp.wb.view.drawLabel('drawArea');
                         localStorage.setItem('canvasDrwMsg', true);
@@ -67,7 +67,7 @@
 
                 } else {
                     vApp.wb.utility.uniqueArrOfObjsToStudent();
-                    if (!vApp.wb.utility.chkValueInLocalStorage('orginalTeacherId')) {
+                    if (!vApp.vutil.chkValueInLocalStorage('orginalTeacherId')) {
                         var canvasWrapper = document.getElementById("vcanvas");
                         canvasWrapper.className = canvasWrapper.className.replace(/\bteacher\b/, ' ');
                         canvasWrapper.className = 'student';
@@ -128,15 +128,15 @@
              //   vApp.wb.utility.makeUserAvailable(e.message.checkUser.e.clientLen);
             },
             createPeer: function(currObj, peerObj, id) {
-                vApp.wb.gObj.video.currBrowser = currObj;
-                vApp.wb.gObj.video.peerBrowser = peerObj;
+                vApp.gObj.video.currBrowser = currObj;
+                vApp.gObj.video.peerBrowser = peerObj;
 
-                if (vApp.wb.gObj.video.currBrowser == id) {
+                if (vApp.gObj.video.currBrowser == id) {
                     if (typeof oneExecuted == 'undefined') {
                         oneExecuted = true; //TODO this should be wrapper with some object
                         vApp.wb.utility.beforeSend({'isChannelReady': true});
-                        vApp.wb.gObj.video.init(true);
-                        vApp.wb.gObj.video.toUser = vApp.wb.gObj.video.peerBrowser;
+                        vApp.gObj.video.init(true);
+                        vApp.gObj.video.toUser = vApp.gObj.video.peerBrowser;
                     }
                 } else {
                     cthis.isStarted = false;
@@ -144,14 +144,14 @@
 
             },
             video: function(formUserId, id, msgVideo) {
-                var video = vApp.wb.gObj.video;
+                var video = vApp.gObj.video;
                 if (typeof video != 'undefined') {
                     if (msgVideo == 'bye') {
                         if (formUserId != id) {
-                           // vApp.wb.gObj.video.videoOnMsg(msgVideo, formUserId);
+                           // vApp.gObj.video.videoOnMsg(msgVideo, formUserId);
                         }
                     } else {
-                        // vApp.wb.gObj.video.videoOnMsg(msgVideo, formUserId);
+                        // vApp.gObj.video.videoOnMsg(msgVideo, formUserId);
                     }
                 }
             },

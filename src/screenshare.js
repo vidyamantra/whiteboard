@@ -6,10 +6,9 @@
 
 (
     function (window){
-        //prevStream = false;
     var screenShare = function (config){
-        
         return {
+            
             prevStream : false,
             init : function (screen){
                 //alert(ssc);
@@ -17,7 +16,7 @@
                 this.ssByClick =  true;
                 //this.ssc = ssc;   
                 this.manualStop = false;
-                if(vApp.wb.gObj.uRole == 't'){
+                if(vApp.gObj.uRole == 't'){
                     this.readyTostart(screen.app);
                 }else{
                     this._init();
@@ -42,10 +41,6 @@
              //   if(!vApp.ss.hasOwnProperty('id')){
                 // if UI is already created
                 if(!this.hasOwnProperty('id')){
-                   
-//                    vApp.ss.dc = window.dirtyCorner;
-//                    vApp.ss.sutil = window.sutil;
-                    
                     this.dc = window.dirtyCorner;
                     this.sutil = window.sutil;
                     
@@ -61,13 +56,13 @@
 
                     this.prevImageSlices = [];
 
-                    var ssUI = this.html.UI.call(this, vApp.wb.gObj.uRole);
+                    var ssUI = this.html.UI.call(this, vApp.gObj.uRole);
                     //document.getElementById(vApp.html.id).appendChild(ssUI);
                     
                     var beforeAppend = document.getElementById(vApp.rWidgetConfig.id);
                     document.getElementById(vApp.html.id).insertBefore(ssUI, beforeAppend);
                     
-                    if(vApp.wb.gObj.uRole == 't'){
+                    if(vApp.gObj.uRole == 't'){
                         //this.localtempCanvas = document.getElementById(vApp.ss.localTemp+"Video");
                         this.localtempCanvas = document.getElementById(this.localTemp+"Video");
                         this.localtempCont =  this.localtempCanvas.getContext('2d');
@@ -142,10 +137,6 @@
             },
 
             initializeRecorder : function (stream){
-                
-//                if(typeof prevStream != 'undefined'){
-//                    myFlag = false;
-//                }
 
                 if(this.prevStream){
                     this.ssByClick = false;
@@ -218,32 +209,43 @@
             },
             
             initAfterImg : function (){
+                var tempObj, encodedData, stringData, d, matched, imgData;
+                this.latestScreen = [];
+                
                 var resA = Math.round(this.height/12);
                 var resB = Math.round(this.width/12);
 
-                var imageSlices = this.dc.getImageSlices(resA, resB, this);
+                this.imageSlices = this.dc.getImageSlices(resA, resB, this);
                 var that = this;
+                
+                
                 vApp.clear =  setInterval(
                     function (){
                         that.localtempCont.drawImage(that.video, 0, 0, that.width, that.height);
                         var sendobj = [];
                         for (sl=0; sl<(resA * resB); sl++) {
-                            var d = imageSlices[sl];
-                            var imgData = that.localtempCont.getImageData(d.x,d.y,d.w,d.h);
+                                d = that.imageSlices[sl];
+                                imgData = that.localtempCont.getImageData(d.x,d.y,d.w,d.h);
                             if(typeof that.prevImageSlices[sl] != 'undefined'){
-                                var matched = that.dc.matchWithPrevious(imgData.data, that.prevImageSlices[sl], d.w);
+                                 matched = that.dc.matchWithPrevious(imgData.data, that.prevImageSlices[sl], d.w);
                                 if(!matched){
                                     that.prevImageSlices[sl] = imgData.data;
                                     //conslice.putImageData(imgData, d.x, d.y);
-                                    var encodedData = that.dc.encodeRGB(imgData.data);
-                                    var stringData = that.sutil.ab2str(encodedData);
-                                    sendobj.push({'ssbyimage' : stringData, 'des' : d});
+                                    encodedData = that.dc.encodeRGB(imgData.data);
+                                    stringData = vApp.vutil.ab2str(encodedData);
+
+                                    tempObj = {'ssbyimage' : stringData, 'des' : d};
+                                    sendobj.push(tempObj);    
+                                    that.latestScreen[sl] = tempObj; 
+
                                 }
                             }else{
                                 that.prevImageSlices[sl] = imgData.data;
-                                var encodedData = that.dc.encodeRGB(imgData.data);
-                                var stringData = that.sutil.ab2str(encodedData);
-                                sendobj.push({'ssbyimage' : stringData, 'des' : d});    
+                                encodedData = that.dc.encodeRGB(imgData.data);
+                                stringData = vApp.vutil.ab2str(encodedData);
+                                tempObj = {'ssbyimage' : stringData, 'des' : d};
+                                sendobj.push(tempObj);    
+                                that.latestScreen[sl] = tempObj; 
                             }
 
                         }
@@ -276,7 +278,7 @@
 
             drawSingleImage : function(imgDataArr, d){
                // var imgData = this.dc.decodeRGB(this.sutil.str2ab(imgDataArr), vApp.ss.localCont, d);
-                  var imgData = this.dc.decodeRGB(this.sutil.str2ab(imgDataArr), this.localCont, d);
+                  var imgData = this.dc.decodeRGB(vApp.vutil.str2ab(imgDataArr), this.localCont, d);
                 //vApp.ss.localCont.putImageData(imgData, d.x, d.y);
                 this.localCont.putImageData(imgData, d.x, d.y);
             },
@@ -334,9 +336,14 @@
                             height: container.width * aspectRatio
                         };
                     }
-               }
-              
+               },
             },
+            
+            sendPackets : function (user){
+                var encodedString = LZString.compressToBase64(JSON.stringify(this.latestScreen));
+                var contDimension = this.getContainerDimension();
+                io.send({'resimg' : true, 'ssbyimage' : encodedString, 'st' : this.type, d : {w:this.width, h:this.height}, vc : {w:contDimension.width, h:contDimension.height}, 'byRequest' : user });                                      
+            }
         }
     }
     

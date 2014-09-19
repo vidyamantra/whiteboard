@@ -17,11 +17,21 @@
               wss: "",
               rw : "",
               lang : {},
-              init : function (urole){
+              error: [],
+              gObj : {
+                uid : window.wbUser.id,
+                uRole : window.wbUser.role,
+                uName : window.wbUser.name
+              },
+              init : function (urole, app){
                   this.lang.getString = window.getString;
                   this.lang.message = window.message;
                   this.vutil = window.vutil;
+                  this.media = window.media; 
+                  this.chat = window.chat;
+                  this.system = window.system;
                   this.clear = "";
+                  this.currApp = app;
                   this.html.init(this);
                   
                   if(urole == 't'){
@@ -29,8 +39,20 @@
                       this.attachFunction();
                   }
                   
+                  
+                  
                   this.adapter = window.adapter;
-                  this.makeAppReady("whiteboardtool");
+                  this.makeAppReady(app, "byclick");
+                  
+                  
+                  //this should be at top
+                  this.system.check();
+                  this.vutil.isSystemCompatible();
+                  
+                  if(app == 'vAppscreenShareTool'){
+                      this.system.setCanvasDimension();
+                  }
+                  
               },
               
               html : {
@@ -103,7 +125,6 @@
               
               makeAppReady : function (app, cusEvent){
                   
-                  
                   if(app == 'whiteboardtool'){
                       if(typeof this.ss == 'object'){
                             this.ss.prevStream = false;   
@@ -131,7 +152,6 @@
 
 
                             this.wb.view = window.view;
-                            this.wb.system = window.system;
 
                             this.wb.packContainer = new window.packContainer();
                             this.wb.draw_object = window.draw_object;
@@ -142,7 +162,7 @@
 
     //                        this.adapter = window.adapter;
 
-                            this.wb.media = window.media; 
+//                            this.wb.media = window.media; 
                             this.wb.bridge = window.bridge;
                             this.wb.response = window.response;
                         }
@@ -153,7 +173,6 @@
                         
                         this.previous = this.wbConfig.id;
                   }else if(app == "screensharetool"){
-                      
                         if(typeof this.ss != 'object'){
                             this.ss = new window.screenShare(vApp.ssConfig);
                         }
@@ -186,21 +205,13 @@
               },
               
               initlizer : function (elem){
-                   var appName = elem.parentNode.id.split("vApp")[1].toLowerCase();
-                   
-                   if(!this.PrvAndCurrIsWss(this.previous, appName)){
-                       this.makeAppReady(appName, "byclick");
-                   }else{
-                       alert("Already the whole screen is being shared.");
-                   }
-//                   
-//                   
-//                    if(this.previous == 'vAppWholeScreenShare' && appName == 'wholescreensharetool'){
-//                        alert("Already the whole screen is being shared.");
-//                    }else{
-//                        this.makeAppReady(appName, "byclick");
-//                    }
-                  
+                var appName = elem.parentNode.id.split("vApp")[1].toLowerCase();
+                this.currApp = appName;
+                if(!this.PrvAndCurrIsWss(this.previous, appName)){
+                    this.makeAppReady(appName, "byclick");
+                }else{
+                    alert("Already the whole screen is being shared.");
+                }
               },
               
               render : function(){

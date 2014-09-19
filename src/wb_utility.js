@@ -261,7 +261,7 @@
                     ctx.restore();
                 },
                 calcPsSentPackets: function(oldData) {
-                    if (vApp.wb.utility.chkValueInLocalStorage('orginalTeacherId')) {
+                    if (vApp.vutil.chkValueInLocalStorage('orginalTeacherId')) {
                         var pacPerSec = vApp.wb.sentPackets - oldData;
                         if (pacPerSec < 0) {
                             pacPerSec = 0;
@@ -286,7 +286,7 @@
                 //initialize transfred packets from local storage when
                 // browser is reloaded.
                 initStoredPacketsNumbers: function() {
-                    if (vApp.wb.utility.chkValueInLocalStorage('orginalTeacherId')) {
+                    if (vApp.vutil.chkValueInLocalStorage('orginalTeacherId')) {
                         if (localStorage.sentPackets) {
                             var totSentPackets = JSON.parse(localStorage.sentPackets);
                             vApp.wb.sentPackets = totSentPackets;
@@ -305,7 +305,7 @@
                 },
                 updateSentPackets: function(obj) {
                     if (vApp.wb.dataInfo == 1) {
-                        if (vApp.wb.utility.chkValueInLocalStorage('orginalTeacherId')) {
+                        if (vApp.vutil.chkValueInLocalStorage('orginalTeacherId')) {
                             vApp.wb.sentPackets = vApp.wb.sentPackets + JSON.stringify(obj).length;
                             if(document.getElementById(vApp.wb.sentPackDiv) != null){
                                 document.getElementById(vApp.wb.sentPackDiv).innerHTML = vApp.wb.sentPackets;
@@ -381,7 +381,7 @@
                 },
                 dispQueuePacket: function(result) {
                     if ((localStorage.getItem('teacherId') != null) ||
-                            (localStorage.getItem('orginalTeacherId') != null && vApp.wb.utility.chkValueInLocalStorage('reclaim'))) {
+                            (localStorage.getItem('orginalTeacherId') != null && vApp.vutil.chkValueInLocalStorage('reclaim'))) {
                         vApp.wb.utility.toolWrapperEnable();
                     }
                     vApp.wb.utility.isUserConnected(vApp.wb.clientLen);
@@ -411,7 +411,9 @@
                     var canvasElement = vcan.main.canvas;
                     canvasElement.style.position = 'relative';
                     //canvasElement.style.zIndex = "-1000";
-                    canvasElement.style.pointerEvents = "none";
+                    //sept17
+                    //canvasElement.style.pointerEvents = "none";
+                    canvasElement.style.pointerEvents = "visible";
                 },
                 makeCanvasEnable: function() {
                     if (localStorage.getItem('teacherId') != null) {
@@ -463,11 +465,11 @@
                     vApp.wb.gObj.packQueue = [];
                     vApp.wb.uid = 0;
 
-                    var teacherId = vApp.wb.utility.chkValueInLocalStorage('teacherId');
-                    var orginalTeacherId = vApp.wb.utility.chkValueInLocalStorage('orginalTeacherId');
-                    var wbrtcMsg = vApp.wb.utility.chkValueInLocalStorage('wbrtcMsg');
-                    var canvasDrwMsg = vApp.wb.utility.chkValueInLocalStorage('canvasDrwMsg');
-                    var toolHeight = vApp.wb.utility.chkValueInLocalStorage('toolHeight');
+                    var teacherId = vApp.vutil.chkValueInLocalStorage('teacherId');
+                    var orginalTeacherId = vApp.vutil.chkValueInLocalStorage('orginalTeacherId');
+                    var wbrtcMsg = vApp.vutil.chkValueInLocalStorage('wbrtcMsg');
+                    var canvasDrwMsg = vApp.vutil.chkValueInLocalStorage('canvasDrwMsg');
+                    var toolHeight = vApp.vutil.chkValueInLocalStorage('toolHeight');
 
                     localStorage.clear();
 
@@ -499,10 +501,10 @@
                         vcan.main.currentTransform = "";
                     }
 
-                    vApp.wb.gObj.video.audio.updateInfo();
+                    vApp.gObj.video.audio.updateInfo();
                 },
                 setOrginalTeacherContent: function(e) {
-                    localStorage.setItem('teacherId', vApp.wb.gObj.uid);
+                    localStorage.setItem('teacherId', vApp.gObj.uid);
                     window.vApp.wb.view.canvasDrawMsg('Canvas');
                     localStorage.setItem('canvasDrwMsg', true);
                     if (!vApp.wb.utility.alreadyExistPacketContainer()) {
@@ -512,18 +514,19 @@
                             vApp.wb.utility.initStoredPacketsNumbers();
                         }
                     }
-                    localStorage.setItem('orginalTeacherId', vApp.wb.gObj.uid);
+                    localStorage.setItem('orginalTeacherId', vApp.gObj.uid);
                 },
-                isSystemCompatible: function() {
-                    if (window.vApp.wb.error.length > 0) {
-                        for (var i = 0; i < window.vApp.wb.error.length; i++) {
-                            var error = window.vApp.wb.error[i];
-                            if (error.hasOwnProperty('msg')) {
-                                vApp.wb.view.displayMessage(error.msg, error.id, error.className);
-                            }
-                        }
-                    }
-                },
+//                isSystemCompatible: function() {
+//                    
+//                    if (window.vApp.error.length > 0) {
+//                        for (var i = 0; i < window.vApp.error.length; i++) {
+//                            var error = window.vApp.error[i];
+//                            if (error.hasOwnProperty('msg')) {
+//                                vApp.wb.view.displayMessage(error.msg, error.id, error.className);
+//                            }
+//                        }
+//                    }
+//                },
                 initDefaultInfo: function(e, role) {
                     var clientNum = e.message.checkUser.e.clientLen;
                     var newuser = e.message.checkUser.e.newUser;
@@ -540,8 +543,8 @@
                     }
 
                     if (clientNum == 1) {
-                        vApp.wb.gObj.video.init();
-                        vApp.wb.gObj.video.isInitiator = true;
+                        vApp.gObj.video.init();
+                        vApp.gObj.video.isInitiator = true;
                         vcan.oneExecuted = false;
                     } else if (clientNum >= 2 && newuser == null) {
                         console.log("browser number " + clientNum);
@@ -553,7 +556,7 @@
                         //vApp.wb.utility.beforeSend({'videoInt': true});
                         //vApp.wb.utility.beforeSend({'isChannelReady': true, 'memberAdded': true});
                         vcan.oneExecuted = false;
-                        vApp.wb.gObj.video.init();
+                        vApp.gObj.video.init();
                     }
                 },
                 checkWebRtcConnected: function() {
@@ -671,7 +674,7 @@
                             if (role) {
                                 if (localStorage.getItem('otherRole') == null) {
                                     var roles = [];
-                                    if (role != vApp.wb.gObj.uRole) {
+                                    if (role != vApp.gObj.uRole) {
                                         roles.push(role);
                                     } else {
                                         existUser = true;
@@ -689,7 +692,7 @@
                                     console.log("Other Browser " + role + ' ' + e.fromUser.userid);
                                 }
                             }
-                            return (vApp.wb.gObj.uRole == role) ? true : false;
+                            return (vApp.gObj.uRole == role) ? true : false;
                         }
                     } else {
                         if (typeof existUser != 'undefined') {
@@ -698,7 +701,7 @@
                             var otherRoles = JSON.parse(localStorage.getItem('otherRole'));
                             if (otherRoles != null) {
                                 for (var i = 0; i < otherRoles.length; i++) {
-                                    if (vApp.wb.gObj.uRole == otherRoles[i]) {
+                                    if (vApp.gObj.uRole == otherRoles[i]) {
                                         return true;
                                     }
                                 }
@@ -744,7 +747,7 @@
                         vApp.wb.utility.makeCanvasDisable();
                     }
 
-                    var res = vApp.wb.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
+                    var res = vApp.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
 
                     var toolHeight = vApp.wb.utility.getWideValueAppliedByCss('commandToolsWrapper');
                     if (toolHeight != false) {
@@ -813,7 +816,7 @@
                     }
 
                     vApp.wb.utility.initDefaultInfo(e, wbUser.role);
-                    var res = vApp.wb.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
+                    var res = vApp.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
 
                     var toolHeight = vApp.wb.utility.getWideValueAppliedByCss('commandToolsWrapper');
                     if (toolHeight != false) {
@@ -890,7 +893,7 @@
                     vApp.wb.utility.beforeSend({'reclaimRole': true});
                 },
                 updateSentInformation: function(jobj, createArrow) {
-                    if (vApp.wb.utility.chkValueInLocalStorage('orginalTeacherId')) {
+                    if (vApp.vutil.chkValueInLocalStorage('orginalTeacherId')) {
                         var sentObj = JSON.parse(jobj);
                         if (typeof createArrow != 'undefined') {
                             var msg = sentObj;

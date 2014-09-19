@@ -12,7 +12,7 @@
                 webrtcDetectedBrowser : null,
                 
                 init : function (navigator){
-                    if (vApp.wb.system.wbRtc.peerCon == true && vApp.wb.system.wbRtc.userMedia == true) {
+                    if (vApp.system.wbRtc.peerCon == true && vApp.system.wbRtc.userMedia == true) {
                         if (navigator.mozGetUserMedia) {
                             
                             window.webrtcDetectedBrowser = "firefox";
