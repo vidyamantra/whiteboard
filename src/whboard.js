@@ -42,7 +42,7 @@
                     myrepObj : [],
                     replayObjs : [],
                     myArr : [],
-                    displayedObjId : 0,
+                    displayedObjId : 0
                 }, // For store the global oject
                 
                 
