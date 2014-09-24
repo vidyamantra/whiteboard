@@ -38,7 +38,7 @@ include('auth.php') ;
 
 <?php
 //the www path for whiteboard
-$whiteboard_path = "https://192.168.1.107/whiteboard/";
+$whiteboard_path = "https://192.168.1.114/whiteboard/";
 //include('js.php');
 include('js.debug.php');
 //$PAGE->requires->js(new moodle_url($CFG->wwwroot .'/mod/onetoone/whiteboard/js/c190214.js'));
@@ -64,7 +64,7 @@ $uid = 15;
 	
 	window.io = io;
     //the www path for whiteboard
-    var whiteboardPath =  'https://192.168.1.107/whiteboard/';
+    var whiteboardPath =  'https://192.168.1.114/whiteboard/';
     
     var resampler = new Resampler(44100, 8000, 1, 4096);
     

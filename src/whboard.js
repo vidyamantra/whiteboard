@@ -42,7 +42,9 @@
                     myrepObj : [],
                     replayObjs : [],
                     myArr : [],
-                    displayedObjId : 0
+                    displayedObjId : 0,
+                    packQueue : [],
+                    virtualWindow : false
                 }, // For store the global oject
                 
                 
@@ -54,6 +56,7 @@
                  *    
                  */
                 init: function() {
+                    
                     vApp.wb.vcan = window.vcan; //this would be done because of possibility of conflict
                     var vcan = vApp.wb.vcan;
                     vApp.wb.canvas = vcan.create('#canvas');
@@ -83,7 +86,7 @@
                         }
                     }, 1000);
                     
-                 this._init();
+                    this._init();
                 },
                 
                 _init : function (){
@@ -118,8 +121,6 @@
                     
                     vApp.wb.utility.setUserStatus(this.stHasTeacher, storageHasReclaim);
 
-                    //vApp.wb.utility.removeOtherUserExist(wbUser.role);
-
                     if(vApp.vutil.chkValueInLocalStorage('reclaim')){
                         var cmdToolsWrapper = document.getElementById(vApp.wb.commandToolsWrapperId);
                         if(cmdToolsWrapper != null){
@@ -129,6 +130,7 @@
                         }
                         vApp.wb.utility.createReclaimButton(cmdToolsWrapper);
                     }
+                    vApp.wb.utility.crateCanvasDrawMesssage();
                 },
                 
                 
@@ -174,14 +176,15 @@
 
                     vApp.wb.createDiv('t_replay', 'Replay', cmdToolsWrapper, 'tool');
 
-                    vApp.wb.createDiv('t_connect', 'conn', cmdToolsWrapper, 'controlCmd coff');
+                    //vApp.wb.createDiv('t_connect', 'conn', cmdToolsWrapper, 'controlCmd coff');
                     vApp.wb.createDiv('t_assign', 'assign', cmdToolsWrapper, 'controlCmd');
 
 
                     vApp.wb.socketOn = parseInt(wbUser.socketOn);
                     if (vApp.wb.socketOn == 1) {
-                        vApp.wb.createDiv('t_connectionoff', 'connectionOff', cmdToolsWrapper, 'controlCmd');
-                        vApp.wb.createDiv('t_connectionon', 'connectionOn', cmdToolsWrapper, 'controlCmd');
+                      //  vApp.wb.createDiv('t_connectionoff', 'connectionOff', cmdToolsWrapper, 'controlCmd');
+                        
+//                        vApp.wb.createDiv('t_connectionon', 'connectionOn', cmdToolsWrapper, 'controlCmd');
                         vApp.wb.utility.setClass('vcanvas', 'socketon');
                     }
                 },
@@ -240,33 +243,33 @@
                 objInit: function(evt) {
                     //to handle like this very dangerous, only for devloping purpose
                     //vApp.wb.user.connected = true;
+                    //if (vApp.wb.user.connected) {
+                    
+                    var anchorNode = this;
 
-                    if (vApp.wb.user.connected) {
-                        var anchorNode = this;
-
-                        /**important **/
-                        if (anchorNode.parentNode.id == 't_replay') {
-                            vApp.wb.utility.clearAll(false);
-                            vApp.wb.utility.beforeSend({'replayAll': true});
-                        } else {
-                            vApp.wb.toolInit(anchorNode.parentNode.id);
-                        }
-
-                        if (anchorNode.parentNode.id != 't_replay' && anchorNode.parentNode.id != 't_clearall'
-                                && anchorNode.parentNode.id != 't_reclaim' && anchorNode.parentNode.id != 't_assign'
-                                && anchorNode.parentNode.id != 't_connectionoff' && anchorNode.parentNode.id != 't_connectionon') {
-
-                            var currTime = new Date().getTime();
-                            vApp.wb.lt = anchorNode.parentNode.id;
-                            var obj = {'cmd': anchorNode.parentNode.id, mt: currTime};
-                            vApp.wb.uid++;
-                            obj.uid = vApp.wb.uid;
-                            vcan.main.replayObjs.push(obj);
-                            vApp.wb.utility.beforeSend({'repObj': [obj]}); //after optimized
-                        }
+                    /**important **/
+                    if (anchorNode.parentNode.id == 't_replay') {
+                        vApp.wb.utility.clearAll(false);
+                        vApp.wb.utility.beforeSend({'replayAll': true});
                     } else {
-                        alert(vApp.lang.getString('askForConnect'));
+                        vApp.wb.toolInit(anchorNode.parentNode.id);
                     }
+
+                    if (anchorNode.parentNode.id != 't_replay' && anchorNode.parentNode.id != 't_clearall'
+                            && anchorNode.parentNode.id != 't_reclaim' && anchorNode.parentNode.id != 't_assign') {
+
+                        var currTime = new Date().getTime();
+                        vApp.wb.lt = anchorNode.parentNode.id;
+                        var obj = {'cmd': anchorNode.parentNode.id, mt: currTime};
+                        vApp.wb.uid++;
+                        obj.uid = vApp.wb.uid;
+                        vcan.main.replayObjs.push(obj);
+                        vApp.wb.utility.beforeSend({'repObj': [obj]}); //after optimized
+                    }
+                        
+//                    } else {
+//                        alert(vApp.lang.getString('askForConnect'));
+//                    }
                 },
                 /**
                  * 
@@ -363,7 +366,6 @@
                         } else {
                             vApp.wb.utility.beforeSend({'assignRole': true, 'socket': vApp.wb.socketOn});
                         }
-
                     }
 
                     if (cmd == 't_reclaim') {
@@ -371,16 +373,17 @@
                         vApp.wb.utility.sendRequest('reclaimRole', true);
                     }
 
-                    if (cmd == 't_connectionoff') {
-                        vApp.wb.utility.connectionOff();
-                    }
-
-                    if (cmd == 't_connectionon') {
-                        vApp.wb.utility.connectionOn();
-                    }
+//                    if (cmd == 't_connectionoff') {
+//                        vApp.wb.utility.connectionOff();
+//                    }
+                    
+//                    
+//                    if (cmd == 't_connectionon') {
+//                        vApp.wb.utility.connectionOn();
+//                    }
 
                     if (cmd != 't_activeall' && cmd != 't_replay' && cmd != 't_clearallInit' && cmd != 't_assign'
-                            && cmd != 't_reclaim' && cmd != 't_connectionoff' && cmd != 't_connectionon') {
+                            && cmd != 't_reclaim') {
                         vApp.wb.tool = new vApp.wb.tool_obj(cmd)
                         vApp.wb.utility.attachEventHandlers();
                     }

@@ -905,7 +905,7 @@ video:hover,  canvas:hover{
 }
 
 
-#vAppscreenShare, #vAppWholeScreenShare {
+#vAppScreenShare, #vAppWholeScreenShare {
     float : left;
     border : 1px solid #ccc;
     height : 100%;
@@ -931,12 +931,12 @@ video:hover,  canvas:hover{
     border: 1px solid #ccc;
 }
 
-#vAppscreenShareLocalVideo{
+#vAppScreenShareLocalVideo{
     
 }
 
 
 
-#vAppscreenShareLocalTempVideo, #vAppwholescreenShareLocalTempVideo  {
+#vAppScreenShareLocalTempVideo, #vAppwholescreenShareLocalTempVideo  {
     display:none;
 }

@@ -7,10 +7,13 @@
 (
   function (window){
       window.vmApp = function (){
+          //var appName = ["Whiteboard", "ScreenShare", "WholeScreenShare"];
+          
           return {
-              wbConfig : { id : "vAppWhiteboard", classes : "appOptions"},
-              ssConfig : { id : "vAppscreenShare", classes : "appOptions"},
-              wssConfig :{ id : "vAppWholeScreenShare", classes : "appOptions"}, 
+//              wbConfig : { id : "vApp" + appName[0], classes : "appOptions"},
+//              ssConfig : { id : "vApp" + appName[1], classes : "appOptions"},
+//              wssConfig :{ id : "vApp" + appName[2], classes : "appOptions"}, 
+              apps : ["Whiteboard", "ScreenShare", "WholeScreenShare"],
               rWidgetConfig : {id: 'widgetRightSide' },
               wb : "", 
               ss : "",
@@ -24,6 +27,11 @@
                 uName : window.wbUser.name
               },
               init : function (urole, app){
+                  
+                  this.wbConfig = { id : "vApp" + this.apps[0], classes : "appOptions"};
+                  this.ssConfig = { id : "vApp" + this.apps[1], classes : "appOptions"};
+                  this.wssConfig = { id : "vApp" + this.apps[2], classes : "appOptions"};
+
                   this.lang.getString = window.getString;
                   this.lang.message = window.message;
                   this.vutil = window.vutil;
@@ -39,20 +47,43 @@
                       this.attachFunction();
                   }
                   
-                  
-                  
                   this.adapter = window.adapter;
                   this.makeAppReady(app, "byclick");
-                  
                   
                   //this should be at top
                   this.system.check();
                   this.vutil.isSystemCompatible();
                   
-                  if(app == 'vAppscreenShareTool'){
+                  if(app == this.apps[1]){
                       this.system.setCanvasDimension();
                   }
                   
+                  this.vutil.sidebarHeightInit();
+                  
+                  this.gObj.video = new window.vApp.media();
+                  this.gObj.chat = new window.vApp.chat();
+                  this.gObj.chat.init();
+                  
+                  this.initSocketConn();
+                  
+              },
+              
+              initSocketConn : function (){
+                  if(this.system.webSocket){
+                    var wbUser = window.wbUser;
+                    io.init({
+                        'userid':wbUser.id, 
+                        'sid':wbUser.sid,
+                        'rid': wbUser.path,
+                        'authuser':wbUser.auth_user,
+                        'authpass':wbUser.auth_pass,
+                        'userobj': {'userid':wbUser.id,'name':wbUser.name},
+                        'fastchat_lasttime':'0',
+                        'fastchatroom_title':'fastchat',
+                        'fastchatroom_name':wbUser.room
+                        });
+                    }
+        
               },
               
               html : {
@@ -125,16 +156,16 @@
               
               makeAppReady : function (app, cusEvent){
                   
-                  if(app == 'whiteboardtool'){
+                  if(app == this.apps[0]){
                       if(typeof this.ss == 'object'){
                             this.ss.prevStream = false;   
                        } 
                       
-                       
                         if(typeof this.previous != 'undefined'){
                             if(typeof cusEvent != 'undefined' && cusEvent == "byclick"){
                                 io.send({'dispWhiteboard' : true});
                             }
+                            
                             document.getElementById(vApp.previous).style.display = 'none';
                         }
                         
@@ -145,8 +176,8 @@
                         }
                         
                         //this should be checked with solid condition
-                        
                         if(typeof this.wb != 'object'){
+                            
                             this.wb = new window.whiteboard(this.wbConfig); 
                             this.wb.utility = new window.utility();
 
@@ -165,22 +196,32 @@
 //                            this.wb.media = window.media; 
                             this.wb.bridge = window.bridge;
                             this.wb.response = window.response;
+                            
+                            
+                            this.wb.utility.displayCanvas();
+                            this.wb.utility.replayFromLocalStroage();
+                            var olddata = "";
+                            this.wb.utility.initUpdateInfo(olddata);
+                            
                         }
+                        
+                        
                         
                         if(typeof this.prevApp != 'undefined' && this.prevApp.hasOwnProperty('currentStream')){
                             this.prevApp.unShareScreen();    
                         }
                         
                         this.previous = this.wbConfig.id;
-                  }else if(app == "screensharetool"){
+                        
+                        
+                  }else if(app == this.apps[1]){
                         if(typeof this.ss != 'object'){
                             this.ss = new window.screenShare(vApp.ssConfig);
                         }
-                        
                         this.ss.init({type: 'ss', app : app});
                         
                         //this.previous = vApp.ssConfig.id;
-                  }else if(app == "wholescreensharetool"){
+                  }else if(app == this.apps[2]){
                       if(typeof this.wss != 'object'){
                             this.wss = new window.screenShare(vApp.wssConfig);
                       }
@@ -205,13 +246,20 @@
               },
               
               initlizer : function (elem){
-                var appName = elem.parentNode.id.split("vApp")[1].toLowerCase();
+//                 alert('ss');
+//                 debugger;
+                //var appName = elem.parentNode.id.split("vApp")[1].toLowerCase();
+                var appName = elem.parentNode.id.split("vApp")[1];
+                
+                appName = appName.substring(0, appName.indexOf("Tool"));
+                
                 this.currApp = appName;
                 if(!this.PrvAndCurrIsWss(this.previous, appName)){
                     this.makeAppReady(appName, "byclick");
                 }else{
                     alert("Already the whole screen is being shared.");
                 }
+                
               },
               
               render : function(){
@@ -219,9 +267,40 @@
               },
               
               PrvAndCurrIsWss : function (previous, appName){
-                        return (previous == 'vAppWholeScreenShare' && appName == 'wholescreensharetool') ? true : false;
+                  return (previous == 'vAppWholeScreenShare' && appName == this.apps[2]) ? true : false;
               },
               
+              initStudentScreen : function (msg){
+                var stool;
+                app = msg.st; 
+            
+                if(msg.st == 'ss'){
+                    stool = vApp.apps[1];
+                }else{
+                    stool = vApp.apps[2];
+                }
+
+                if(typeof vApp[app] != 'object'){
+                    vApp.makeAppReady(stool);
+                    vApp[app].dimensionStudentScreen(msg);
+                }else{
+                    var prvScreen = document.getElementById(vApp.previous);
+                    if(prvScreen != null){
+                        prvScreen.style.display = 'none';
+                        document.getElementById(vApp[app].id).style.display = 'block';
+                    }
+                }
+
+                if(typeof prvWidth != 'undefined' && msg.d.w != prvWidth){
+                    vApp[app].dimensionStudentScreen(msg);
+                }
+                
+                prvWidth = msg.d.w;
+                prvHeight = msg.d.h;
+                vApp.previous =  vApp[app].id;
+                
+                vApp[app].drawImages(msg.si);
+              }
                
               //TODO remove this function
               //the same function is defining at script.js

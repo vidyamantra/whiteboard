@@ -296,9 +296,6 @@
                         video.width = this.width;
                         video.height = this.height;
                         
-//                        alert("sss");
-//                        debugger;
-                        
                         var videoCont = this.videoCont;
                         
                         if(typeof videoCont == 'undefined'){
@@ -515,13 +512,13 @@
         io.disconnect();
     }
 
-    window.isVideoFound = function(videoFound, fromUser) {
-        if (fromUser != wbUser.id) {
-            if (videoFound == false) {
-                cthis.isInitiator = true;
-            }
-            cthis.sendMessage('got user media');
-        }
-    }
+//    window.isVideoFound = function(videoFound, fromUser) {
+//        if (fromUser != wbUser.id) {
+//            if (videoFound == false) {
+//                cthis.isInitiator = true;
+//            }
+//            cthis.sendMessage('got user media');
+//        }
+//    }
 }
 )(window);

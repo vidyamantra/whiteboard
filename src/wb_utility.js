@@ -39,6 +39,7 @@
                     }
                     return true;
                 },
+                
                 /**
                  *  This function converts string to number
                  *  @param expects pmdTime which has to be converted
@@ -368,25 +369,29 @@
                     }
                     vApp.wb.utility.makeCanvasEnable();
                 },
-                connectionOff: function() {
-                    cthis.isInitiator = false;
-                    cthis.pc = [];
-                    cthis.cn = 0;
-                    cthis.isStarted = false;
-                    cthis.byCommand = true;
-                    io.disconnect();
-                },
-                connectionOn: function() {
-                    io.wsconnect();
-                },
+//                connectionOff: function() {
+//                    cthis.isInitiator = false;
+//                    cthis.pc = [];
+//                    cthis.cn = 0;
+//                    cthis.isStarted = false;
+//                    cthis.byCommand = true;
+//                    io.disconnect();
+//                },
+                
+//                connectionOn: function() {
+//                    io.wsconnect();
+//                },
+                
                 dispQueuePacket: function(result) {
                     if ((localStorage.getItem('teacherId') != null) ||
                             (localStorage.getItem('orginalTeacherId') != null && vApp.vutil.chkValueInLocalStorage('reclaim'))) {
                         vApp.wb.utility.toolWrapperEnable();
                     }
-                    vApp.wb.utility.isUserConnected(vApp.wb.clientLen);
+                    //vApp.wb.utility.isUserConnected(vApp.wb.clientLen);
+                    
                     vApp.wb.drawMode = false;
-                    if (localStorage.getItem('teacherId') != null && vApp.wb.user.connected) {
+                    //if (localStorage.getItem('teacherId') != null && vApp.wb.user.connected) {
+                    if (localStorage.getItem('teacherId') != null) {
                         vApp.wb.utility.makeCanvasEnable();
                     }
                     if (vApp.wb.gObj.packQueue.length > 0) {
@@ -408,14 +413,16 @@
                     }
                 },
                 makeCanvasDisable: function() {
+//                    alert('canva disable');
+//                    debugger;
                     var canvasElement = vcan.main.canvas;
                     canvasElement.style.position = 'relative';
-                    //canvasElement.style.zIndex = "-1000";
                     //sept17
-                    //canvasElement.style.pointerEvents = "none";
-                    canvasElement.style.pointerEvents = "visible";
+                    canvasElement.style.pointerEvents = "none";
+                    //canvasElement.style.pointerEvents = "visible";
                 },
                 makeCanvasEnable: function() {
+                    
                     if (localStorage.getItem('teacherId') != null) {
                         if(!vApp.wb.hasOwnProperty('canvasDisable') || !vApp.wb.canvasDisable){
                             var canvasElement = vcan.main.canvas;
@@ -651,16 +658,13 @@
                     var classes = classes + newClass;
                     elem.setAttribute('class', classes);
                 },
-                isUserConnected: function(userLength) {
-                    if (userLength > 1 && localStorage.getItem('otherRole')) {
-                        vApp.wb.user.connected = true;
-                    }
-                },
-                isUserConnected_old: function(userLength) {
-                    if (userLength > 1) {
-                        vApp.wb.user.connected = true;
-                    }
-                },
+                
+//                isUserConnected: function(userLength) {
+//                    if (userLength > 1 && localStorage.getItem('otherRole')) {
+//                        vApp.wb.user.connected = true;
+//                    }
+//                },
+                
                 setStyleUserConnetion: function(currClass, newClass, whoIs) {
                     var cdiv = document.getElementsByClassName(currClass)[0];
                     if (cdiv != null){
@@ -722,25 +726,27 @@
                     }
                 },
                 makeUserAvailable: function(browerLength) {
-                    vApp.wb.utility.isUserConnected(browerLength);
-                    if (vApp.wb.user.connected) {
+                    //vApp.wb.utility.isUserConnected(browerLength);
+                    
+                    //if (vApp.wb.user.connected) {
                         if (localStorage.getItem('repObjs') == null) {
                             vApp.wb.utility.toolWrapperEnable();
                             if (vcan.main.canvas != null) {
                                 vApp.wb.utility.makeCanvasEnable();
                             }
                         }
-                        vApp.wb.utility.setStyleUserConnetion('coff', 'con');
-                    }
+                        
+                        //vApp.wb.utility.setStyleUserConnetion('coff', 'con');
+                        
+                    //}
                 },
                 displayCanvas: function() {
                     window.vApp.wb.attachToolFunction(vcan.cmdWrapperDiv);
                     window.vApp.wb.init();
+                    
                     vApp.wb.utility.makeCanvasDisable();
-
-                    // This is disabled because its need to be enable for teacher
-                    //TODO this should be evaluate
                     vApp.wb.utility.toolWrapperDisable();
+                    
                 },
                 initAll: function(e) {
                     if (localStorage.getItem('teacherId') != null) {
@@ -805,26 +811,28 @@
                         }
                     }
                 },
-                shareVideoInformation: function(e, storageHasTeacher) {
-                    vApp.wb.utility.isUserConnected(e.message.length);
-                    if (vApp.wb.user.connected) {
-                        vApp.wb.utility.setStyleUserConnetion('coff', 'con');
-                    }
-
-                    if (typeof vcan.teacher == 'undefined' && !storageHasTeacher) {
-                        vApp.wb.utility.makeCanvasDisable();
-                    }
-
-                    vApp.wb.utility.initDefaultInfo(e, wbUser.role);
-                    var res = vApp.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
-
-                    var toolHeight = vApp.wb.utility.getWideValueAppliedByCss('commandToolsWrapper');
-                    if (toolHeight != false) {
-                        vApp.wb.utility.beforeSend({'virtualWindow': {'shareBrowserWidth': true, 'browserRes': res, 'toolHeight': toolHeight}});
-                    } else {
-                        vApp.wb.utility.beforeSend({'virtualWindow': {'shareBrowserWidth': true, 'browserRes': res}});
-                    }
-                },
+                
+//                shareVideoInformation: function(e, storageHasTeacher) {
+//                    vApp.wb.utility.isUserConnected(e.message.length);
+//                    //if (vApp.wb.user.connected) {
+//                        vApp.wb.utility.setStyleUserConnetion('coff', 'con');
+//                    //}
+//
+//                    if (typeof vcan.teacher == 'undefined' && !storageHasTeacher) {
+//                        vApp.wb.utility.makeCanvasDisable();
+//                    }
+//
+//                    vApp.wb.utility.initDefaultInfo(e, wbUser.role);
+//                    var res = vApp.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
+//
+//                    var toolHeight = vApp.wb.utility.getWideValueAppliedByCss('commandToolsWrapper');
+//                    if (toolHeight != false) {
+//                        vApp.wb.utility.beforeSend({'virtualWindow': {'shareBrowserWidth': true, 'browserRes': res, 'toolHeight': toolHeight}});
+//                    } else {
+//                        vApp.wb.utility.beforeSend({'virtualWindow': {'shareBrowserWidth': true, 'browserRes': res}});
+//                    }
+//                },
+                
                 setUserStatus: function(storageHasTeacher, storageHasReclaim) {
                     //TODO storageHasTeacher check with null rather than style of now.
                     if (!storageHasTeacher && !storageHasReclaim) {
@@ -875,8 +883,10 @@
                     }
                     return true;
                 },
+                
                 actionAfterRemovedUser: function() {
                     vApp.wb.utility.makeCanvasDisable();
+                    
                     vApp.wb.utility.setStyleUserConnetion('con', 'coff');
                     vApp.wb.utility.removeVirtualWindow('virtualWindow');
                     vApp.wb.user.connected = false;
@@ -889,6 +899,7 @@
                         }
                     }
                 },
+                
                 sendRequest: function(msg, value) {
                     vApp.wb.utility.beforeSend({'reclaimRole': true});
                 },
@@ -979,6 +990,15 @@
                          rightOffSet = window.innerWidth - (elemContainer.clientWidth + (offset.x - rspace));
                     }
                     return rightOffSet;
+                },
+                initUpdateInfo  : function (oldData2){
+                     oldData2 = vApp.wb.receivedPackets;
+                    setInterval(function (){
+                        if(document.getElementById(vApp.wb.receivedPackDivPS) != null){
+                            oldData2 = vApp.wb.utility.calcPsRecvdPackets(oldData2);
+                            document.getElementById(vApp.wb.receivedPackDiv).innerHTML = vApp.wb.receivedPackets;
+                        }
+                    }, 1000);
                 }
             };
         }

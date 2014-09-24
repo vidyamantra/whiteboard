@@ -46,7 +46,7 @@
             },
             
             sidebarHeightInit : function (){
-                 var sidebar = document.getElementById("widgetRightSide");
+                var sidebar = document.getElementById("widgetRightSide");
                 sidebar.style.height = (window.innerHeight) + "px";
             },
             

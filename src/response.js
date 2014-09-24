@@ -39,7 +39,9 @@
                     canvasWrapper.className = canvasWrapper.className.replace(/\bstudent\b/, ' ');
                     canvasWrapper.className = 'teacher';
                     localStorage.canvasDrwMsg = true;
-                    vApp.wb.utility.setStyleUserConnetion('coff', 'con');
+                    
+                    //vApp.wb.utility.setStyleUserConnetion('coff', 'con');
+                    
                 }
             },
             assignRole: function(fromUserId, id, socket, toolHeight) {
@@ -59,11 +61,12 @@
                     canvasWrapper.className = canvasWrapper.className.replace(/\bstudent\b/, ' ');
                     canvasWrapper.className = 'teacher';
 
-                    vApp.wb.user.connected = true;
+                  //  vApp.wb.user.connected = true;
 
                     var toolHeight = localStorage.getItem('toolHeight');
                     vApp.wb.utility.setCommandToolHeights(toolHeight, 'increment');
-                    vApp.wb.utility.setStyleUserConnetion('coff', 'con', 'fromAssign');
+                    
+                    //vApp.wb.utility.setStyleUserConnetion('coff', 'con', 'fromAssign');
 
                 } else {
                     vApp.wb.utility.uniqueArrOfObjsToStudent();
@@ -79,70 +82,89 @@
                     localStorage.setItem('canvasDrwMsg', true);
                 }
             },
-            videoInit: function(fromUserId, id) {
-                if (fromUserId != id) {
-                    if (!vApp.wb.videoAdd) {
-                        vApp.wb.utility.beforeSend({'foundVideo': false});
-                    } else {
-                        vApp.wb.utility.beforeSend({'foundVideo': true, 'fromUser': fromUserId});
-                    }
-                }
-            },
-            foundVideo: function(foundVideo, formUserId) {
-                (!foundVideo) ? window.isVideoFound(false, formUserId) : window.isVideoFound(true, formUserId);
-            },
+//            videoInit: function(fromUserId, id) {
+//                if (fromUserId != id) {
+//                    if (!vApp.wb.videoAdd) {
+//                        vApp.wb.utility.beforeSend({'foundVideo': false});
+//                    } else {
+//                        vApp.wb.utility.beforeSend({'foundVideo': true, 'fromUser': fromUserId});
+//                    }
+//                }
+//            },
+//            foundVideo: function(foundVideo, formUserId) {
+//                (!foundVideo) ? window.isVideoFound(false, formUserId) : window.isVideoFound(true, formUserId);
+//            },
+            
             checkUser: function(e, id, storageHasTeacher) {
                 
-                var joinId = e.message.joinId;
-                vApp.wb.joinUserId = joinId;
-                var alreadyExist = vApp.wb.utility.existUserLikeMe(e);
-                if ((e.fromUser.userid == id && e.fromUser.userid == joinId)) {
-                    setTimeout(
-                            function() {
-                                alreadyExist = vApp.wb.utility.existUserLikeMe(e);
-                                  // aug
-//                                if (alreadyExist) {
-//                                    var canvasContainer = document.getElementById('containerWb');
-//                                    canvasContainer.parentNode.removeChild(canvasContainer);
-//                                    alert('Either Teacher Or Student is already existed, \nIt\'s also possible there other role is passing');
-//                                    io.disconnect();
-//                                    return 'disconnect';
-//                                } else {
+//                var joinId = e.message.joinId;
+//                vApp.wb.joinUserId = joinId;
+//                var alreadyExist = vApp.wb.utility.existUserLikeMe(e);
+//                if ((e.fromUser.userid == id && e.fromUser.userid == joinId)) {
+//                    setTimeout(
+//                            function() {
+//                                alreadyExist = vApp.wb.utility.existUserLikeMe(e);
+//                                  // aug
+////                                if (alreadyExist) {
+////                                    var canvasContainer = document.getElementById('containerWb');
+////                                    canvasContainer.parentNode.removeChild(canvasContainer);
+////                                    alert('Either Teacher Or Student is already existed, \nIt\'s also possible there other role is passing');
+////                                    io.disconnect();
+////                                    return 'disconnect';
+////                                } else {
+////                                    vApp.wb.utility.shareVideoInformation(e, storageHasTeacher);
+////                                    vApp.wb.utility.makeUserAvailable(e.message.checkUser.e.clientLen);
+////                                    if (vApp.wb.user.connected && !vApp.wb.drawMode) {
+////                                        vApp.wb.utility.makeCanvasEnable();
+////                                    }
+////                                }
 //                                    vApp.wb.utility.shareVideoInformation(e, storageHasTeacher);
 //                                    vApp.wb.utility.makeUserAvailable(e.message.checkUser.e.clientLen);
 //                                    if (vApp.wb.user.connected && !vApp.wb.drawMode) {
 //                                        vApp.wb.utility.makeCanvasEnable();
 //                                    }
-//                                }
-                                    vApp.wb.utility.shareVideoInformation(e, storageHasTeacher);
-                                    vApp.wb.utility.makeUserAvailable(e.message.checkUser.e.clientLen);
-                                    if (vApp.wb.user.connected && !vApp.wb.drawMode) {
-                                        vApp.wb.utility.makeCanvasEnable();
-                                    }
-                            }, 1000  //time may increased according to server response
-                            );
-                } else {
+//                            }, 1000  //time may increased according to server response
+//                            );
+//                } else {
+//                    vApp.wb.utility.makeUserAvailable(e.message.checkUser.e.clientLen);
+//                }
+                var joinId = e.message.joinId;
+                if ((typeof vcan.teacher == 'undefined') && (!storageHasTeacher) && (e.fromUser.userid == id) && (e.fromUser.userid == joinId)) {
+                    vApp.wb.utility.makeCanvasDisable();
+                }
+                
+                if (e.fromUser.userid == id ){
+                    vApp.wb.utility.initDefaultInfo(e, wbUser.role);
+                    
+                    //vApp.wb.utility.makeCanvasEnable();
+                    
                     vApp.wb.utility.makeUserAvailable(e.message.checkUser.e.clientLen);
                 }
                 
+                
+                
+                
+                
              //   vApp.wb.utility.makeUserAvailable(e.message.checkUser.e.clientLen);
             },
-            createPeer: function(currObj, peerObj, id) {
-                vApp.gObj.video.currBrowser = currObj;
-                vApp.gObj.video.peerBrowser = peerObj;
-
-                if (vApp.gObj.video.currBrowser == id) {
-                    if (typeof oneExecuted == 'undefined') {
-                        oneExecuted = true; //TODO this should be wrapper with some object
-                        vApp.wb.utility.beforeSend({'isChannelReady': true});
-                        vApp.gObj.video.init(true);
-                        vApp.gObj.video.toUser = vApp.gObj.video.peerBrowser;
-                    }
-                } else {
-                    cthis.isStarted = false;
-                }
-
-            },
+            
+//            createPeer: function(currObj, peerObj, id) {
+//                vApp.gObj.video.currBrowser = currObj;
+//                vApp.gObj.video.peerBrowser = peerObj;
+//
+//                if (vApp.gObj.video.currBrowser == id) {
+//                    if (typeof oneExecuted == 'undefined') {
+//                        oneExecuted = true; //TODO this should be wrapper with some object
+//                        vApp.wb.utility.beforeSend({'isChannelReady': true});
+//                        vApp.gObj.video.init(true);
+//                        vApp.gObj.video.toUser = vApp.gObj.video.peerBrowser;
+//                    }
+//                } else {
+//                    cthis.isStarted = false;
+//                }
+//
+//            },
+            
             video: function(formUserId, id, msgVideo) {
                 var video = vApp.gObj.video;
                 if (typeof video != 'undefined') {
