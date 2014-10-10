@@ -15,20 +15,78 @@
                         tag.clasName = clasName;
                     }
                     return tag;
-                 },
-
+                },
+                
+                
+                togglePacketCont : function (cthis){
+                   var classes = this.className.split(" ");
+                   for(var i=0; i<classes.length; i++){
+                       if(classes[i] == 'display'){
+                           this.className = 'hide';
+                           this.innerHTML = "+";
+                           cthis._togglePacketCont(classes[i]);
+                           break;
+                       }else if(classes[i] == 'hide'){
+                           this.className = 'display';
+                           this.innerHTML = "-";
+                           cthis._togglePacketCont(classes[i]);
+                           break;
+                       }
+                   }
+                },
+                
+                _togglePacketCont : function (label){
+                    var style  = label == 'display' ? 'none' : 'block';
+               
+                    var heading = document.getElementById("dataInfoHeading");
+                    heading.style.display = style;
+                    
+                    var packCont = document.getElementById("packetContainer");
+                    packCont.style.display = style;
+                    
+                    var packCont = document.getElementById("informationCont");
+                    packCont.style.display = style;
+                },
+                
+                
+                
                 //creating divs about sending data per seconds and total
                 createPacketContainer :function() {
                     //Creating Column Two.
                     var packetContainer = document.getElementById('packetContainer');
-
+                    
+//                    var toggleBox = document.createElement("div");
+//                    toggleBox.id = "displayHeader";
+//                    toggleBox.innerHTML = "-";
+//                    packetContainer.appendChild(toggleBox);
+                    
                     var headingTag = document.createElement("h4");
                     headingTag.id = 'dataInfoHeading';
-                    headingTag.innerHTML = this.lang.getString('dataDetails');
-
+                    headingTag.innerHTML = vApp.lang.getString('dataDetails');
+                    
+                    var toggleBox = document.createElement("div");
+                    toggleBox.id = "toggleContainer";
+                    toggleBox.className = "display";
+                     
+                    var that = this; 
+                    toggleBox.addEventListener('click', function (){
+                        that.togglePacketCont.call(this, that);
+                        
+                    });
+                    
+                    toggleBox.innerHTML = "-";
+                    //mainContainer.appendChild(toggleBox);
+                    
                     var mainContainer = document.getElementById('mainContainer');
-                    mainContainer.insertBefore(headingTag, mainContainer.firstChild);
+                    mainContainer.insertBefore(toggleBox, mainContainer.firstChild);
+                    
+               
+                    
+               //     toggleBox.addEventListener('click', this.togglePacktetCont);
 
+                    //var mainContainer = document.getElementById('mainContainer');
+                    mainContainer.insertBefore(headingTag, packetContainer);
+                    
                     var labelDiv = this.createPacketContDiv("dataInformation");
                     packetContainer.appendChild(labelDiv);
 
@@ -37,11 +95,11 @@
                     labelDiv.appendChild(blankDiv);
 
                     var perSecLabel = this.createPacketContDiv("perSecData");
-                    perSecLabel.innerHTML = this.lang.getString('perSecond');
+                    perSecLabel.innerHTML = vApp.lang.getString('perSecond');
                     labelDiv.appendChild(perSecLabel);
 
                     var totalDataLabel = this.createPacketContDiv('totalDataLabel');
-                    totalDataLabel.innerHTML = this.lang.getString('total');
+                    totalDataLabel.innerHTML = vApp.lang.getString('total');
                     labelDiv.appendChild(totalDataLabel);
 
                     //Creating Column Two.
@@ -49,7 +107,7 @@
                     packetContainer.appendChild(sentPackCont);
 
                     var sendPacketPSLabel = this.createPacketContDiv('sentPacketsLabel');
-                    sendPacketPSLabel.innerHTML = this.lang.getString('sentPackets');
+                    sendPacketPSLabel.innerHTML = vApp.lang.getString('sentPackets');
                     sentPackCont.appendChild(sendPacketPSLabel);
 
                     var sendPacketPS = this.createPacketContDiv('sendPackPsCont');
@@ -71,7 +129,7 @@
                     packetContainer.appendChild(receviedPackCont);
 
                     var receivedPacketPSLabel = this.createPacketContDiv('receivedPacketsLabel');
-                    receivedPacketPSLabel.innerHTML = this.lang.getString('receviedPackets');
+                    receivedPacketPSLabel.innerHTML = vApp.lang.getString('receviedPackets');
                     receviedPackCont.appendChild(receivedPacketPSLabel);
 
                     var receivePacketPS = this.createPacketContDiv('receivePackPsCont');
@@ -95,7 +153,7 @@
                     ///creating sent message information
                     var informationCont = document.getElementById('informationCont');
                     label = document.createElement('label');
-                    label.innerHTML = this.lang.getString("sentMessageInfo");
+                    label.innerHTML = vApp.lang.getString("sentMessageInfo");
 
                     var sentMsgInfoCont = this.createPacketContDiv('sentMsgInfoContainer');
                     sentMsgInfoCont.appendChild(label);
@@ -107,7 +165,7 @@
 
                     var receivedMsgInfoCont = this.createPacketContDiv('receivedMsgInfoContainer');
                     label = document.createElement('label');
-                    label.innerHTML = this.lang.getString("receivedMessageInfo");
+                    label.innerHTML = vApp.lang.getString("receivedMessageInfo");
 
                     receivedMsgInfoCont.appendChild(label);
 

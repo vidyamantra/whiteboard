@@ -107,7 +107,6 @@
                         //alert('suman bogati');
                         //debugger;
                     }
-
                 },
                 /**
                  * By this function  all drawn object over the canvas would be erased   
@@ -115,7 +114,9 @@
                  * @param delRpNode
                  */
                 clearAll: function(delRpNode, pkMode) {
-
+                    //TODO this should be done in proper way
+                    //vApp.recorder.items = [];
+                    
                     vApp.wb.uid = 0; //this should be done with proper way
                     vApp.wb.lt = "";
                     var vcan = vApp.wb.vcan;
@@ -479,7 +480,19 @@
                     var toolHeight = vApp.vutil.chkValueInLocalStorage('toolHeight');
 
                     localStorage.clear();
-
+                    vApp.recorder.items = [];
+                    
+                    // TODO this should be done by proepr way
+                    // it has to be done in function
+                    vApp.gObj.video.audio.bufferSize = 0;
+                    vApp.gObj.video.audio.encMode = "alaw";
+                    vApp.gObj.video.audio.an = -1;
+                    vApp.gObj.video.audio.rec = '';
+                    vApp.gObj.video.audio.audioNodes = [];
+                    vApp.gObj.video.audio.tempAudArr = [];
+                    
+                    vApp.gObj.video.audio.initAudioNode();
+                    
                     if (teacherId) {
                         localStorage.setItem('teacherId', teacherId);
                     }
@@ -755,12 +768,12 @@
 
                     var res = vApp.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
 
-                    var toolHeight = vApp.wb.utility.getWideValueAppliedByCss('commandToolsWrapper');
-                    if (toolHeight != false) {
-                        vApp.wb.utility.beforeSend({'virtualWindow': {'shareBrowserWidth': true, 'browserRes': res, 'toolHeight': toolHeight, 'role': wbUser.role}});
-                    } else {
-                        vApp.wb.utility.beforeSend({'virtualWindow': {'shareBrowserWidth': true, 'browserRes': res, 'role': wbUser.role}});
-                    }
+//                    var toolHeight = vApp.wb.utility.getWideValueAppliedByCss('commandToolsWrapper');
+//                    if (toolHeight != false) {
+//                        vApp.wb.utility.beforeSend({'virtualWindow': {'shareBrowserWidth': true, 'browserRes': res, 'toolHeight': toolHeight, 'role': wbUser.role}});
+//                    } else {
+//                        vApp.wb.utility.beforeSend({'virtualWindow': {'shareBrowserWidth': true, 'browserRes': res, 'role': wbUser.role}});
+//                    }
                 },
                 alreadyExistToolBar: function() {
                     var rectDiv = document.getElementById('t_rectangle');
@@ -991,6 +1004,7 @@
                     }
                     return rightOffSet;
                 },
+                
                 initUpdateInfo  : function (oldData2){
                      oldData2 = vApp.wb.receivedPackets;
                     setInterval(function (){
@@ -999,6 +1013,11 @@
                             document.getElementById(vApp.wb.receivedPackDiv).innerHTML = vApp.wb.receivedPackets;
                         }
                     }, 1000);
+                },
+                
+                objPutInContainer : function (obj){
+                    vcan.main.replayObjs.push(obj);
+                    localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
                 }
             };
         }

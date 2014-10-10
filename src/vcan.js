@@ -21,6 +21,7 @@
                 create: function(canvasId) {
                     if (canvasId.charAt(0) == '#') {
                         var cid = canvasId.substring(1, canvasId.length);
+                        
                         vcan.utility.canvasCalcOffset(cid);
 
                         return new vcan.main(canvasId);

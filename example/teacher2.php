@@ -62,10 +62,10 @@ $sid = 12;
 	
 	window.io = io;
     //the www path for whiteboard
-    var whiteboardPath =  'http://192.168.1.118/whiteboard/';
+    var whiteboardPath =  'http://192.168.1.114/whiteboard/';
 	</script>
 
-   <div id="vcanvas" class="socketon teacher" style="width: 961px;">
+   <div id="vcanvas" class="socketon teacher" >
     <div id="containerWb">
       
     </div>

@@ -118,8 +118,8 @@ body {
 
 #fireFoxWebrtcCont{
     position : absolute;
-    left: 150px;
-    top : 100px;
+    left: 160px;
+    top : 173px;
     z-index: 100;
 }
 
@@ -448,6 +448,7 @@ a[title]:hover:after {
 
 #dataInfoHeading{
     width:915px;
+    text-align:center;
 }
 
 #informationCont{
@@ -677,7 +678,7 @@ a[title]:hover:after {
 .con.controlCmd a{}
 
 .controlCmd.coff{
-	margin-right : 10px;
+    margin-right : 10px;
 }
 
 #page-mod-onetoone-whiteboard #divForReloadMsgAnchor{
@@ -685,36 +686,30 @@ a[title]:hover:after {
 }
 
 #divForReloadMsg{
-    padding : 10px;
     border:2px solid #76CFF5;
     width:auto;
     float:left;
-    margin-top:5px;
     background : #E4EFF5;
-    margin-left : 35%;
     border-radius:5px;
     padding:15px;
     line-height: 120%;
     letter-spacing: 0.3px;
+    margin : 15px 0 15px 0;
 }
 
 #serverErrorCont, #divForReloadMsg{
     padding : 10px;
     width:auto;
     float:left;
-    margin-top:5px;
     margin-left : 35%;
     border-radius:5px;
     padding:15px;
     line-height: 120%;
     letter-spacing: 0.3px;
-
+    width : 46%;
 }
 
-#divForReloadMsg{
-    border:2px solid #76CFF5;
-    background : #E4EFF5;
-}
+
 
 #serverErrorCont{
     border: 2px solid #9E1333;
@@ -734,8 +729,11 @@ a[title]:hover:after {
 
 #widgetRightSide{
    float:left; 
-   width : 260px;
-   border :1px solid #ccc;
+/*   width : 260px;*/
+    width : 260px;
+    border : 1px solid #ccc; 
+    border-left :none; 
+    
 /*   height : 95%;*/
 /*   border-left : none;*/
 }
@@ -800,7 +798,8 @@ video:hover,  canvas:hover{
 .videoSubWrapper[data-uname]:hover:after{
     content: attr(data-uname);
     padding: 2px 5px 2px 5px;
-    color: rgba(232,2,83, 1);
+    /* color: rgba(232,2,83, 1);*/
+    color: rgba(48,39,2, 1);
     position: absolute;
     margin-left:-40px;
     left: 40;
@@ -810,7 +809,6 @@ video:hover,  canvas:hover{
     background: rgba(240,245,240,0.6);
     font-size:80%;
     letter-spacing: 110%;
-    
 }
 
 #allVideosCont{
@@ -821,15 +819,16 @@ video:hover,  canvas:hover{
     clear : both;
     width : 100%;
     height :92%;
-    
     /* border:2px solid orange; */
 }
 
 #textInputBox {
     width : 100%;
-    height : 6%;
+    height : 5%;
     padding : 5px 3px 5px 3px;
     resize:none;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
 
 
@@ -840,7 +839,7 @@ video:hover,  canvas:hover{
 
 #chatBox{
     font-size : 80%;
-    border-top:2px solid #ccc;
+    border-top:1px solid #ccc;
 
 }
 
@@ -928,15 +927,104 @@ video:hover,  canvas:hover{
 
 .Local {
     margin: 4px 7px 0 7px;
-    border: 1px solid #ccc;
+/*    border: 1px solid #ccc;*/
 }
 
 #vAppScreenShareLocalVideo{
+/*    width : 100%;*/
+}
+
+#vAppScreenShareLocalTempVideo, #vAppwholescreenShareLocalTempVideo  {
+    display:none;
+}
+
+#commonChatBoardLabel{
+/*    position: fixed;
+    top: 50%;
+    left: 82%;
+    width: 140px;
+    color : #ccc;
+    font-size : 20px;
+    opacity : 0.7;*/
+}
+
+#commonChatBoardLabel{
+    position: relative;
+    width: 140px;
+    color: #ccc;
+    font-size: 24px;
+    opacity: 0.8;
+    left: 50px;
+    top: -55%;
+}
+
+
+
+#commonChatBoardLabel #firstWord{
+    margin-left: 8%;
+    font-size: 20px;
     
 }
 
 
+::-webkit-input-placeholder, :-moz-placeholder  {
+   opacity: 0.8 !important;
+}
 
-#vAppScreenShareLocalTempVideo, #vAppwholescreenShareLocalTempVideo  {
-    display:none;
+#textInputBox{
+    padding-top: 11px;
+    padding-left: 8px;
+}
+
+/*
+:-moz-placeholder { 
+   opacity: 0.8;  
+}
+*/
+
+#toggleContainer{
+   font-weight: bold;
+    color: #686464;
+    width: 7px;
+    border:1px solid #ccc;
+    padding-left:4px;
+    padding-right : 4px;
+    cursor : pointer;
+}
+
+#toggleContainer.display{
+    position: relative;
+    top: 25px;
+    left: 10px;
+}
+#toggleContainer.hide{
+    margin-left : 4px;
+    padding-right : 6px;
+}
+
+
+#t_replay img{
+    width : 24px;
+    height : 24px;
+}
+
+#vAppCont{
+/*    float : left;*/
+}
+
+#vAppWhiteboard{
+    float : left;
+}
+
+#vAppCont{
+    float:left;
+}
+
+canvas {
+    padding : 0;
+    margin : 0;
+}
+
+#vAppOptionsCont{
+    clear : both;
 }

@@ -35,7 +35,7 @@ function(window) {
                 //var obj = {'cmd': vApp.wb.keyBoard.prvTool,  mdTime : currTime};
                 var obj = {'cmd': vApp.wb.keyBoard.prvTool, mt: currTime};
                 vcan.main.replayObjs.push(obj);
-                //io.send({'repObj': [obj]}); //after optimized
+                //vApp.wb.utility.beforeSend({'repObj': [obj]}); //after optimized
                 vApp.wb.utility.beforeSend({'repObj': [obj]});
             }
         }

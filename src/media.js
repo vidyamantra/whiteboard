@@ -4,31 +4,17 @@
   */
 (
     function(window) {
-        var io = window.io;
-//        var vcan = window.vcan;
-//        
-//        vApp.wb = window.vApp.wb;
-        //this.recordAudio = false;
+ 
+     repMode = false;
+     var io = window.io;
         
         
-        var responseErorr = function() {
-            console.log("this error is come when the create and answer is occurring");
-        }
         
-        //TODO change naming convention
-//        var encMode = "alaw"; 
-//
-//        var resampler = new Resampler(44100, 8000, 1, 4096);
-//        var Html5Audio = {};
-//        Html5Audio.audioContext = new AudioContext();
-//        
-//        var imageSlices;
-//        var sl= 0;
-//        var prevImageSlices = [];
-//        var completeImg = [];
-        
-        // videoChat name should be converted into 
-        // another name
+      var responseErorr = function() {
+        console.log("this error is come when the create and answer is occurring");
+      }
+      
+      var ar = 0;
         
       var  media = function() {
             return {
@@ -49,16 +35,33 @@
                 videoContainerId: "videos",
                 
                 audio : {
-                   audioStreamArr : [],
-                   tempAudioStreamArr :  [],
-                   recordingLength : 0,
-                   bufferSize : 0,
-                   encMode : "alaw",
-                   recordAudio : false,
-                   resampler : new Resampler(44100, 8000, 1, 4096),
+                  audioStreamArr : [],
+                  tempAudioStreamArr :  [],
+                  recordingLength : 0,
+                  bufferSize : 0,
+                  encMode : "alaw",
+                  recordAudio : false,
+                  resampler : new Resampler(44100, 8000, 1, 4096),
+                  rec : '',
+                  an : - 1,
+                  audioNodes : [],
+                  tempAudArr : [],
+                   
                    Html5Audio : {audioContext : new AudioContext()},
-                    init : function (){
-
+                   init : function (){
+                        
+//                        this.audioStreamArr = [];
+//                        this.tempAudioStreamArr =  [];
+//                        this.recordingLength = 0;
+//                        this.bufferSize = 0;
+//                        this.encMode = "alaw";
+//                        this.recordAudio = false;
+//                        this.resampler = new Resampler(44100, 8000, 1, 4096);
+//                        this.rec = '';
+//                        this.an = -1;
+//                        this.audioNodes = [];
+//                        this.tempAudArr = [];
+                        
                         this.graph = {
                             height : 56, 
                             width : 4, 
@@ -98,30 +101,82 @@
                         };
                     },
                     
-                    recorderProcess : function (e) {
-//                        this.audioInGraph();
-                        this.calcAverage();
-                        
-                        var left = e.inputBuffer.getChannelData(0);
-                        var samples = this.resampler.resampler(left);
-
-                        if(!this.recordAudio){
-                            this.audioStreamArr.push(new Float32Array(samples));
-                            this.recordingLength += this.bufferSize;
+                    
+                    ab2str : function (buf) {
+                        return String.fromCharCode.apply(null, new Int8Array(buf));
+                    },
+                    
+                    str2ab : function (str) {
+                        var buf = new ArrayBuffer(str.length); // 2 bytes for each char
+                        var bufView = new Int8Array(buf);
+                        for (var i=0, strLen=str.length; i<strLen; i++) {
+                          bufView[i] = str.charCodeAt(i);
                         }
+                        return bufView;
+                    },
+                    
+                    recorderProcess : function (e) {
+                        var currTime = new Date().getTime();
+                        
+                        
+                    // this.audioInGraph();
+                        console.log("out of recording");
+                        if(!repMode){
+//                            if (cthis.stream.ended) {
+//                                this.onaudioprocess = function () {};
+//                                return;
+//                            }
+                            
+                            console.log("Audio recording");
+                            this.calcAverage();
+                            
+                            var left = e.inputBuffer.getChannelData(0);
+                            var samples = this.resampler.resampler(left);
 
+                            if(!this.recordAudio){
+                                   this.audioNodes[this.an].adArr.push(new Float32Array(samples));
+                                
+//                                this.audioStreamArr.push(new Float32Array(samples));
+                                 this.recordingLength += this.bufferSize;
+                            }
+
+//                            var leftSix = convertFloat32ToInt16(samples);
+//                            var encoded = G711.encode(leftSix, {
+//                                alaw: this.encMode == "alaw" ? true : false
+//                            });
+//
+//                            var sendstring = this.ab2str(encoded);
+//                            var send = LZString.compressToBase64(sendstring);
+//
+//                            this.tempAudioStreamArr.push(send);
+//                            localStorage.audioStream = JSON.stringify(this.tempAudioStreamArr);
+                            
+                            
+                            var send = this.audioInLocalStorage(samples);
+                            vApp.wb.utility.beforeSend({'audioSamp' : send});
+                        }   
+                    },
+                    
+                    audioInLocalStorage : function (samples){
                         var leftSix = convertFloat32ToInt16(samples);
+                        
                         var encoded = G711.encode(leftSix, {
                             alaw: this.encMode == "alaw" ? true : false
                         });
 
-
-                        var sendstring = vApp.vutil.ab2str(encoded);
+                        var sendstring = this.ab2str(encoded);
                         var send = LZString.compressToBase64(sendstring);
 
-                        this.tempAudioStreamArr.push(send);
-                        localStorage.audioStream = JSON.stringify(this.tempAudioStreamArr);
-                        vApp.wb.utility.beforeSend({'audioSamp' : send});
+                        //this.tempAudioStreamArr.push(send);
+                        //this.audioNodes[this.an].tempAudArr = {mt:this.audioNodes[this.an].mt, adArr = send}
+                        
+//                        this.audioNodes[this.an].tempAudArr.adArr.push(send); 
+                        
+                        this.tempAudArr[this.an].adArr.push(send); 
+                        
+                        //localStorage.audioStream = JSON.stringify(this.audioNodes[this.an].tempAudArr);
+                        localStorage.audioStream = JSON.stringify(this.tempAudArr);
+                        return send;    
                     },
                     
                     calcAverage : function (){
@@ -154,8 +209,9 @@
                     },
                     
                     play : function (receivedAudio, inHowLong, offset){
+                        
                         var audioString = LZString.decompressFromBase64(receivedAudio);
-                        var clip = vApp.vutil.str2ab(audioString);
+                        var clip = this.str2ab(audioString);
 
                         var samples = G711.decode(clip, {
                             alaw: this.encMode == "alaw" ? true : false,
@@ -176,46 +232,113 @@
                     }, 
                         
                     replay : function (inHowLong, offset){
-                        //cthis = this;
+                        repMode = true;
                         var samples,whenTime,newBuffer,newSource, totArr8;
-                        if(this.audioStreamArr.length > 0){
-                            samples =  mergeBuffers(this.audioStreamArr);;
+                        
+                        //if(this.audioStreamArr.length > 0){
+                            if(this.audioNodes.length > 0){
+                                samples =  this.mergeBuffers(this.audioNodes[ar].adArr);
 
-                            whenTime = this.Html5Audio.audioContext.currentTime + inHowLong;
+                                whenTime = this.Html5Audio.audioContext.currentTime + inHowLong;
+                                newBuffer = this.Html5Audio.audioContext.createBuffer(1, samples.length, 7800)
+                                newBuffer.getChannelData(0).set(samples);
 
-                            //newBuffer = this.Html5Audio.audioContext.createBuffer(1, samples.length, 8000);
-                            newBuffer = this.Html5Audio.audioContext.createBuffer(1, samples.length, 8000);
-                            newBuffer.getChannelData(0).set(samples);
+                                newSource = this.Html5Audio.audioContext.createBufferSource();
+                                newSource.buffer = newBuffer;
 
-                            newSource = this.Html5Audio.audioContext.createBufferSource();
-                            newSource.buffer = newBuffer;
-
-                            newSource.connect(this.Html5Audio.audioContext.destination);
-                            newSource.start(whenTime, offset); 
+                                newSource.connect(this.Html5Audio.audioContext.destination);
+                                newSource.start(whenTime, offset); 
+                                
+                                if(typeof this.audioNodes[ar + 1] != 'undefined'){
+                                    var repTime = this.audioNodes[ar + 1].mt - this.audioNodes[ar + 0].mt;
+                                    var that = this;
+                                    ar++;
+                                    console.log('repTime ' + repTime);
+                                    
+                                    setTimeout(
+                                       function (){
+                                           that.replay.call(that, 0, 0);
+                                       },
+                                       repTime + 10
+                                    );
+                                }
+                            }
+                        //}
+                    },
+                    
+                    mergeBuffers : function(channelBuffer){
+                        var result = new Float32Array(this.recordingLength);
+                        var offset = 0;
+                        var lng = channelBuffer.length;
+                        for (var i = 0; i < lng; i++){
+                          var buffer = channelBuffer[i];
+                          console.log("bf Length " + buffer.length);
+                          result.set(buffer, offset);
+                          offset += buffer.length;
                         }
+                        return result;
                     },
                     
                     assignFromLocal : function () {
                         this.init();
-                        var arrStream = JSON.parse(localStorage.audioStream);
-                        for(var i=0; i<arrStream.length; i++){
-                            var rec1 = LZString.decompressFromBase64(arrStream[i]);
-                            var clip = vApp.vutil.str2ab(rec1);
+                        var arrAudioNode = JSON.parse(localStorage.audioStream);
+                        for(var j=0; j < arrAudioNode.length; j++){
+                            
+                            arrStream = arrAudioNode[j].adArr;
+                            this.an++;
+                            this.audioNodes[this.an] = [];
+                            this.audioNodes[this.an] = {mt : arrAudioNode[j].mt, adArr : []};
+                            this.tempAudArr[this.an] = [];
+                            this.tempAudArr[this.an] = {mt : arrAudioNode[j].mt, adArr : []};
 
-                            samples = G711.decode(clip, {
-                               alaw: this.encMode == "alaw" ? true : false,
-                               floating_point : true,
-                               Eight : true
-                            });
+                        //    this.audioNodes[this.an].tempAudArr = {mt : arrAudioNode[j].mt, adArr : []};   
 
-                            this.audioStreamArr.push(new Float32Array(samples));
-                            this.recordingLength += 16384;
+                            for(var i=0; i<arrStream.length; i++){
+                                // this.audioNodes[this.an].adArr.push(new Float32Array(samples));
+                                 var rec1 = LZString.decompressFromBase64(arrStream[i]);
+                                 var clip = this.str2ab(rec1);
+
+                                 samples = G711.decode(clip, {
+                                    alaw: this.encMode == "alaw" ? true : false,
+                                    floating_point : true,
+                                    Eight : true
+                                 });
+
+                                 //this.audioStreamArr.push(new Float32Array(samples));
+
+                                 this.audioNodes[this.an].adArr.push(new Float32Array(samples));
+                                 this.recordingLength += 16384;
+                                 this.audioInLocalStorage(samples);
+                            }
+                            
                         }
+                        
+//                        for(var i=0; i<arrStream.length; i++){
+//                           // this.audioNodes[this.an].adArr.push(new Float32Array(samples));
+//                            var rec1 = LZString.decompressFromBase64(arrStream[i].adArr);
+//                            var clip = this.str2ab(rec1);
+//
+//                            samples = G711.decode(clip, {
+//                               alaw: this.encMode == "alaw" ? true : false,
+//                               floating_point : true,
+//                               Eight : true
+//                            });
+//                            
+//                            //this.audioStreamArr.push(new Float32Array(samples));
+//                            
+//                            this.an++;
+//                            
+//                            alert('should be first' + this.an);
+//                            this.audioNodes[this.an] = [];
+//                            this.audioNodes[this.an] = {mt : arrStream[i].mt,  adArr : new Float32Array(samples)};
+//                            this.audioNodes[this.an].tempAudArr = {mt : arrStream[i].mt, adArr : []};   
+//                            this.recordingLength += 16384;
+//                            this.audioInLocalStorage(samples);
+//                        }
                     }, 
                     
                     manuPulateStream : function (){
                         var stream = cthis.stream;
-                        
                         if(!vApp.vutil.chkValueInLocalStorage('recordStart')){
                             vApp.wb.recordStarted = new Date().getTime();
                             localStorage.setItem('recordStart', vApp.wb.recordStarted);
@@ -229,20 +352,39 @@
 
                         var audioInput = context.createMediaStreamSource(stream);
                         cthis.audio.bufferSize = 16384;
+                            
+                        cthis.audio.rec = context.createScriptProcessor(cthis.audio.bufferSize, 1, 1);
+                        
+                        //var ctTime = new Date().getTime();
+                       
+//                        cthis.audio.an++;
+//                        localStorage.setItem('an', cthis.audio.an);
+//                        cthis.audio.audioNodes[cthis.audio.an] = {mt : ctTime, adArr : []};
+//                        cthis.audio.tempAudArr[cthis.audio.an] = {mt : ctTime, adArr : []};
 
-                        var recorder = context.createScriptProcessor(cthis.audio.bufferSize, 1, 1);
-                        recorder.onaudioprocess = cthis.audio.recorderProcess.bind(cthis.audio);
-
+                        cthis.audio.initAudioNode();
+                        // NOTE, WARNING
+                        // THIS SHOULD BE DISPLAY
+                        cthis.audio.rec.onaudioprocess = cthis.audio.recorderProcess.bind(cthis.audio);
+                        
                         audioInput.connect(analyser);
-                        analyser.connect(recorder);
-
-                        recorder.connect(context.destination);
+                        analyser.connect(cthis.audio.rec);
+                        cthis.audio.rec.connect(context.destination);
+                    },
+                    
+                    initAudioNode : function (){
+                        var ctTime = new Date().getTime();
+                        cthis.audio.an++;
+                        localStorage.setItem('an', cthis.audio.an);
+                        cthis.audio.audioNodes[cthis.audio.an] = {mt : ctTime, adArr : []};
+                        cthis.audio.tempAudArr[cthis.audio.an] = {mt : ctTime, adArr : []};
                     },
                     
                     updateInfo : function (){
                         this.audioStreamArr = [];
                         vApp.wb.pageEnteredTime = vApp.wb.recordStarted =  new Date().getTime();
                         this.recordAudio = false;
+                        repMode = false;
                     }
                 },
                 
@@ -368,7 +510,7 @@
                              if(vApp.gObj.uRole == 't'){
                                  user.role = vApp.gObj.uRole;
                              }
-                             io.send({user : user, 'videoByImage': frame});
+                             vApp.wb.utility.beforeSend({user : user, 'videoByImage': frame});
                              },
                              1000
                          );
@@ -444,7 +586,9 @@
                 init: function(vbool) {
                     cthis = this; //TODO there should be done work for cthis
                     vcan.oneExecuted = true;
+                    
                     var audio =  (vApp.gObj.uRole == 't') ?  true : false;
+                    var audio =  true;
                     var session = {
                         audio : audio,
                         video: true
@@ -455,15 +599,25 @@
                     
                     var cNavigator =  vApp.adpt.init(navigator);
                     cNavigator.getUserMedia(session, this.handleUserMedia, this.handleUserMediaError);
+                    if (vApp.system.wbRtc.peerCon) {
+                        if (typeof localStorage.wbrtcMsg == 'undefined') {
+                            vApp.wb.view.multiMediaMsg('WebRtc');
+                            localStorage.wbrtcMsg = true;
+                        }
+                    }
+                    
                 },
                
                 //equivalent to initializeRecorder
                 handleUserMedia: function(stream) {
-                    
                     cthis.audio.init();
                     cthis.video.myVideo = document.getElementById("video"+ vApp.gObj.uid);
-                    
                     vApp.adpt.attachMediaStream(cthis.video.myVideo, stream);
+                    cthis.video.myVideo.muted = true;
+                    
+                    stream.ontimeupdate = function () {
+                        console.log("raja" + stream.currentTime);
+                    };
                     
                     if(vApp.gObj.uRole == 't'){
                         cthis.stream = stream;
@@ -474,7 +628,7 @@
                     cthis.video.myVideo.onloadedmetadata = function (){
                         cthis.video.startToStream();
                         cthis.video.updateHightInSideBar(cthis.video.myVideo.offsetHeight);
-//                        cthis.video.justForDemo();
+                        //cthis.video.justForDemo();
                     }
                 },
                 

@@ -209,9 +209,14 @@
                         var obj = {'mt': currTime, 'ac': 'd', 'x': this.startPosX, 'y': this.startPosY, 'mtext': textObj.text};
                         vApp.wb.uid++;
                         obj.uid = vApp.wb.uid;
+                        
                         vcan.main.replayObjs.push(obj);
                         localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
-                        // io.send({'repObj': [obj]});
+                        
+                        vApp.recorder.items.push(obj);
+                        localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                        
+                        // vApp.wb.utility.beforeSend({'repObj': [obj]});
                         vApp.wb.utility.beforeSend({'repObj': [obj]});
                         vApp.wb.utility.updateSentPackets(obj);
                     }

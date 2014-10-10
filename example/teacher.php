@@ -56,7 +56,7 @@ $uname = "raju shree";
 <script type="text/javascript">
 	<?php echo "wbUser.name='$uname';"; ?>
 	<?php echo "wbUser.id='".$uid."';"; ?>
-	<?php echo "wbUser.socketOn='1';"; ?>
+	<?php echo "wbUser.socketOn='0';"; ?>
 	<?php echo "wbUser.dataInfo='1';"; ?>
 	<?php echo "wbUser.room='215';"; ?>
 	<?php echo "wbUser.sid='".$sid."';"; ?>
@@ -76,23 +76,19 @@ $uname = "raju shree";
         return buf;
     }
     
-    
     var session = {
         audio: true,
         video: false
     };
 
     var recordRTC = null;
-
-//    navigator.getUserMedia(session, initializeRecorder, onError);
     var resampler = new Resampler(44100, 8000, 1, 4096);
 
     var Html5Audio = {};
     Html5Audio.audioContext = new AudioContext();
-    
-    var encMode = "alaw"; 
 
-    </script>
+    var encMode = "alaw"; 
+</script>
 
 
 <div id="vAppCont">
@@ -100,7 +96,7 @@ $uname = "raju shree";
  
 <div id="vAppWhiteboard" class="vmApp">
     
-   <div id="vcanvas" class="socketon teacher" style="width: 961px;">
+   <div id="vcanvas" class="socketon teacher">
        
     <div id="containerWb">
      
@@ -108,77 +104,13 @@ $uname = "raju shree";
 
 
     <div id="mainContainer">
-      <h4 id="dataInfoHeading">Data Details</h4>
 
       <div id="packetContainer">
-        <div id="dataInformation">
-          <div id="blankDiv">
-            &nbsp;<br />
-            &nbsp;
-          </div>
-
-          <div id="perSecData">
-            Per Second
-          </div>
-
-          <div id="totalDataLabel">
-            Total
-          </div>
-        </div>
-
-        <div id="sendPackCont">
-          <div id="sentPacketsLabel">
-            Sent<br />
-            <span>Packets</span>
-          </div>
-
-          <div id="sendPackPsCont">
-            <div id="sentPacketPS">
-              0
-            </div>
-          </div>
-
-          <div id="totSendPackCont">
-            <div id="sentPacket">
-              14391
-            </div>
-          </div>
-        </div>
-
-        <div id="receivePackCont">
-          <div id="receivedPacketsLabel">
-            Received<br />
-            <span>Pacekts</span>
-          </div>
-
-          <div id="receivePackPsCont">
-            <div id="receivedNumberPS">
-              0
-            </div>
-          </div>
-
-          <div id="totReceivedPackCont">
-            <div id="receivedNumber">
-              0
-            </div>
-          </div>
-        </div>
+       
       </div>
 
       <div id="informationCont">
-        <div id="sentMsgInfoContainer">
-          <label>Sent Message<br />
-          <span>Information</span></label>
-
-          <div id="sentMsgInfo"></div>
-        </div>
-
-        <div id="receivedMsgInfoContainer">
-          <label>Received Message<br />
-          <span>information</span></label>
-
-          <div id="rcvdMsgInfo"></div>
-        </div>
+        
       </div>
     </div>
 

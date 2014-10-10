@@ -177,7 +177,7 @@
                     vApp.wb.createDiv('t_replay', 'Replay', cmdToolsWrapper, 'tool');
 
                     //vApp.wb.createDiv('t_connect', 'conn', cmdToolsWrapper, 'controlCmd coff');
-                    vApp.wb.createDiv('t_assign', 'assign', cmdToolsWrapper, 'controlCmd');
+               //     vApp.wb.createDiv('t_assign', 'assign', cmdToolsWrapper, 'controlCmd');
 
 
                     vApp.wb.socketOn = parseInt(wbUser.socketOn);
@@ -241,12 +241,8 @@
                  * @param expects the mouse down event.
                  */
                 objInit: function(evt) {
-                    //to handle like this very dangerous, only for devloping purpose
-                    //vApp.wb.user.connected = true;
-                    //if (vApp.wb.user.connected) {
                     
                     var anchorNode = this;
-
                     /**important **/
                     if (anchorNode.parentNode.id == 't_replay') {
                         vApp.wb.utility.clearAll(false);
@@ -257,20 +253,18 @@
 
                     if (anchorNode.parentNode.id != 't_replay' && anchorNode.parentNode.id != 't_clearall'
                             && anchorNode.parentNode.id != 't_reclaim' && anchorNode.parentNode.id != 't_assign') {
-
                         var currTime = new Date().getTime();
                         vApp.wb.lt = anchorNode.parentNode.id;
                         var obj = {'cmd': anchorNode.parentNode.id, mt: currTime};
                         vApp.wb.uid++;
                         obj.uid = vApp.wb.uid;
                         vcan.main.replayObjs.push(obj);
+                        recorder.items.push(obj);
+                        localStorage.recObjs = JSON.stringify(vApp.recorder.items);
                         vApp.wb.utility.beforeSend({'repObj': [obj]}); //after optimized
                     }
-                        
-//                    } else {
-//                        alert(vApp.lang.getString('askForConnect'));
-//                    }
                 },
+                
                 /**
                  * 
                  * This function does attach the handlers by click the particular object
@@ -340,8 +334,11 @@
                             vcan.setValInMain('id', 0);
                         }
                         if (typeof myfunc != 'undefined') {
+                            //alert('via socket');
+                            
                             vApp.wb.t_replayInit(repMode, myfunc);
                         } else {
+                            //alert('via click');
                             vApp.wb.t_replayInit(repMode);
                         }
                     }
@@ -429,28 +426,33 @@
                  * it replays all the object the user would drawn 
                  */
                 t_replayInit: function(repMode, myfunc) {
-                    vApp.wb.recordAudio = true;
-
+                    //vApp.wb.replay = vApp.wb._replay();
                     if(repMode == 'fromFile'){
+                        vApp.wb.recordAudio = true;
+                        
                         var audioRepTime = vApp.wb.recordStarted - vApp.wb.pageEnteredTime;
+                        
+//                        console.log("audioRepTime " + audioRepTime);
+                        
+                        vApp.recorder.init();
+                        vApp.recorder.renderObj();
                         setTimeout(
                             function (){
                                 if(typeof vApp.gObj.video != 'undefined'){
-                                    vApp.gObj.video.audio.replay( 0, 0);
+                                    vApp.gObj.video.audio.replay(0, 0);
                                 }
                             },
                             audioRepTime
                         );
-                    }
-
-                    // TODO this should be enable.
-                    vApp.wb.replay = vApp.wb._replay();
-                    vApp.wb.replay.init(repMode);
-
-                    if (typeof myfunc != 'undefined') {
-                        vApp.wb.replay.renderObj(myfunc);
-                    } else {
-                        vApp.wb.replay.renderObj();
+                    }else{
+                        vApp.wb.replay = vApp.wb._replay();
+                        if (typeof myfunc != 'undefined') {
+                            vApp.wb.replay.init(repMode, myfunc);
+                            vApp.wb.replay.renderObj(myfunc);
+                        }else {
+                            vApp.wb.replay.init(repMode);
+                            vApp.wb.replay.renderObj();
+                        }
                     }
                 }
             };

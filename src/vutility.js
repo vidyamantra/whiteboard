@@ -21,10 +21,10 @@
                 if(typeof _class != 'undefined'){
                     var classes = "";
                     if(_class.length > 0){
-                      for(var i=0; i<_class.length; i++){
-                         classes += _class[i] + " ";
-                      }
-                    }
+                        for(var i=0; i<_class.length; i++){
+                           classes += _class[i] + " ";
+                        }
+                     }
                     
                     elem.className = classes;
                 }
@@ -37,14 +37,27 @@
             },
             
             str2ab : function(str) {
-                var buf = new ArrayBuffer(str.length); // 2 bytes for each char
-                var bufView = new Uint8ClampedArray(buf);
-                for (var i=0, strLen=str.length; i<strLen; i++) {
-                  bufView[i] = str.charCodeAt(i);
-                }
-                return bufView;
+               var buf = new ArrayBuffer(str.length); // 2 bytes for each char
+               var bufView = new Uint8ClampedArray(buf);
+               for (var i=0, strLen=str.length; i<strLen; i++) {
+                 bufView[i] = str.charCodeAt(i);
+               }
+               return bufView;
             },
             
+//            ab2str : function (buf) {
+//                return String.fromCharCode.apply(null, new Int8Array(buf));
+//            },
+//            
+//            str2ab : function (str) {
+//                var buf = new ArrayBuffer(str.length); // 2 bytes for each char
+//                var bufView = new Int8Array(buf);
+//                for (var i=0, strLen=str.length; i<strLen; i++) {
+//                  bufView[i] = str.charCodeAt(i);
+//                }
+//                return bufView;
+//            },
+
             sidebarHeightInit : function (){
                 var sidebar = document.getElementById("widgetRightSide");
                 sidebar.style.height = (window.innerHeight) + "px";
@@ -69,7 +82,70 @@
                 }
             },
             
+            setContainerWidth : function (res){
+                var appId = 'vAppWhiteboard';
+                if(typeof vApp.previous != 'undefined'){
+                   appId = vApp.previous;
+                }
+                
+                
+                
+                var appCont = document.getElementById(appId);
+                var rightOffSet = 260;
+                var extraWidth = 25;
+                
+                var leftSideBar = document.getElementById("vAppOptionsCont")
+                
+                if(leftSideBar != null){
+                    leftSideBarWidth = leftSideBar.offsetWidth;
+                }else{
+                    leftSideBarWidth = 0;
+                }
+                
+                res.width = res.width - (rightOffSet + leftSideBarWidth + extraWidth + 5);
+                appCont.style.width = res.width + 'px';
+                
+                if(appId != 'vAppWhiteboard'){
+                    vApp.vutil.setScreenInnerTagsWidth(appId);
+                }
+            },
+            
+            setScreenInnerTagsWidth : function(currAppId){
+                var sId = currAppId;
+                var screenShare = document.getElementById(sId);
+                var screenShareWidth = screenShare.offsetWidth;
+                var screenShareLocal  = document.getElementById(sId + "Local");
+                var screenShareLocalWidth = screenShareLocal.offsetWidth;
+                var toBeLeft  = screenShareWidth-screenShareLocalWidth;
+
+                screenShareLocal.style.marginLeft = (toBeLeft/2) + "px";
+
+                var screenShareLocalVideo = document.getElementById(sId+"LocalVideo");
+                var screenShareLocalVideoWidth = screenShareLocalVideo.offsetWidth;
+
+                var screenShareLocalVideoWidth = screenShareLocalWidth - screenShareLocalVideoWidth
+                screenShareLocalVideo.style.marginLeft = (screenShareLocalVideoWidth/2) + "px";
+            }
         }
+        
         window.vutil = vutil;
+        
+        
+//        function setScreenInnerTagsWidth(currAppId){
+//            var sId = currAppId;
+//            var screenShare = document.getElementById(sId);
+//            var screenShareWidth = screenShare.offsetWidth;
+//            var screenShareLocal  = document.getElementById(sId + "Local");
+//            var screenShareLocalWidth = screenShareLocal.offsetWidth;
+//            var toBeLeft  = screenShareWidth-screenShareLocalWidth;
+//            
+//            screenShareLocal.style.marginLeft = (toBeLeft/2) + "px";
+//            
+//            var screenShareLocalVideo = document.getElementById(sId+"LocalVideo");
+//            var screenShareLocalVideoWidth = screenShareLocalVideo.offsetWidth;
+//            
+//            var screenShareLocalVideoWidth = screenShareLocalWidth - screenShareLocalVideoWidth
+//            screenShareLocalVideo.style.marginLeft = (screenShareLocalVideoWidth/2) + "px";
+//        }
     }
 )(window);

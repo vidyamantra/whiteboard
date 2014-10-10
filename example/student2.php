@@ -70,7 +70,7 @@ $uid = 3;
 <div id="vAppCont">
 <div id="vAppWhiteboard" class="vmApp">
 
-   <div id="vcanvas" class="socketoff student" style="width: 961px;">
+   <div id="vcanvas" class="socketoff student">
     <div id="containerWb">
       
     </div>

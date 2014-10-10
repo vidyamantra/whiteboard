@@ -60,57 +60,84 @@
                 if (typeof window.WebSocket != 'undefined' && (typeof window.WebSocket == 'function' || typeof window.WebSocket == 'object') && window.WebSocket.hasOwnProperty('OPEN')) {
                     this.webSocket = true;
                 } else {
-                    alert("suman bogati");
+                    
                     vApp.error.push({'msg': vApp.lang.getString('notSupportWebSocket'), 'id': 'errorWebSocket', 'className': 'error'});
                 }
             },
 
             measureResoultion : function(resolution) {
-                if(typeof vcan.main.offset != 'undefined'){
-                    var offset = vcan.main.offset;
-                }else{
-                    var element = document.getElementById('vcanvas');
-                    var offset = vcan.utility.getElementOffset(element);
-                }
+//                if(typeof vcan.main.offset != 'undefined'){
+//                    
+//                    var offset = vcan.main.offset;
+//                }else{
+//                    
+//                   // var element = document.getElementById('vcanvas');
+//                    var element = document.getElementById('vAppCont');
+//                        vcan.utility.canvasCalcOffset(element.id);
+//                    var offset = vcan.utility.getElementOffset(element);
+//                }
+                
+                var element = document.getElementById('vAppCont');
+                var offset = vcan.utility.getElementOffset(element);
+                
                 var offsetLeft = offset.x;
+                
                 if (resolution.width < 1024) {
                     var width = 1024 - offsetLeft;
                 } else {
                     var width = resolution.width - offsetLeft;
                 }
                 var height = resolution.height - offset.y;
+                
                 return {'width': (width), 'height': (height)};
             },
 
             setCanvasDimension : function() {
-                var measureRes = this.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
-
+                
+//                alert('suman bogati');
+//                debugger;
+                
+                //var measureRes = this.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
+                
+                var measureRes = this.measureResoultion({'width': window.innerWidth, 'height': window.innerHeight});
+                
+                //alert(measureRes.width);
                 var mainWrapper =  document.getElementById('vAppCont');
+                // var vcanvas = document.getElementById('vcanvas');
+                
+               //  var vcanvas = document.getElementById('vAppWhiteboard');
+                
+                //var  rightOffSet = vApp.wb.utility.getElementRightOffSet(vcanvas);
+                
+                
+                
 
-                var vcanvas = document.getElementById('vcanvas');
-
-
-                var  rightOffSet = vApp.wb.utility.getElementRightOffSet(vcanvas);
-                console.log('rightOffSet ' + rightOffSet);
-
-                measureRes.width = measureRes.width - rightOffSet; //60 for right edge
+                // measureRes.width = measureRes.width - rightOffSet; //60 for right edge
                 //to apply top wrapper container
-                mainWrapper.style.width = measureRes.width + 'px';
-
-                measureRes.width =  Math.round(measureRes.width * (3/4));
-    //            alert();
-                vcanvas.style.width = measureRes.width + 'px';
-
-
-
+                // measureRes.width =  Math.round(measureRes.width * (3/4));
+                
+//                var extraWidth = 25;
+//                mainWrapper.style.width = (measureRes.width - extraWidth) + 'px';
+//                var rightOffSet = 260;
+//                var leftSideBarWidth = document.getElementById("vAppOptionsCont").offsetWidth;
+//                measureRes.width = measureRes.width - (rightOffSet + leftSideBarWidth + extraWidth + 5); //60 for right edge
+//                vcanvas.style.width = measureRes.width + 'px';
+                  
+                  vApp.vutil.setContainerWidth(measureRes);
+                  
+                  //vApp.util.setContainerWidth(measureRes);
+                
+                //console.log('wrapperWidth ' + vcanvas.style.width);
+                
                 if (typeof vcan.main.canvas != 'undefined') {
                     var canvas = vcan.main.canvas;
                     ctx = vcan.main.canvas.getContext('2d');
-
                     canvas.width = measureRes.width;
-                    canvas.height = measureRes.height
+                    canvas.height = measureRes.height;
+                    
                     //this would be added for moodle clean theme.
                     // as first offset of canvas is different afte put the canvas element.
+                    console.log("canvas width " + canvas.width);
                     var element = document.getElementById('canvas');
                     var offset = vcan.utility.getElementOffset(element);
                     vcan.main.offset.x = offset.x;

@@ -38,6 +38,7 @@
                   this.media = window.media; 
                   this.chat = window.chat;
                   this.system = window.system;
+                  this.recorder = window.recorder;
                   this.clear = "";
                   this.currApp = app;
                   this.html.init(this);
@@ -101,9 +102,6 @@
                     this.createDiv(vApp.wbConfig.id + "Tool", "whiteboard", appOptCont, vApp.wbConfig.classes);
                     this.createDiv(vApp.ssConfig.id + "Tool", "screenshare", appOptCont, vApp.ssConfig.classes);
                     this.createDiv(vApp.wssConfig.id + "Tool", "wholescreenshare", appOptCont, vApp.wssConfig.classes);
-                    
-                    //this.createDiv(vApp.ssConfig.id + "Tool", "screenshare", appOptCont, vApp.ssConfig.classes);
-                    
                 },  
                 
                 createDiv: function(toolId, text, cmdToolsWrapper, cmdClass) {
@@ -163,9 +161,8 @@
                       
                         if(typeof this.previous != 'undefined'){
                             if(typeof cusEvent != 'undefined' && cusEvent == "byclick"){
-                                io.send({'dispWhiteboard' : true});
+                                vApp.wb.utility.beforeSend({'dispWhiteboard' : true});
                             }
-                            
                             document.getElementById(vApp.previous).style.display = 'none';
                         }
                         
@@ -177,7 +174,6 @@
                         
                         //this should be checked with solid condition
                         if(typeof this.wb != 'object'){
-                            
                             this.wb = new window.whiteboard(this.wbConfig); 
                             this.wb.utility = new window.utility();
 
@@ -246,31 +242,21 @@
               },
               
               initlizer : function (elem){
-//                 alert('ss');
-//                 debugger;
-                //var appName = elem.parentNode.id.split("vApp")[1].toLowerCase();
-                var appName = elem.parentNode.id.split("vApp")[1];
-                
-                appName = appName.substring(0, appName.indexOf("Tool"));
-                
-                this.currApp = appName;
-                if(!this.PrvAndCurrIsWss(this.previous, appName)){
-                    this.makeAppReady(appName, "byclick");
-                }else{
-                    alert("Already the whole screen is being shared.");
-                }
-                
-              },
-              
-              render : function(){
-                  
+                    var appName = elem.parentNode.id.split("vApp")[1];
+                    appName = appName.substring(0, appName.indexOf("Tool"));
+                    this.currApp = appName;
+                    if(!this.PrvAndCurrIsWss(this.previous, appName)){
+                        this.makeAppReady(appName, "byclick");
+                    }else{
+                        alert("Already the whole screen is being shared.");
+                    }
               },
               
               PrvAndCurrIsWss : function (previous, appName){
                   return (previous == 'vAppWholeScreenShare' && appName == this.apps[2]) ? true : false;
               },
               
-              initStudentScreen : function (msg){
+              initStudentScreen : function (msg, vtype){
                 var stool;
                 app = msg.st; 
             
@@ -280,9 +266,16 @@
                     stool = vApp.apps[2];
                 }
 
-                if(typeof vApp[app] != 'object'){
+
+                if(typeof vApp[app] != 'object' ){
+                    if(typeof vtype != 'undefined'){
+                        //vApp.repType = vtype;
+                        vApp.recorder.recImgPlay = true;
+                    }
+                    
                     vApp.makeAppReady(stool);
                     vApp[app].dimensionStudentScreen(msg);
+                    
                 }else{
                     var prvScreen = document.getElementById(vApp.previous);
                     if(prvScreen != null){
@@ -293,6 +286,12 @@
 
                 if(typeof prvWidth != 'undefined' && msg.d.w != prvWidth){
                     vApp[app].dimensionStudentScreen(msg);
+                    
+                    if(typeof vtype == 'undefined'){
+                        vApp[app].dimensionStudentScreen(msg);
+                    }else{
+                        vApp[app].dimensionStudentScreen(msg, vtype);
+                    }
                 }
                 
                 prvWidth = msg.d.w;

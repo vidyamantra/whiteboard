@@ -28,14 +28,30 @@
                    var commonChatBd = document.createElement('div');
                    commonChatBd.id = this.commonChatId;
                    
+                   var cbLabel = document.createElement('p');
+                       cbLabel.id =  this.commonChatId + 'Label';
+                       
+                      // cbLabel.innerHTML = "<span id='firstWord'>Common </span> <br />Chat Board";
+                      cbLabel.innerHTML = "Chat Station";
+                       
+                //   commonChatBd.appendChild(cbLabel);
+                       
                    this.inputBox = document.createElement('textarea');
+                   this.inputBox.placeholder = "Let's Start The Messaging..:)";
                    this.inputBox.disabled=false;
                    this.inputBox.id = this.inputBoxId;
 
                    this.inputBox.addEventListener("keyup", this.gettingMessage.bind(this));
                    chatBox.appendChild(commonChatBd);
-                   chatBox.appendChild(this.inputBox);
-                   document.getElementById(this.mainWrapperId).appendChild(chatBox);
+                
+                    chatBox.appendChild(this.inputBox);
+                   
+                   //chatBox.appendChild(cbLabel);
+                   
+                   var mainWrapper = document.getElementById(this.mainWrapperId);
+                   mainWrapper.appendChild(chatBox);
+                   mainWrapper.parentNode.appendChild(chatBox.appendChild(cbLabel));
+                   
                    vApp.vutil.sidebarHeightInit();        
                 },
                 
@@ -54,11 +70,21 @@
                     var msgLength = this.getMessageWidth(cthis.id);
                   
                     if(e.keyCode == 13){
+                       if(cthis.placeholder != ""){
+                           cthis.placeholder = "";
+                       }
+                       
                        var message = cthis.value.trim();
                        
                        //removing new line from string 
                        message = message.replace(/(\r\n|\n|\r)/gm,"");
                        if(message.length > 0 && message != ""){
+                            var commonChatBoardLabel = document.getElementById(this.commonChatId+"Label");
+                            if(commonChatBoardLabel != null){
+                                commonChatBoardLabel.parentNode.removeChild(commonChatBoardLabel);
+                            }
+                            
+                            //alert(this.commonChatId);
                             var user = {id : vApp.gObj.uid, name : vApp.gObj.uName, msg : message};
                             vApp.wb.utility.beforeSend({"userMsg": user});
                             cthis.value = "";
@@ -95,6 +121,16 @@
 
                     msgBox.appendChild(msgCont);
                     document.getElementById(this.commonChatId).appendChild(msgBox);
+                    
+//                    var insBeore = document.getElementById(this.commonChatId + "Label");
+//                    if(insBeore != null){
+//                        insBeore.parentNode.insertBefore(msgBox, insBeore);
+//                    }else{
+//                        document.getElementById(this.commonChatId).appendChild(msgBox);
+//                    }
+
+                    //document.getElementById(this.commonChatId).appendChild(msgBox);
+                    
                     this.stickScrollbarAtBottom();
                 },
                 

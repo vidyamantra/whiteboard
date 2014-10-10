@@ -104,7 +104,7 @@
                   window.location.reload();
               }
               div.appendChild(a);
-              var vcanvas = document.getElementById('vcanvas');
+              var vcanvas = document.getElementById('vAppOptionsCont');
               vcanvas.parentNode.insertBefore(div, vcanvas);
           },
           
@@ -251,27 +251,33 @@
         
         view.window.resize = function() {
             var res = vApp.system.measureResoultion({'width': window.innerWidth, 'height': window.innerHeight});
-            var vcanvas = document.getElementById('vcanvas');
-            var  rightOffSet = vApp.wb.utility.getElementRightOffSet(vcanvas);
-            res.width = res.width - rightOffSet; //60 for right edge
-            vcanvas.style.width = res.width + 'px';
+          //  var vcanvas = document.getElementById('vAppWhiteboard');
+            //var  rightOffSet = vApp.wb.utility.getElementRightOffSet(vcanvas);
+            
+//            var rightOffSet = 260;
+//            var extraWidth = 25;
+//            var leftSideBarWidth = document.getElementById("vAppOptionsCont").offsetWidth;
+//            res.width = res.width - (rightOffSet + leftSideBarWidth + extraWidth + 5);
+//            vcanvas.style.width = res.width + 'px';
+
+            vApp.vutil.setContainerWidth(res);
             vcan.renderAll();
             
-            if (typeof lastresizetime == 'undefined') {
-                lastresizetime = new Date().getTime();
-                vApp.wb.utility.beforeSend({'virtualWindow': {'resizeWindow': res}});
-            }
-
-            presentresizetime = new Date().getTime();
-            if ((presentresizetime - lastresizetime) >= 500) { // Optimized
-                vApp.wb.utility.beforeSend({'virtualWindow': {'resizeWindow': res}});
-                lastresizetime = new Date().getTime();
-                console.log('send request ' + count);
-            }
-
-            this.window.resizeFinished(function() {
-                vApp.wb.utility.beforeSend({'virtualWindow': {'resizeWindow': res}});
-            }, 500);
+//            if (typeof lastresizetime == 'undefined') {
+//                lastresizetime = new Date().getTime();
+//                vApp.wb.utility.beforeSend({'virtualWindow': {'resizeWindow': res}});
+//            }
+//
+//            presentresizetime = new Date().getTime();
+//            if ((presentresizetime - lastresizetime) >= 500) { // Optimized
+//                vApp.wb.utility.beforeSend({'virtualWindow': {'resizeWindow': res}});
+//                lastresizetime = new Date().getTime();
+//                console.log('send request ' + count);
+//            }
+//
+//            this.window.resizeFinished(function() {
+//                vApp.wb.utility.beforeSend({'virtualWindow': {'resizeWindow': res}});
+//            }, 500);
         },
                 
         view.virtualWindow.manupulation = function(e) {
@@ -282,30 +288,33 @@
                 }
                 return;
             } else if (message.hasOwnProperty('resizeWindow')) {
-                myResolution = vApp.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
-                if (e.fromUser.userid != wbUser.id) {
-                    var otherResolution = message.resizeWindow;
-                    otherBrowser = otherResolution;
-                    if (otherResolution.width < myResolution.width) {
-                        vApp.wb.utility.createVirtualWindow(otherResolution);
-                    } else if (otherResolution.width == myResolution.width) {
-                        vApp.wb.utility.removeVirtualWindow('virtualWindow');
-                    }
-                } else {
-                    if (typeof otherBrowser != 'undefined') {
-                        if (myResolution.width < otherBrowser.width) {
-                            //CRITICAL this function does call undefinite
-                            vApp.wb.utility.beforeSend({'virtualWindow' : { 'resizeWindow' : myResolution}});
-                            vApp.wb.utility.removeVirtualWindow('virtualWindow');
-                        } else if (myResolution.width > otherBrowser.width) {
-                            vApp.wb.utility.createVirtualWindow(otherBrowser);
-                            vApp.wb.utility.beforeSend({'virtualWindow': {'removeVirtualWindow': true}});
-                        } else if (myResolution.width == otherBrowser.width) {
-                            vApp.wb.utility.removeVirtualWindow('virtualWindow');
-                        }
-                    }
-                }
-                return;
+                
+//                myResolution = vApp.system.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
+//                if (e.fromUser.userid != wbUser.id) {
+//                    var otherResolution = message.resizeWindow;
+//                    otherBrowser = otherResolution;
+//                    if (otherResolution.width < myResolution.width) {
+//                        vApp.wb.utility.createVirtualWindow(otherResolution);
+//                    } else if (otherResolution.width == myResolution.width) {
+//                        vApp.wb.utility.removeVirtualWindow('virtualWindow');
+//                    }
+//                    
+//                } else {
+//                    if (typeof otherBrowser != 'undefined') {
+//                        if (myResolution.width < otherBrowser.width) {
+//                            //CRITICAL this function does call undefinite
+//                            vApp.wb.utility.beforeSend({'virtualWindow' : { 'resizeWindow' : myResolution}});
+//                            vApp.wb.utility.removeVirtualWindow('virtualWindow');
+//                        } else if (myResolution.width > otherBrowser.width) {
+//                            vApp.wb.utility.createVirtualWindow(otherBrowser);
+//                            vApp.wb.utility.beforeSend({'virtualWindow': {'removeVirtualWindow': true}});
+//                        } else if (myResolution.width == otherBrowser.width) {
+//                            vApp.wb.utility.removeVirtualWindow('virtualWindow');
+//                        }
+//                    }
+//                }
+//                return;
+                
             } else if (message.hasOwnProperty('createVirtualWindow')) {
                 if (message.hasOwnProperty('toolHeight')) {
                     localStorage.setItem('toolHeight', message.toolHeight);

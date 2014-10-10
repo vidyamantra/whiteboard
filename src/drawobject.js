@@ -32,6 +32,8 @@
              * 
              */
             tool.mousedown = function(ev, cobj) {
+                var ct = new Date().getTime();
+                console.log("sumanbogati" + (ct - vApp.wb.pageEnteredTime));
                 if (ev.detail.hasOwnProperty('cevent')) {
                     ev.clientX = ev.detail.cevent.x + (wb.vcan.main.offset.x);
                     ev.clientY = ev.detail.cevent.y + (wb.vcan.main.offset.y);
@@ -133,10 +135,16 @@
                                             wb.uid++;
                                             dataChunk[i].uid = wb.uid;
                                             vcan.main.replayObjs.push(dataChunk[i]);
+                                            vApp.recorder.items.push(dataChunk[i]);
                                         }
+                                        
+                                        
                                         wb.utility.beforeSend({'repObj': dataChunk});
-                                        wb.utility.updateSentPackets(dataChunk);
                                         localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
+                                        
+                                        localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+
+                                        wb.utility.updateSentPackets(dataChunk);
                                         dataChunk = [];
                                         lastmousemovetime = new Date().getTime();
                                     }
@@ -186,7 +194,7 @@
                     }
                 } else {
                     if (wb.vcan.main.action != 'move' || ((vcan.main.currentTransform == "" || vcan.main.currentTransform == null) && wb.vcan.main.action == "move")) {
-                        //io.send({'createArrow': true, x: ev.currX, y: ev.currY});
+                        //vApp.wb.utility.beforeSend({'createArrow': true, x: ev.currX, y: ev.currY});
                         wb.utility.beforeSend({'createArrow': true, x: ev.currX, y: ev.currY});
                     }
 
@@ -234,9 +242,13 @@
                                     wb.uid++;
                                     dataChunk[i].uid = wb.uid;
                                     vcan.main.replayObjs.push(dataChunk[i]);
+                                    vApp.recorder.items.push(dataChunk[i]);
                                 }
                                 wb.utility.beforeSend({'repObj': dataChunk});
+                                
                                 localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
+                                localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                                
                                 wb.utility.updateSentPackets(dataChunk);
                                 dataChunk = [];
                             }

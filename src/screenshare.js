@@ -13,9 +13,12 @@
             init : function (screen){
                 this.type = screen.type;
                 this.ssByClick =  true;
-                this.manualStop = false;
-                if(vApp.gObj.uRole == 't'){
+                this.manualStop = false; 
+                //if(vApp.gObj.uRole == 't' && !vApp.hasOwnProperty('repType')){
+                if(vApp.gObj.uRole == 't' && !vApp.recorder.recImgPlay){
+                    //if(!vApp.hasOwnProperty('repType')){
                     this.readyTostart(screen.app);
+                    //}
                 }else{
                     this._init();
                 }
@@ -54,7 +57,8 @@
                     var beforeAppend = document.getElementById(vApp.rWidgetConfig.id);
                     document.getElementById(vApp.html.id).insertBefore(ssUI, beforeAppend);
                     
-                    if(vApp.gObj.uRole == 't'){
+                   // if(vApp.gObj.uRole == 't' && !vApp.hasOwnProperty('repType')){
+                    if(vApp.gObj.uRole == 't' && !vApp.recorder.recImgPlay){
                         this.localtempCanvas = document.getElementById(this.localTemp+"Video");
                         this.localtempCont =  this.localtempCanvas.getContext('2d');
                     }
@@ -119,7 +123,7 @@
                     this.currentStream.stop(); 
                 }
                 
-                io.send({'unshareScreen' : true, st : this.type});
+                vApp.wb.utility.beforeSend({'unshareScreen' : true, st : this.type});
             },
             
             removeStream : function(){
@@ -152,7 +156,7 @@
                         that.localtempCont.clearRect(0, 0, that.localtempCanvas.width, that.localtempCanvas.height);
                         clearInterval(vApp.clear);
                         that.prevImageSlices = [];
-                        io.send({'unshareScreen' : true, st : that.type});
+                        vApp.wb.utility.beforeSend({'unshareScreen' : true, st : that.type});
                         that.prevStream = false;
                         that.prevApp = "";
                     }else{
@@ -190,11 +194,17 @@
                     that.localtempCanvas.width = that.width ;
                     that.localtempCanvas.height = that.height;
                     vApp.prevApp = that;
-                    that.initAfterImg();
+                    
+                    var res = vApp.system.measureResoultion({'width': window.innerWidth, 'height': window.innerHeight});
+                    
+            
+                    //that.initAfterImg();
+                    that.sharing();
+                    vApp.vutil.setContainerWidth(res);
                 }
             },
             
-            initAfterImg : function (){
+            sharing : function (){
                 var tempObj, encodedData, stringData, d, matched, imgData;
                 this.latestScreen = [];
                 
@@ -224,7 +234,6 @@
                                     tempObj = {'si' : stringData, 'd' : d};
                                     sendobj.push(tempObj);    
                                     that.latestScreen[sl] = tempObj; 
-
                                 }
                             }else{
                                 that.prevImageSlices[sl] = imgData.data;
@@ -241,7 +250,13 @@
                             if(sendobj.length > 0){
                                 var encodedString = LZString.compressToBase64(JSON.stringify(sendobj));
                                 var contDimension = that.getContainerDimension();
-                                io.send({'si' : encodedString, 'st' : that.type, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}   });                                      
+                                var madeTime = new Date().getTime();
+                                
+                                var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}, mt : madeTime};
+                                vApp.recorder.items.push(imgObj);
+                                localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                                        
+                                vApp.wb.utility.beforeSend(imgObj);                                      
                                 sendobj=[];
                             }
                         }
@@ -268,10 +283,18 @@
                 this.localCont.putImageData(imgData, d.x, d.y);
             },
             
-            dimensionStudentScreen : function (msg){
+            dimensionStudentScreen : function (msg, vtype){
                 if(typeof this.vac == 'undefined'){
                     this.vac = true;
+                    
                     this.localCanvas = document.getElementById(vApp[app].local+"Video");
+                    
+//                    if(typeof vtype == 'undefined'){
+//                        this.localCanvas = document.getElementById(vApp[app].local+"Video");
+//                    }else{
+//                        this.localCanvas = document.getElementById(vApp[app].local+"TempVideo");
+//                    }
+                    
                     this.localCont = vApp[app].localCanvas.getContext('2d');
                 }
                 
@@ -283,8 +306,6 @@
                     vc.style.width = msg.vc.w + "px";
                     vc.style.height = msg.vc.h + "px";
                 }
-                
-                 
             },
            
             html : {
@@ -292,13 +313,23 @@
                UI : function (user){
                    var mainCont =  vApp.vutil.createDOM("div", this.id, [this.className]);
                    var locVidCont =  vApp.vutil.createDOM("div", this.local, [this.label]);
-                   
                    if((user == 't')){
-                       var vidCont =  vApp.vutil.createDOM("video", this.local+"Video");
-                       vidCont.setAttribute("autoplay", true);
+                       
+                       //if(vApp.hasOwnProperty('repType')){
+                       if(vApp.recorder.recImgPlay){
+                           var vidCont =  vApp.vutil.createDOM("canvas", this.local+"Video");
+                           //vidCont.setAttribute("autoplay", true);
+                           
+                       }else{
+                           var vidCont =  vApp.vutil.createDOM("video", this.local+"Video");
+                           vidCont.setAttribute("autoplay", true);
+                       }
                        
                        css(locVidCont, "position:relative");
+                       
+                       //css(vidCont, "position : absolute; height : 99%");
                        css(vidCont, "position : absolute; height : 99%");
+                       
                    }else{
                        var vidCont =  vApp.vutil.createDOM("canvas", this.local+"Video");
                    }
@@ -308,7 +339,8 @@
                    locVidCont.appendChild(vidCont);
                    mainCont.appendChild(locVidCont);
 
-                   if(user == 't'){
+                //   if(user == 't' && !vApp.hasOwnProperty('repType')){
+                   if(user == 't' && !vApp.recorder.recImgPlay){ 
                        var locVidContTemp =  vApp.vutil.createDOM("div", this.localTemp);
                        var vidContTemp =  vApp.vutil.createDOM("canvas", this.localTemp+"Video");
                        locVidContTemp.appendChild(vidContTemp);
@@ -341,12 +373,13 @@
                         };
                     }
                },
+               
             },
             
             sendPackets : function (user){
                 var encodedString = LZString.compressToBase64(JSON.stringify(this.latestScreen));
                 var contDimension = this.getContainerDimension();
-                io.send({'resimg' : true, 'si' : encodedString, 'st' : this.type, d : {w:this.width, h:this.height}, vc : {w:contDimension.width, h:contDimension.height}, 'byRequest' : user });                                      
+                vApp.wb.utility.beforeSend({'resimg' : true, 'si' : encodedString, 'st' : this.type, d : {w:this.width, h:this.height}, vc : {w:contDimension.width, h:contDimension.height}, 'byRequest' : user });                                      
             }
         }
     }
