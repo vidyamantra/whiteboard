@@ -181,9 +181,9 @@
                 var that = this;
                 this.video.onloadedmetadata = function (){
                     if(dimension.width < that.video.offsetWidth){
-                         that.width = dimension.width;
-                         that.height = dimension.height;
-                         that.video.style.maxWidth = (that.width - 5)  + "px";
+                        that.width = dimension.width;
+                        that.height = dimension.height;
+                        that.video.style.maxWidth = (that.width - 5)  + "px";
                     }else{
                         var video = document.getElementById(that.local+"Video");
                         that.width = video.clientWidth;
@@ -286,15 +286,12 @@
             dimensionStudentScreen : function (msg, vtype){
                 if(typeof this.vac == 'undefined'){
                     this.vac = true;
-                    
                     this.localCanvas = document.getElementById(vApp[app].local+"Video");
-                    
 //                    if(typeof vtype == 'undefined'){
 //                        this.localCanvas = document.getElementById(vApp[app].local+"Video");
 //                    }else{
 //                        this.localCanvas = document.getElementById(vApp[app].local+"TempVideo");
 //                    }
-                    
                     this.localCont = vApp[app].localCanvas.getContext('2d');
                 }
                 
@@ -305,6 +302,10 @@
                     var vc  = document.getElementById(vApp[app].local);
                     vc.style.width = msg.vc.w + "px";
                     vc.style.height = msg.vc.h + "px";
+                }
+                
+                if(vApp.previous != 'vAppWhiteboard'){
+                    vApp.vutil.setScreenInnerTagsWidth(vApp.previous);
                 }
             },
            

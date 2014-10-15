@@ -88,16 +88,16 @@
                    appId = vApp.previous;
                 }
                 
-                
-                
                 var appCont = document.getElementById(appId);
-                var rightOffSet = 260;
-                var extraWidth = 25;
+                var rightOffSet = document.getElementById(vApp.rWidgetConfig.id).offsetWidth;
+                //alert(vApp.wb.utility.getElementRightOffSet);
                 
-                var leftSideBar = document.getElementById("vAppOptionsCont")
+                var extraWidth = 25;
+                var leftSideBar = document.getElementById("vAppOptionsCont");
                 
                 if(leftSideBar != null){
-                    leftSideBarWidth = leftSideBar.offsetWidth;
+                    var offset = vcan.utility.getElementOffset(leftSideBar);
+                    leftSideBarWidth = leftSideBar.offsetWidth + offset.x;
                 }else{
                     leftSideBarWidth = 0;
                 }
@@ -106,6 +106,8 @@
                 appCont.style.width = res.width + 'px';
                 
                 if(appId != 'vAppWhiteboard'){
+                    var ssType = document.getElementById(appId + 'Local');
+                    ssType.style.width = res.width + "px";
                     vApp.vutil.setScreenInnerTagsWidth(appId);
                 }
             },

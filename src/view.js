@@ -104,8 +104,11 @@
                   window.location.reload();
               }
               div.appendChild(a);
-              var vcanvas = document.getElementById('vAppOptionsCont');
-              vcanvas.parentNode.insertBefore(div, vcanvas);
+              
+             //var vcanvas = document.getElementById('vAppOptionsCont');
+              
+              var vAppCont = document.getElementById('vAppCont');
+              vAppCont.insertBefore(div, vAppCont.firstChild);
           },
           
           displayServerError : function (id, msg){

@@ -79,7 +79,6 @@
                 
                 var element = document.getElementById('vAppCont');
                 var offset = vcan.utility.getElementOffset(element);
-                
                 var offsetLeft = offset.x;
                 
                 if (resolution.width < 1024) {
@@ -93,19 +92,11 @@
             },
 
             setCanvasDimension : function() {
-                
-//                alert('suman bogati');
-//                debugger;
-                
-                //var measureRes = this.measureResoultion({'width': window.outerWidth, 'height': window.innerHeight});
-                
                 var measureRes = this.measureResoultion({'width': window.innerWidth, 'height': window.innerHeight});
-                
-                //alert(measureRes.width);
                 var mainWrapper =  document.getElementById('vAppCont');
                 // var vcanvas = document.getElementById('vcanvas');
                 
-               //  var vcanvas = document.getElementById('vAppWhiteboard');
+                //  var vcanvas = document.getElementById('vAppWhiteboard');
                 
                 //var  rightOffSet = vApp.wb.utility.getElementRightOffSet(vcanvas);
                 

@@ -298,6 +298,7 @@
                 prvHeight = msg.d.h;
                 vApp.previous =  vApp[app].id;
                 
+                
                 vApp[app].drawImages(msg.si);
               }
                
