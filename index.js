@@ -117,7 +117,8 @@ $.when(
                 }
                 return;
             } else if(e.message.hasOwnProperty('userMsg')){ //chat start
-                vApp.gObj.chat.display(e.message.userMsg, e.fromUser.userid);
+                //vApp.gObj.chat.display(e.message.userMsg, e.fromUser.userid);
+                vApp.gObj.chat.display(e.message.userMsg);
                 return;
             } else if(e.message.hasOwnProperty('requestPacketBy')){
                 if(vApp.gObj.uRole == "t"){

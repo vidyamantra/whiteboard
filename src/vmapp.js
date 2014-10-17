@@ -65,8 +65,7 @@
                   this.gObj.chat = new window.vApp.chat();
                   this.gObj.chat.init();
                   
-                  this.initSocketConn();
-                  
+                  this.initSocketConn();                  
               },
               
               initSocketConn : function (){
@@ -297,9 +296,8 @@
                 prvWidth = msg.d.w;
                 prvHeight = msg.d.h;
                 vApp.previous =  vApp[app].id;
-                
-                
                 vApp[app].drawImages(msg.si);
+                
               }
                
               //TODO remove this function

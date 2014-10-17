@@ -251,7 +251,6 @@
                                 var encodedString = LZString.compressToBase64(JSON.stringify(sendobj));
                                 var contDimension = that.getContainerDimension();
                                 var madeTime = new Date().getTime();
-                                
                                 var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}, mt : madeTime};
                                 vApp.recorder.items.push(imgObj);
                                 localStorage.recObjs = JSON.stringify(vApp.recorder.items);
@@ -353,7 +352,6 @@
                             element.style.cssText += ';' + styles;
                         }
                    }
-
                    return mainCont;
                },
                

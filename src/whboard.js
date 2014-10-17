@@ -428,14 +428,32 @@
                 t_replayInit: function(repMode, myfunc) {
                     //vApp.wb.replay = vApp.wb._replay();
                     if(repMode == 'fromFile'){
-                        vApp.wb.recordAudio = true;
+                        vApp.gObj.chat.removeAllChat();
                         
+//                        if(vAppObj.gObj.chat.isAvailable()){
+//                            vAppObj.gObj.chat.removeAllChat();
+//                        }
+                        
+                        vApp.wb.recordAudio = true;
                         var audioRepTime = vApp.wb.recordStarted - vApp.wb.pageEnteredTime;
                         
 //                        console.log("audioRepTime " + audioRepTime);
-                        
                         vApp.recorder.init();
-                        vApp.recorder.renderObj();
+                        
+                        var obj = vApp.recorder.objs[0];
+                        
+                        //var newTime = new Date().getTime();
+                        //vApp.wb.replayTime =  obj.mt - vApp.wb.pageEnteredTime;
+                        
+                        var repTime = obj.mt - vApp.wb.pageEnteredTime;
+                        //var repTime = newTime - obj.mt;
+                        setTimeout(
+                            function (){
+                                vApp.recorder.renderObj();
+                            },
+                            repTime
+                        );
+                        
                         setTimeout(
                             function (){
                                 if(typeof vApp.gObj.video != 'undefined'){

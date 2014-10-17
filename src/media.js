@@ -282,6 +282,10 @@
                     assignFromLocal : function () {
                         this.init();
                         var arrAudioNode = JSON.parse(localStorage.audioStream);
+                        
+//                        localStorage.removeItem('audioStream');
+                        
+                        
                         for(var j=0; j < arrAudioNode.length; j++){
                             
                             arrStream = arrAudioNode[j].adArr;

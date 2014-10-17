@@ -65,6 +65,8 @@
                     }
                 }, 
                 
+                
+                
                 gettingMessage : function (e){
                     var cthis =  e.target;
                     var msgLength = this.getMessageWidth(cthis.id);
@@ -102,8 +104,7 @@
                     
                 },
                  
-                
-                display : function (user){
+                display : function (user, cevent){
                     var msg = {};
                     localStorage.setItem('msg', msg);
                     var msgBox = document.createElement('div');
@@ -118,19 +119,15 @@
                     
                     this.userChatList.push(user);
                     localStorage.setItem('uChatList', JSON.stringify(this.userChatList));
-
+                    
+                    if(typeof cevent == 'undefined'){
+                        var madeTime = new Date().getTime();
+                        var userMsg = {'cuser' : user, mt : madeTime};
+                        vApp.recorder.items.push(userMsg);
+                    }
+                    
                     msgBox.appendChild(msgCont);
                     document.getElementById(this.commonChatId).appendChild(msgBox);
-                    
-//                    var insBeore = document.getElementById(this.commonChatId + "Label");
-//                    if(insBeore != null){
-//                        insBeore.parentNode.insertBefore(msgBox, insBeore);
-//                    }else{
-//                        document.getElementById(this.commonChatId).appendChild(msgBox);
-//                    }
-
-                    //document.getElementById(this.commonChatId).appendChild(msgBox);
-                    
                     this.stickScrollbarAtBottom();
                 },
                 
@@ -168,7 +165,40 @@
                 alreadyExist : function (id){
                     var element = document.getElementById(id);
                     return (element != null) ? true : false;
-                }                    
+                },
+                
+                isChatAvailable : function (){
+                   //var chatCont = document.getElementById(this.commonChatId);
+//                   if(chatCont.childNodes.length > 0){
+//                       
+//                   }
+                   return  (chatCont.childNodes.length > 0) ? true : false;
+                },
+                
+                removeAllChat : function (){
+                   var chatCont = document.getElementById(this.commonChatId);
+                   if(chatCont.childNodes.length > 0){
+                       
+                       while(chatCont.childNodes[0] != null ){
+                          chatCont.childNodes[0].parentNode.removeChild(chatCont.childNodes[0]);
+                       }
+                       
+//                        for(var i=0; i<nodes.length; i++){
+//                            if(nodes[i].tagName == 'DIV'){
+//                                alert(i);
+//                                nodes[i].parentNode.removeChild(nodes[i]);
+//                            }
+//                        }
+//                       var conTainerId = chatCont.id;
+//                       var parentId = chatCont.parentNode.id;
+//                       
+//                       chatCont.parentNode.removeChild(chatCont);
+//                       var createdDiv = document.createElement('div');
+//                       createdDiv.id = conTainerId;
+//                       
+//                       document.getElementById(parentId).appendChild(createdDiv);
+                   }
+                }
             }
         }
         

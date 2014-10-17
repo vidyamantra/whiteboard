@@ -11,6 +11,8 @@
             recImgPlay : false,
             
             init: function(repMode, myfunc) {
+                  //localStorage.removeItem('recObjs');
+                
                  var vcan = vApp.wb.vcan;
                  if(typeof myfunc != 'undefined'){
                      this.objs = vcan.getStates('replayObjs'); 
@@ -40,20 +42,27 @@
              },
                 
             renderObj : function(myfunc) {
-                
                 vApp.wb.drawMode = true;
+                
                 if (typeof this.objs[this.objNo] == 'undefined') {
                     console.log("is this happend");
                     return;
                 }
-
+                
+//                if(this.objNo == 0){
+//                    var newTime = new.Date().getDate();
+//                    var repTime  = this.objs[this.objNo].mt
+//                }
+                
                 if (this.objs[this.objNo].hasOwnProperty('cmd')) {
                     vApp.wb.gObj.displayedObjId = this.objs[this.objNo].uid;
                     vApp.wb.toolInit(this.objs[this.objNo].cmd, 'fromFile', true);
                 } else {
                     if(this.objs[this.objNo].hasOwnProperty('si')){
                         vApp.initStudentScreen(this.objs[this.objNo], "recImgPlay");
-                        
+                    }else if(this.objs[this.objNo].hasOwnProperty('cuser')){
+                        vApp.gObj.chat.userChatList = [];
+                        vApp.gObj.chat.display(this.objs[this.objNo].cuser, 'cevent');
                     }else{
                         if(vApp.previous != "vApp"+vApp.apps[0]){
                            document.getElementById('vApp' + vApp.apps[0]).style.display = 'block';
@@ -63,10 +72,6 @@
                         
                         var event = "";
                         if (this.objs[this.objNo].ac == 'd') {
-                           
-//                            var totalTime = this.objs[this.objNo].mt - vApp.wb.pageEnteredTime;
-//                            console.log("bogatisuman " + totalTime);
-                            
                             event = 'mousedown';
                         } else if ((this.objs[this.objNo].ac == 'm')) {
                             event = 'mousemove';
@@ -94,11 +99,15 @@
                     if (typeof this.repMode != 'undefined' && this.repMode == 'fromBrowser') {
                         vApp.wb.replayTime = 0;
                     }else{
-                        if(this.objNo == 0){
-                            vApp.wb.replayTime =  this.objs[this.objNo].mt - vApp.wb.pageEnteredTime;
-                        }else{
-                            vApp.wb.replayTime = this.objs[this.objNo + 1].mt - this.objs[this.objNo].mt;
-                        }
+                        
+//                        if(this.objNo == 0){
+//                            vApp.wb.replayTime =  this.objs[this.objNo].mt - vApp.wb.pageEnteredTime;
+//                        }else{
+//                            vApp.wb.replayTime = this.objs[this.objNo + 1].mt - this.objs[this.objNo].mt;
+//                        }
+                        
+                        vApp.wb.replayTime = this.objs[this.objNo + 1].mt - this.objs[this.objNo].mt;
+
                     }
 
                     this.objNo++;
