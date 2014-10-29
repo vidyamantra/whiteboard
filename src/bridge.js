@@ -52,7 +52,11 @@
                 bridge.sortingReplyObjs();
 
                 if (fromUserId != id) {
-                    localStorage.repObjs = JSON.stringify(vApp.wb.gObj.replayObjs);
+                    //localStorage.repObjs = JSON.stringify(vApp.wb.gObj.replayObjs);
+                    
+                    vApp.storage.store(JSON.stringify(vApp.wb.gObj.replayObjs));
+                    
+                    //localStorage.repObjs = JSON.stringify(vApp.wb.gObj.replayObjs);
                 }
                 this.containsIfQueuePacks(fromUserId, id, vApp.wb.gObj.displayedObjId, repObj);
             },

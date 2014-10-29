@@ -12,7 +12,7 @@ $.when(
         window.earlierWidth = window.innerWidth;
         window.earlierHeight = window.innerHeight;
         window.wbUser = wbUser;
-        
+        window.pageEnter = new Date().getTime();
         var vApp = new window.vmApp();
         window.vApp = vApp; //make available to vApp object to each file
         
@@ -25,8 +25,10 @@ $.when(
             return;
         }
         
-        if(localStorage.getItem('audioStream') !=  null){
-            vApp.gObj.video.audio.assignFromLocal();
+        if(localStorage.getItem('audiostream') !=  null){
+            
+//            var arrStream = JSON.parse(localStorage.audiostream); 
+//            vApp.gObj.video.audio.assignFromLocal(arrStream);
         }
         
         $(document).on("user_logout", function(e){

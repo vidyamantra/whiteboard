@@ -26,6 +26,7 @@
                 uRole : window.wbUser.role,
                 uName : window.wbUser.name
               },
+              
               init : function (urole, app){
                   
                   this.wbConfig = { id : "vApp" + this.apps[0], classes : "appOptions"};
@@ -41,8 +42,12 @@
                   this.recorder = window.recorder;
                   this.clear = "";
                   this.currApp = app;
-                  this.html.init(this);
+                 
+                  this.storage = window.storage;
                   
+                  this.storage.init();
+                  
+                  this.html.init(this);
                   if(urole == 't'){
                       this.html.optionsWithWrapper();
                       this.attachFunction();
@@ -194,7 +199,8 @@
                             
                             
                             this.wb.utility.displayCanvas();
-                            this.wb.utility.replayFromLocalStroage();
+                            
+                            //this.wb.utility.replayFromLocalStroage();
                             var olddata = "";
                             this.wb.utility.initUpdateInfo(olddata);
                             

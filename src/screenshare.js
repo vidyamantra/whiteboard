@@ -253,8 +253,17 @@
                                 var madeTime = new Date().getTime();
                                 var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}, mt : madeTime};
                                 vApp.recorder.items.push(imgObj);
-                                localStorage.recObjs = JSON.stringify(vApp.recorder.items);
-                                        
+                                
+//                                localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                                
+                               // var data = JSON.stringify(vApp.recorder.items);
+                               // vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
+                               // vApp.rwitems = JSON.stringify(vApp.recorder.items);
+                               
+                                //vApp.storage.wholeStore(JSON.stringify(imgObj));
+                                vApp.storage.wholeStore(imgObj);
+                                //vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
+                                
                                 vApp.wb.utility.beforeSend(imgObj);                                      
                                 sendobj=[];
                             }

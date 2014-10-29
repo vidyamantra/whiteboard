@@ -71,7 +71,7 @@
                     vApp.system.setCanvasDimension();
                     if (typeof (Storage) !== "undefined") {
                         if (localStorage.repObjs) {
-                            var replayObjs = JSON.parse(localStorage.repObjs);
+                           // var replayObjs = JSON.parse(localStorage.repObjs);
                         }
                         window.vApp.wb = vApp.wb;
                     }
@@ -260,7 +260,18 @@
                         obj.uid = vApp.wb.uid;
                         vcan.main.replayObjs.push(obj);
                         recorder.items.push(obj);
-                        localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                        
+                        //localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                        
+                       // var data = JSON.stringify(vApp.recorder.items);
+                        //vApp.storage.storeWholeData(data);
+                        
+                        //vApp.storage.wholeStore(JSON.stringify(obj));
+                        
+                        vApp.storage.wholeStore(obj);
+                        
+                        //vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
+                        
                         vApp.wb.utility.beforeSend({'repObj': [obj]}); //after optimized
                     }
                 },

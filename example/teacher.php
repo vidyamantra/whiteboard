@@ -131,4 +131,6 @@ $uname = "raju shree";
     <div id="chatContainer">
     </div>
 </div> 
+    
+    <div id="dummyResult"></div>
 </div>

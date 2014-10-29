@@ -28,9 +28,17 @@ function my_curl_request($url, $post_data)
  $authpassword = substr(str_shuffle(MD5(microtime())), 0, 12);
  $licen = '';
  $post_data = array('authuser'=> $authusername,'authpass' => $authpassword, 'licensekey' => '10-30-82c1c09515ae50a73e3e6e');
+ //$post_data = array('authuser'=> $authusername,'authpass' => $authpassword, 'licensekey' => '100-5454676903fc3060e4849a');
+ 
  $post_data = json_encode($post_data);
+ 
+     
  $rid = my_curl_request("https://c.vidya.io", $post_data); // REMOVE HTTP
  //print_r( $rid);exit;//8000.vidya.io
+ 
+// $rid = "8002.vidya.io";
+// $rid = "8002.vidya.io";
+ 
  if(empty($rid) or strlen($rid) > 32){
   	echo "Chat server is unavailable!";
   	exit;

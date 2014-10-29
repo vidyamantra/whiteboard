@@ -102,11 +102,11 @@
                 t_clearallInit: function() {
                     var delRpNode = true;
                     vApp.wb.utility.clearAll(delRpNode);
-                    if (localStorage.repObjs) {
+                   // if (localStorage.repObjs) {
                         //localStorage.clear();
                         //alert('suman bogati');
                         //debugger;
-                    }
+                    //}
                 },
                 /**
                  * By this function  all drawn object over the canvas would be erased   
@@ -805,23 +805,57 @@
                         commandToolWrapper.style.pointerEvents = "visible";
                     }
                 },
-                replayFromLocalStroage: function() {
+                replayFromLocalStroage : function(allRepObjs) {
                     if (typeof (Storage) !== "undefined") {
+                        
                         //if (localStorage.repObjs) {
-                        if (localStorage.getItem('repObjs') != null) {
-                            var allRepObjs = JSON.parse(localStorage.repObjs);
+                       // if (localStorage.getItem('repObjs') != null) {
+                            
+                            
+                            //var allRepObjs = JSON.parse(localStorage.repObjs);
+                            
+                           //var allRepObjs = vApp.storage.getAllObjs(callback);
+                            
+//                            vApp.storage.getAllObjs(callback);
+//                            
+//                            vApp.wb.vcan.main.replayObjs = allRepObjs;
+//                            vApp.wb.utility.clearAll(false, 'dontClear');
+//
+//                            vApp.wb.gObj.replayObjs = vApp.wb.gObj.replayObjs.concat(allRepObjs);
+//                            if (allRepObjs.length > 0) {
+//                                vApp.wb.uid = allRepObjs[allRepObjs.length - 1].uid;
+//                                vApp.wb.gObj.rcvdPackId = vApp.wb.uid;
+//                                vApp.wb.toolInit('t_replay', 'fromBrowser', true, vApp.wb.utility.dispQueuePacket);
+//                            }
+//                            vApp.storage.getAllObjs(callback, 'repObjs');
+//                            
+//                            function callback(allRepObjs){
+//                                vApp.wb.vcan.main.replayObjs = allRepObjs;
+//                                vApp.wb.utility.clearAll(false, 'dontClear');
+//
+//                                vApp.wb.gObj.replayObjs = vApp.wb.gObj.replayObjs.concat(allRepObjs);
+//                                if (allRepObjs.length > 0) {
+//                                    vApp.wb.uid = allRepObjs[allRepObjs.length - 1].uid;
+//                                    vApp.wb.gObj.rcvdPackId = vApp.wb.uid;
+//                                    vApp.wb.toolInit('t_replay', 'fromBrowser', true, vApp.wb.utility.dispQueuePacket);
+//                                }
+//                            }
+                            
                             vApp.wb.vcan.main.replayObjs = allRepObjs;
                             vApp.wb.utility.clearAll(false, 'dontClear');
 
                             vApp.wb.gObj.replayObjs = vApp.wb.gObj.replayObjs.concat(allRepObjs);
+                            
                             if (allRepObjs.length > 0) {
                                 vApp.wb.uid = allRepObjs[allRepObjs.length - 1].uid;
                                 vApp.wb.gObj.rcvdPackId = vApp.wb.uid;
                                 vApp.wb.toolInit('t_replay', 'fromBrowser', true, vApp.wb.utility.dispQueuePacket);
                             }
-                        }else{
-                            vApp.wb.utility.toolWrapperEnable();
-                        }
+                            
+                            
+//                        }else{
+//                            vApp.wb.utility.toolWrapperEnable();
+//                        }
                     }
                 },
                 
@@ -1006,7 +1040,7 @@
                 },
                 
                 initUpdateInfo  : function (oldData2){
-                     oldData2 = vApp.wb.receivedPackets;
+                    oldData2 = vApp.wb.receivedPackets;
                     setInterval(function (){
                         if(document.getElementById(vApp.wb.receivedPackDivPS) != null){
                             oldData2 = vApp.wb.utility.calcPsRecvdPackets(oldData2);
@@ -1017,7 +1051,8 @@
                 
                 objPutInContainer : function (obj){
                     vcan.main.replayObjs.push(obj);
-                    localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
+                    //localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
+                    vApp.storage.store(JSON.stringify(vcan.main.replayObjs));
                 }
             };
         }

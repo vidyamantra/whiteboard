@@ -66,6 +66,7 @@
                             height : 56, 
                             width : 4, 
                             average : 0,
+                            
                             display : function (){
                                 var cvideo = cthis.video;
                                 if(vApp.gObj.uRole == 't'){
@@ -122,6 +123,7 @@
                     // this.audioInGraph();
                         console.log("out of recording");
                         if(!repMode){
+                            console.log("second suman");
 //                            if (cthis.stream.ended) {
 //                                this.onaudioprocess = function () {};
 //                                return;
@@ -134,9 +136,11 @@
                             var samples = this.resampler.resampler(left);
 
                             if(!this.recordAudio){
-                                   this.audioNodes[this.an].adArr.push(new Float32Array(samples));
+                                   this.audioNodes.push(new Float32Array(samples)); 
+                                   //this.audioNodes[this.an].adArr.push(new Float32Array(samples));
                                 
 //                                this.audioStreamArr.push(new Float32Array(samples));
+
                                  this.recordingLength += this.bufferSize;
                             }
 
@@ -169,14 +173,23 @@
 
                         //this.tempAudioStreamArr.push(send);
                         //this.audioNodes[this.an].tempAudArr = {mt:this.audioNodes[this.an].mt, adArr = send}
-                        
 //                        this.audioNodes[this.an].tempAudArr.adArr.push(send); 
                         
-                        this.tempAudArr[this.an].adArr.push(send); 
+                        //this.tempAudArr[this.an].adArr.push(send); //TODO - We should not use continious growing 
+                        
+                        this.tempAudArr.push(send);
                         
                         //localStorage.audioStream = JSON.stringify(this.audioNodes[this.an].tempAudArr);
-                        localStorage.audioStream = JSON.stringify(this.tempAudArr);
+                        //localStorage.audioStream = JSON.stringify(this.tempAudArr);
+                        
+                        //var audioStream = JSON.stringify(this.tempAudArr);
+                        
+//                      vApp.storage.audioStore(JSON.stringify(this.tempAudArr));
+                        
+                        vApp.storage.audioStore(JSON.stringify(send));
+                        //vApp.storage.audioStore(JSON.stringify(this.tempAudArr));
                         return send;    
+                        
                     },
                     
                     calcAverage : function (){
@@ -188,7 +201,6 @@
                         for (var i = 0; i < length; i++) {
                             values += array[i];
                         }
-                        
                         this.graph.average = values / length;
                     },
                     
@@ -233,12 +245,17 @@
                         
                     replay : function (inHowLong, offset){
                         repMode = true;
-                        var samples,whenTime,newBuffer,newSource, totArr8;
                         
+//                        this.audioNodes = [];
+//                        this.assignFromLocal();
+                        
+                        var samples,whenTime,newBuffer,newSource, totArr8;
                         //if(this.audioStreamArr.length > 0){
                             if(this.audioNodes.length > 0){
-                                samples =  this.mergeBuffers(this.audioNodes[ar].adArr);
-
+                                //samples =  this.mergeBuffers(this.audioNodes[ar].adArr);
+                                samples =  this.mergeBuffers(this.audioNodes);
+                                
+                                
                                 whenTime = this.Html5Audio.audioContext.currentTime + inHowLong;
                                 newBuffer = this.Html5Audio.audioContext.createBuffer(1, samples.length, 7800)
                                 newBuffer.getChannelData(0).set(samples);
@@ -249,19 +266,19 @@
                                 newSource.connect(this.Html5Audio.audioContext.destination);
                                 newSource.start(whenTime, offset); 
                                 
-                                if(typeof this.audioNodes[ar + 1] != 'undefined'){
-                                    var repTime = this.audioNodes[ar + 1].mt - this.audioNodes[ar + 0].mt;
-                                    var that = this;
-                                    ar++;
-                                    console.log('repTime ' + repTime);
-                                    
-                                    setTimeout(
-                                       function (){
-                                           that.replay.call(that, 0, 0);
-                                       },
-                                       repTime + 10
-                                    );
-                                }
+//                                if(typeof this.audioNodes[ar + 1] != 'undefined'){
+//                                    var repTime = this.audioNodes[ar + 1].mt - this.audioNodes[ar + 0].mt;
+//                                    var that = this;
+//                                    ar++;
+//                                    console.log('repTime ' + repTime);
+//                                    
+//                                    setTimeout(
+//                                       function (){
+//                                           that.replay.call(that, 0, 0);
+//                                       },
+//                                       repTime + 10
+//                                    );
+//                                }
                             }
                         //}
                     },
@@ -279,65 +296,40 @@
                         return result;
                     },
                     
-                    assignFromLocal : function () {
+                    assignFromLocal : function (arrStream) {
+//                        alert('suman bogati');
+//                        debugger;
+                        
                         this.init();
-                        var arrAudioNode = JSON.parse(localStorage.audioStream);
-                        
-//                        localStorage.removeItem('audioStream');
-                        
-                        
-                        for(var j=0; j < arrAudioNode.length; j++){
-                            
-                            arrStream = arrAudioNode[j].adArr;
-                            this.an++;
-                            this.audioNodes[this.an] = [];
-                            this.audioNodes[this.an] = {mt : arrAudioNode[j].mt, adArr : []};
-                            this.tempAudArr[this.an] = [];
-                            this.tempAudArr[this.an] = {mt : arrAudioNode[j].mt, adArr : []};
-
-                        //    this.audioNodes[this.an].tempAudArr = {mt : arrAudioNode[j].mt, adArr : []};   
-
-                            for(var i=0; i<arrStream.length; i++){
-                                // this.audioNodes[this.an].adArr.push(new Float32Array(samples));
-                                 var rec1 = LZString.decompressFromBase64(arrStream[i]);
-                                 var clip = this.str2ab(rec1);
-
-                                 samples = G711.decode(clip, {
-                                    alaw: this.encMode == "alaw" ? true : false,
-                                    floating_point : true,
-                                    Eight : true
-                                 });
-
-                                 //this.audioStreamArr.push(new Float32Array(samples));
-
-                                 this.audioNodes[this.an].adArr.push(new Float32Array(samples));
-                                 this.recordingLength += 16384;
-                                 this.audioInLocalStorage(samples);
-                            }
-                            
-                        }
-                        
-//                        for(var i=0; i<arrStream.length; i++){
-//                           // this.audioNodes[this.an].adArr.push(new Float32Array(samples));
-//                            var rec1 = LZString.decompressFromBase64(arrStream[i].adArr);
-//                            var clip = this.str2ab(rec1);
-//
-//                            samples = G711.decode(clip, {
-//                               alaw: this.encMode == "alaw" ? true : false,
-//                               floating_point : true,
-//                               Eight : true
-//                            });
-//                            
-//                            //this.audioStreamArr.push(new Float32Array(samples));
-//                            
+//                        for(var j=0; j < arrAudioNode.length; j++){
+//                            arrStream = arrAudioNode[j].adArr;
 //                            this.an++;
-//                            
-//                            alert('should be first' + this.an);
 //                            this.audioNodes[this.an] = [];
-//                            this.audioNodes[this.an] = {mt : arrStream[i].mt,  adArr : new Float32Array(samples)};
-//                            this.audioNodes[this.an].tempAudArr = {mt : arrStream[i].mt, adArr : []};   
-//                            this.recordingLength += 16384;
-//                            this.audioInLocalStorage(samples);
+//                            this.audioNodes[this.an] = {mt : arrAudioNode[j].mt, adArr : []};
+//                            this.tempAudArr[this.an] = [];
+//                            this.tempAudArr[this.an] = {mt : arrAudioNode[j].mt, adArr : []};
+
+                       
+                        
+                        //var arrStream = JSON.parse(localStorage.audiostream);    
+                        
+
+                        for(var i=0; i<arrStream.length; i++){
+                             var rec1 = LZString.decompressFromBase64(arrStream[i]);
+                             var clip = this.str2ab(rec1);
+
+                             samples = G711.decode(clip, {
+                                alaw: this.encMode == "alaw" ? true : false,
+                                floating_point : true,
+                                Eight : true
+                             });
+
+                             //this.audioNodes[this.an].adArr.push(new Float32Array(samples));
+                             this.audioNodes.push(new Float32Array(samples));
+                             this.recordingLength += 16384;
+                             
+                           //  this.audioInLocalStorage(samples);
+                        }
 //                        }
                     }, 
                     
@@ -369,6 +361,7 @@
                         cthis.audio.initAudioNode();
                         // NOTE, WARNING
                         // THIS SHOULD BE DISPLAY
+                        // below code should be enable
                         cthis.audio.rec.onaudioprocess = cthis.audio.recorderProcess.bind(cthis.audio);
                         
                         audioInput.connect(analyser);
@@ -380,8 +373,13 @@
                         var ctTime = new Date().getTime();
                         cthis.audio.an++;
                         localStorage.setItem('an', cthis.audio.an);
-                        cthis.audio.audioNodes[cthis.audio.an] = {mt : ctTime, adArr : []};
-                        cthis.audio.tempAudArr[cthis.audio.an] = {mt : ctTime, adArr : []};
+                        
+//                        cthis.audio.audioNodes[cthis.audio.an] = {mt : ctTime, adArr : []};
+//                        cthis.audio.tempAudArr[cthis.audio.an] = {mt : ctTime, adArr : []};
+                        
+//                        cthis.audio.audioNodes = [];
+//                        cthis.audio.tempAudArr = [];
+                        
                     },
                     
                     updateInfo : function (){
@@ -664,6 +662,17 @@
   
     window.media = media;
     window.onbeforeunload = function() {
+        if(typeof window.wholeStoreData != 'undefined'){
+            alert('suman bogati');
+            debugger;
+            var obj = JSON.parse(window.wholeStoreData);
+            obj.beforeRefresh = true;
+            
+            //vApp.storage.wholeStore(JSON.stringify(obj), "put");
+            vApp.storage.wholeStore(obj, "put");
+            
+        }
+        
         localStorage.removeItem('otherRole');
         vApp.wb.utility.userIds = [];
         cthis.sendMessage('bye');

@@ -5,18 +5,21 @@
 
 (
     function(window) {
-        var rObjs = localStorage.getItem('recObjs')
+        //var rObjs = localStorage.getItem('recObjs');
         var recorder = {
-            items :  (rObjs != null) ? JSON.parse(rObjs) : [],
+            
+          //  items :  (rObjs != null) ? JSON.parse(rObjs) : [],
+            items : [],
             recImgPlay : false,
             
             init: function(repMode, myfunc) {
                   //localStorage.removeItem('recObjs');
-                
                  var vcan = vApp.wb.vcan;
                  if(typeof myfunc != 'undefined'){
                      this.objs = vcan.getStates('replayObjs'); 
                  }else{
+                     
+                     //recorder.items;
                      this.objs = recorder.items;
                  }
                  
@@ -99,15 +102,17 @@
                     if (typeof this.repMode != 'undefined' && this.repMode == 'fromBrowser') {
                         vApp.wb.replayTime = 0;
                     }else{
-                        
+                        if(this.objs[this.objNo].hasOwnProperty('beforeRefresh')){
+                            vApp.wb.replayTime = (this.objs[this.objNo+1].mt - this.objs[this.objNo + 1].peTime)+1000;
+                            //vApp.wb.replayTime = 0;
+                        }else{
+                            vApp.wb.replayTime = this.objs[this.objNo + 1].mt - this.objs[this.objNo].mt;
+                        }
 //                        if(this.objNo == 0){
 //                            vApp.wb.replayTime =  this.objs[this.objNo].mt - vApp.wb.pageEnteredTime;
 //                        }else{
 //                            vApp.wb.replayTime = this.objs[this.objNo + 1].mt - this.objs[this.objNo].mt;
 //                        }
-                        
-                        vApp.wb.replayTime = this.objs[this.objNo + 1].mt - this.objs[this.objNo].mt;
-
                     }
 
                     this.objNo++;

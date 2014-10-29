@@ -140,10 +140,17 @@
                                         
                                         
                                         wb.utility.beforeSend({'repObj': dataChunk});
-                                        localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
                                         
-                                        localStorage.recObjs = JSON.stringify(vApp.recorder.items);
-
+                                        //localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
+                                        vApp.storage.store(JSON.stringify(vcan.main.replayObjs));
+                                        
+                                        //localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                                       // var data = JSON.stringify(vApp.recorder.items);
+                                        
+                                        vApp.storage.wholeStore(dataChunk);
+                                        
+                                        //vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
+                                        
                                         wb.utility.updateSentPackets(dataChunk);
                                         dataChunk = [];
                                         lastmousemovetime = new Date().getTime();
@@ -164,15 +171,22 @@
                         var rCurrObject = wb.canvas.readyObject(currObject);
                         wb.canvas.addObject(rCurrObject);
                         rCurrObject.coreObj.usrCurrAction = 'create';
-
+                        
+//                        if(typeof mouseup != 'undefined'){
+//                            var currTime = prvTime;
+//                        }else{
+//                            var currTime = new Date().getTime();
+//                        }
+                        
                         var currTime = new Date().getTime();
-
+                        
                         if ((typeof lastmousemovetime == 'undefined') || (lastmousemovetime == null)) {
                             lastmousemovetime = new Date().getTime();
                             if (!ev.detail.hasOwnProperty('cevent') && objType != 'text' && wb.tool.cmd != 't_clearall') {
                                 vcan.optimize.calculatePackets(currTime, 'm', endPosX, endPosY);
                             }
                         }
+                        
                         presentmousemovetime = new Date().getTime();
 
                         if ((presentmousemovetime - lastmousemovetime) >= 2000) { // Optimized
@@ -190,6 +204,8 @@
                          ****/
 
                         wb.prvObj = rCurrObject.coreObj;
+                        
+                        //prvTime = currTime;
 
                     }
                 } else {
@@ -224,6 +240,8 @@
                 if (tool.started && objType != 'text') {
                     tool.mousemove(ev, 'up');
                     if (!ev.detail.hasOwnProperty('cevent') && objType != 'freeDrawing') {
+//                        var currTime = new Date().getTime();
+                        
                         var currTime = new Date().getTime();
                         vcan.optimize.calculatePackets(currTime, 'u', endPosX, endPosY);
                     }
@@ -246,8 +264,16 @@
                                 }
                                 wb.utility.beforeSend({'repObj': dataChunk});
                                 
-                                localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
-                                localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                                //localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
+                                vApp.storage.store(JSON.stringify(vcan.main.replayObjs));
+                                
+                                //localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                                
+                               // var data = JSON.stringify(vApp.recorder.items);
+                               
+                               vApp.storage.wholeStore(dataChunk);
+                                
+                               //vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
                                 
                                 wb.utility.updateSentPackets(dataChunk);
                                 dataChunk = [];

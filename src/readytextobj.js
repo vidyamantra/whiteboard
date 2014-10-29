@@ -211,10 +211,23 @@
                         obj.uid = vApp.wb.uid;
                         
                         vcan.main.replayObjs.push(obj);
-                        localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
+                        
+                        //localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
+                        vApp.storage.store(JSON.stringify(vcan.main.replayObjs));
                         
                         vApp.recorder.items.push(obj);
-                        localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                        
+                        //localStorage.recObjs = JSON.stringify(vApp.recorder.items);
+                        
+                      // var data = JSON.stringify(vApp.recorder.items);
+                       // vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
+//                        vApp.rwitems = JSON.stringify(vApp.recorder.items);
+
+                        //vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
+                        
+                        //vApp.storage.wholeStore(JSON.stringify(obj));
+                        
+                        vApp.storage.wholeStore(obj);
                         
                         // vApp.wb.utility.beforeSend({'repObj': [obj]});
                         vApp.wb.utility.beforeSend({'repObj': [obj]});
