@@ -6,11 +6,13 @@
     function(window) {
         var adData = [];
         var wbDataArr = [];
-        
+        var that;
         var storage = {
             init : function (){
-                 that = this;
-                var openRequest = window.indexedDB.open("vidya_app", 1);
+                that = this;
+                this.tables = ["wbData", "allData", "audioData"];
+                
+                var openRequest = window.indexedDB.open("vidya_app", 2);
                 
                 openRequest.onerror = function(e) {
                     console.log("Error opening db");
@@ -20,7 +22,6 @@
                 openRequest.onupgradeneeded = function(e) {
                     var thisDb = e.target.result;
                     var objectStore;
-
                     //Create Note OS
                     
                     if(!thisDb.objectStoreNames.contains("wbData")) {
@@ -39,75 +40,32 @@
                 };
                 
                 openRequest.onsuccess = function(e) {
-                    db = e.target.result;
-                    db.onerror = function(event) {
-                      // Generic error handler for all errors targeted at this database's
-                      // requests!
-                      //alert("Database error: " + event.target.errorCode);
+                    that.db = e.target.result;
+                    that.db.onerror = function(event) {
                       console.dir(event.target);
                     };
-                    
                     that.getAllObjs();
-                 //   vApp.wb.utility.replayFromLocalStroage();
-                  //  vApp.gObj.video.audio.assignFromLocal();
-
-//                    setInterval(
-//                        function (){   
-//                            var number = Math.floor(Math.random() * 9);
-//                            console.log('number to put ' + number);
-//                            that.store(number);
-//                        }, 
-//                        100
-//                    );
-//                    
-//                    setInterval(
-//                        function (){
-//                            that.displayData();
-//                        },
-//                        100
-//                    );
                 };
             },
             
             store : function (data){
-                var t = db.transaction(["wbData"], "readwrite");  
-                //t.objectStore("wbData").delete();
-                
+                var t = that.db.transaction(["wbData"], "readwrite");  
                 var objectStore = t.objectStore("wbData");
                 objectStore.clear();
                 t.objectStore("wbData").add({repObjs :data , timeStamp : new Date().getTime(), id : 1})
-                
-                
-                  
-//                return true;
-//                var t = db.transaction(["vapp"], "readwrite");
-//                if(typeof key == "undefined") {
-//                    key = true;
-//                    t.objectStore("vapp").add({repObjs :data , updated: new Date().getTime(), id : 1});
-//                } else {
-//                    t.objectStore("vapp").put({repObjs :data,updated:new Date().getTime(), id : 1});
-//                }
                 return false;
             },
             
             audioStore : function (data){
-//                localStorage.audiostream = data;
-//                return;
-                
-                var t = db.transaction(["audioData"], "readwrite");
+                var t = that.db.transaction(["audioData"], "readwrite");
                 t.objectStore("audioData").add({audiostream :data , timeStamp: new Date().getTime(), id : 2});
-                
                 return false;
             },
             
             wholeStore_working : function (dt, type){
-                //alert(typeof dt);
                 var dtArr = [];
                 var currTime = new Date().getTime();
-                
                 if(typeof dt == "object" && !(dt instanceof Array) ) {
-                    //dt.peTime = window.pageEnter;
-                    
                     dtArr.push(dt);
                 }else{
                     dtArr = dt;
@@ -126,7 +84,7 @@
                         currTime = currTime + 1;
                     }
 
-                    var t = db.transaction(["allData"], "readwrite");
+                    var t = that.db.transaction(["allData"], "readwrite");
 
                     if(typeof type == 'undefined'){
                         t.objectStore("allData").add({recObjs :data, timeStamp : currTime, id : 3});
@@ -152,7 +110,7 @@
                     currTime = currTime + 1;
                 }
                 
-                var t = db.transaction(["allData"], "readwrite");
+                var t = that.db.transaction(["allData"], "readwrite");
                 
                 if(typeof type == 'undefined'){
                     t.objectStore("allData").add({recObjs :data, timeStamp : currTime, id : 3});
@@ -165,30 +123,19 @@
             },
             
             displayData : function (){
-                var transaction = db.transaction(["vapp"], "readonly"); 
+                var transaction = that.db.transaction(["vapp"], "readonly"); 
                 var objectStore = transaction.objectStore("vapp");
                 objectStore.openCursor().onsuccess =  that.handleResult;
             },
             
             getAllObjs : function (){
-//                alert('suman');
-//                debugger;
-                //mycallback = callback;
-                //var tables = ["allData", "audioData"];
-                
-                
-//                var adArr = JSON.parse(localStorage.audiostream);
-//                vApp.gObj.video.audio.assignFromLocal(adArr);
-
-                var tables = ["wbData", "allData", "audioData"];
-                for(var i=0; i<tables.length; i++){
-                    var transaction = db.transaction(tables[i], "readonly"); 
-                    var objectStore = transaction.objectStore(tables[i]);
-                    
+                for(var i=0; i<that.tables.length; i++){
+                    var transaction = that.db.transaction(that.tables[i], "readonly"); 
+                    var objectStore = transaction.objectStore(that.tables[i]);
                     objectStore.openCursor().onsuccess =  (
                         function (val){
-                            return function (){
-                                that[tables[val]].handleResult();
+                            return function (event){
+                                that[that.tables[val]].handleResult(event);
                             }
                         }
                     )(i);
@@ -197,31 +144,22 @@
             
             
             wbData : {
-                handleResult : function (){
+                handleResult : function (event){
                     var cursor = event.target.result;  
                     if (cursor) {
                         if(cursor.value.hasOwnProperty('repObjs')){
-                            
-                              vApp.wb.utility.replayFromLocalStroage(JSON.parse(cursor.value.repObjs));
-
-//                            wbDataArr.push(JSON.parse(cursor.value.repObjs));
+                            vApp.wb.utility.replayFromLocalStroage(JSON.parse(cursor.value.repObjs));
                         }
                         cursor.continue();    
-                    } else {
-//                        if(wbDataArr.length > 1){
-//                            vApp.wb.utility.replayFromLocalStroage(wbDataArr);
-//                            
-//                        }
                     }
                  }
             },
             
             audioData : {
-                handleResult : function (){
+                handleResult : function (event){
                     var cursor = event.target.result;  
                     if (cursor) {
                         if(cursor.value.hasOwnProperty('audiostream')){
-                            
                             adData.push(JSON.parse(cursor.value.audiostream));
                         }
                         cursor.continue();    
@@ -234,9 +172,8 @@
                  }
             },
             
-            
             allData : {
-                handleResult : function (){
+                handleResult : function (event){
                     var cursor = event.target.result;  
                     if (cursor) {
                         if(cursor.value.hasOwnProperty('recObjs')){
@@ -252,12 +189,20 @@
                 }
             },
             
-            handleResult : function (){
+            clearStorageData : function (){
+                for(var i=0; i<this.tables.length; i++){
+                    var t = this.db.transaction([this.tables[i]], "readwrite");  
+                    if(typeof t != 'undefined'){
+                        var objectStore = t.objectStore(this.tables[i]);
+                        objectStore.clear();  
+                    }
+                }
+
+            },
+            
+            handleResultNoUsing : function (){
                 var cursor = event.target.result;  
                 if (cursor) {
-//                  document.getElementById('dummyResult').innerHTML = cursor.key + " " + cursor.value.repObjs;
-                    //var allObjs = cursor.value.repObjs;
-                    //cursor.value.hasOwnProperty('repObjs')
                     if(cursor.value.hasOwnProperty('repObjs')){
                         var allObjs = JSON.parse(cursor.value.repObjs);
                         vApp.wb.utility.replayFromLocalStroage(allObjs);
@@ -267,19 +212,9 @@
                         vApp.gObj.video.audio.assignFromLocal(allObjs);
                         
                     }else  if (cursor.value.hasOwnProperty('recObjs')){
-                        //vApp.witems = JSON.parse(cursor.value.recObjs);
-                        //vApp.recorder.items = JSON.parse(cursor.value.recObjs);
                         vApp.recorder.items.push(JSON.parse(cursor.value.recObjs));
                     }
-                    
-                    //var allObjs = cursor.value[item];
-                    //var allObjs = JSON.parse(allObjs);
-                    //mycallback(allObjs);
                     cursor.continue();
-                }else{
-                    
-                    alert(vApp.recorder.items.length);
-                    alert("something happend");
                 }
             }
         }

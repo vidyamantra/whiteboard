@@ -363,6 +363,8 @@
                         //vApp.gObj.video.updateVideoInfo();
                         vApp.wb.utility.t_clearallInit();
                         vApp.wb.utility.makeDefaultValue();
+                        vApp.storage.clearStorageData();
+                        
                         vApp.wb.utility.beforeSend({'clearAll': true});
                     }
 

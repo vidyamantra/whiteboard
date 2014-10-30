@@ -12,6 +12,7 @@ $.when(
         window.earlierWidth = window.innerWidth;
         window.earlierHeight = window.innerHeight;
         window.wbUser = wbUser;
+        
         window.pageEnter = new Date().getTime();
         var vApp = new window.vmApp();
         window.vApp = vApp; //make available to vApp object to each file
@@ -221,7 +222,8 @@ $.when(
                             }
 
                             if(e.fromUser.userid != wbUser.id){
-                                localStorage.setItem('repObjs', JSON.stringify(vApp.wb.gObj.replayObjs));
+                                //localStorage.setItem('repObjs', JSON.stringify(vApp.wb.gObj.replayObjs));
+                                vApp.storage.store(JSON.stringify(vApp.wb.gObj.replayObjs));
                             }else{
                                 if(typeof vApp.wb.gObj.rcvdPackId != 'undefined'){
                                     vApp.wb.gObj.displayedObjId = vApp.wb.gObj.rcvdPackId;

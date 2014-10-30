@@ -182,6 +182,7 @@
                     vApp.wb.tool = new vApp.wb.tool_obj('t_clearall');
                     vApp.wb.utility.t_clearallInit();
                     vApp.wb.utility.makeDefaultValue();
+                    vApp.storage.clearStorageData();
                 }
 
                 if (orginalTeacherId) {
