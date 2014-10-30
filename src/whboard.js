@@ -176,15 +176,8 @@
 
                     vApp.wb.createDiv('t_replay', 'Replay', cmdToolsWrapper, 'tool');
 
-                    //vApp.wb.createDiv('t_connect', 'conn', cmdToolsWrapper, 'controlCmd coff');
-               //     vApp.wb.createDiv('t_assign', 'assign', cmdToolsWrapper, 'controlCmd');
-
-
                     vApp.wb.socketOn = parseInt(wbUser.socketOn);
                     if (vApp.wb.socketOn == 1) {
-                      //  vApp.wb.createDiv('t_connectionoff', 'connectionOff', cmdToolsWrapper, 'controlCmd');
-                        
-//                        vApp.wb.createDiv('t_connectionon', 'connectionOn', cmdToolsWrapper, 'controlCmd');
                         vApp.wb.utility.setClass('vcanvas', 'socketon');
                     }
                 },
@@ -261,16 +254,7 @@
                         vcan.main.replayObjs.push(obj);
                         recorder.items.push(obj);
                         
-                        //localStorage.recObjs = JSON.stringify(vApp.recorder.items);
-                        
-                       // var data = JSON.stringify(vApp.recorder.items);
-                        //vApp.storage.storeWholeData(data);
-                        
-                        //vApp.storage.wholeStore(JSON.stringify(obj));
-                        
                         vApp.storage.wholeStore(obj);
-                        
-                        //vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
                         
                         vApp.wb.utility.beforeSend({'repObj': [obj]}); //after optimized
                     }
@@ -382,15 +366,6 @@
                         vApp.wb.utility.reclaimRole();
                         vApp.wb.utility.sendRequest('reclaimRole', true);
                     }
-
-//                    if (cmd == 't_connectionoff') {
-//                        vApp.wb.utility.connectionOff();
-//                    }
-                    
-//                    
-//                    if (cmd == 't_connectionon') {
-//                        vApp.wb.utility.connectionOn();
-//                    }
 
                     if (cmd != 't_activeall' && cmd != 't_replay' && cmd != 't_clearallInit' && cmd != 't_assign'
                             && cmd != 't_reclaim') {

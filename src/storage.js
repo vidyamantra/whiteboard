@@ -218,7 +218,6 @@
                 }
             }
         }
-        
         window.storage = storage;
     }
 )(window);

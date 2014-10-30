@@ -60,7 +60,7 @@
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/chat.js"></script>
 
-<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/ss_utility.js"></script>
+<!--<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/ss_utility.js"></script>-->
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/dirtycorner.js"></script>
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/vutility.js"></script>

@@ -54,12 +54,6 @@
                 createPacketContainer :function() {
                     //Creating Column Two.
                     var packetContainer = document.getElementById('packetContainer');
-                    
-//                    var toggleBox = document.createElement("div");
-//                    toggleBox.id = "displayHeader";
-//                    toggleBox.innerHTML = "-";
-//                    packetContainer.appendChild(toggleBox);
-                    
                     var headingTag = document.createElement("h4");
                     headingTag.id = 'dataInfoHeading';
                     headingTag.innerHTML = vApp.lang.getString('dataDetails');
@@ -79,12 +73,7 @@
                     
                     var mainContainer = document.getElementById('mainContainer');
                     mainContainer.insertBefore(toggleBox, mainContainer.firstChild);
-                    
-               
-                    
-               //     toggleBox.addEventListener('click', this.togglePacktetCont);
 
-                    //var mainContainer = document.getElementById('mainContainer');
                     mainContainer.insertBefore(headingTag, packetContainer);
                     
                     var labelDiv = this.createPacketContDiv("dataInformation");
@@ -173,9 +162,6 @@
                     receivedMsgInfoCont.appendChild(rcvdMsgInfo);
                     informationCont.appendChild(receivedMsgInfoCont);
                 }
-
-                
-                
             }
         };
         window.packContainer = packContainer;

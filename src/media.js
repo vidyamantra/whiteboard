@@ -678,14 +678,4 @@
         cthis.sendMessage('bye');
         io.disconnect();
     }
-
-//    window.isVideoFound = function(videoFound, fromUser) {
-//        if (fromUser != wbUser.id) {
-//            if (videoFound == false) {
-//                cthis.isInitiator = true;
-//            }
-//            cthis.sendMessage('got user media');
-//        }
-//    }
-}
-)(window);
+})(window);

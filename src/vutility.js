@@ -131,23 +131,5 @@
         }
         
         window.vutil = vutil;
-        
-        
-//        function setScreenInnerTagsWidth(currAppId){
-//            var sId = currAppId;
-//            var screenShare = document.getElementById(sId);
-//            var screenShareWidth = screenShare.offsetWidth;
-//            var screenShareLocal  = document.getElementById(sId + "Local");
-//            var screenShareLocalWidth = screenShareLocal.offsetWidth;
-//            var toBeLeft  = screenShareWidth-screenShareLocalWidth;
-//            
-//            screenShareLocal.style.marginLeft = (toBeLeft/2) + "px";
-//            
-//            var screenShareLocalVideo = document.getElementById(sId+"LocalVideo");
-//            var screenShareLocalVideoWidth = screenShareLocalVideo.offsetWidth;
-//            
-//            var screenShareLocalVideoWidth = screenShareLocalWidth - screenShareLocalVideoWidth
-//            screenShareLocalVideo.style.marginLeft = (screenShareLocalVideoWidth/2) + "px";
-//        }
     }
 )(window);

@@ -66,17 +66,6 @@
             },
 
             measureResoultion : function(resolution) {
-//                if(typeof vcan.main.offset != 'undefined'){
-//                    
-//                    var offset = vcan.main.offset;
-//                }else{
-//                    
-//                   // var element = document.getElementById('vcanvas');
-//                    var element = document.getElementById('vAppCont');
-//                        vcan.utility.canvasCalcOffset(element.id);
-//                    var offset = vcan.utility.getElementOffset(element);
-//                }
-                
                 var element = document.getElementById('vAppCont');
                 var offset = vcan.utility.getElementOffset(element);
                 var offsetLeft = offset.x;
@@ -94,31 +83,7 @@
             setCanvasDimension : function() {
                 var measureRes = this.measureResoultion({'width': window.innerWidth, 'height': window.innerHeight});
                 var mainWrapper =  document.getElementById('vAppCont');
-                // var vcanvas = document.getElementById('vcanvas');
-                
-                //  var vcanvas = document.getElementById('vAppWhiteboard');
-                
-                //var  rightOffSet = vApp.wb.utility.getElementRightOffSet(vcanvas);
-                
-                
-                
-
-                // measureRes.width = measureRes.width - rightOffSet; //60 for right edge
-                //to apply top wrapper container
-                // measureRes.width =  Math.round(measureRes.width * (3/4));
-                
-//                var extraWidth = 25;
-//                mainWrapper.style.width = (measureRes.width - extraWidth) + 'px';
-//                var rightOffSet = 260;
-//                var leftSideBarWidth = document.getElementById("vAppOptionsCont").offsetWidth;
-//                measureRes.width = measureRes.width - (rightOffSet + leftSideBarWidth + extraWidth + 5); //60 for right edge
-//                vcanvas.style.width = measureRes.width + 'px';
-                  
-                  vApp.vutil.setContainerWidth(measureRes);
-                  
-                  //vApp.util.setContainerWidth(measureRes);
-                
-                //console.log('wrapperWidth ' + vcanvas.style.width);
+                vApp.vutil.setContainerWidth(measureRes);
                 
                 if (typeof vcan.main.canvas != 'undefined') {
                     var canvas = vcan.main.canvas;

@@ -138,19 +138,9 @@
                                             vApp.recorder.items.push(dataChunk[i]);
                                         }
                                         
-                                        
                                         wb.utility.beforeSend({'repObj': dataChunk});
-                                        
-                                        //localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
                                         vApp.storage.store(JSON.stringify(vcan.main.replayObjs));
-                                        
-                                        //localStorage.recObjs = JSON.stringify(vApp.recorder.items);
-                                       // var data = JSON.stringify(vApp.recorder.items);
-                                        
                                         vApp.storage.wholeStore(dataChunk);
-                                        
-                                        //vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
-                                        
                                         wb.utility.updateSentPackets(dataChunk);
                                         dataChunk = [];
                                         lastmousemovetime = new Date().getTime();
@@ -171,12 +161,6 @@
                         var rCurrObject = wb.canvas.readyObject(currObject);
                         wb.canvas.addObject(rCurrObject);
                         rCurrObject.coreObj.usrCurrAction = 'create';
-                        
-//                        if(typeof mouseup != 'undefined'){
-//                            var currTime = prvTime;
-//                        }else{
-//                            var currTime = new Date().getTime();
-//                        }
                         
                         var currTime = new Date().getTime();
                         
@@ -210,10 +194,8 @@
                     }
                 } else {
                     if (wb.vcan.main.action != 'move' || ((vcan.main.currentTransform == "" || vcan.main.currentTransform == null) && wb.vcan.main.action == "move")) {
-                        //vApp.wb.utility.beforeSend({'createArrow': true, x: ev.currX, y: ev.currY});
                         wb.utility.beforeSend({'createArrow': true, x: ev.currX, y: ev.currY});
                     }
-
                 }
             };
 
@@ -262,18 +244,14 @@
                                     vcan.main.replayObjs.push(dataChunk[i]);
                                     vApp.recorder.items.push(dataChunk[i]);
                                 }
+                                
                                 wb.utility.beforeSend({'repObj': dataChunk});
                                 
                                 //localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
                                 vApp.storage.store(JSON.stringify(vcan.main.replayObjs));
                                 
-                                //localStorage.recObjs = JSON.stringify(vApp.recorder.items);
-                                
-                               // var data = JSON.stringify(vApp.recorder.items);
                                
-                               vApp.storage.wholeStore(dataChunk);
-                                
-                               //vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
+                                vApp.storage.wholeStore(dataChunk);
                                 
                                 wb.utility.updateSentPackets(dataChunk);
                                 dataChunk = [];

@@ -217,16 +217,6 @@
                         
                         vApp.recorder.items.push(obj);
                         
-                        //localStorage.recObjs = JSON.stringify(vApp.recorder.items);
-                        
-                      // var data = JSON.stringify(vApp.recorder.items);
-                       // vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
-//                        vApp.rwitems = JSON.stringify(vApp.recorder.items);
-
-                        //vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
-                        
-                        //vApp.storage.wholeStore(JSON.stringify(obj));
-                        
                         vApp.storage.wholeStore(obj);
                         
                         // vApp.wb.utility.beforeSend({'repObj': [obj]});

@@ -130,13 +130,7 @@
                     document.getElementById(this.commonChatId).appendChild(msgBox);
                     this.stickScrollbarAtBottom();
                 },
-                
-//                requestMissedPackets : function (start, end){
-//                    alert('suman');
-//                    debugger;
-//                    this.requestUser = true;
-//                    vApp.wb.utility.beforeSend({"chatPackReqest": [start, end]});
-//                },
+             
                 
                 //TODO userChatList is not a good name.
                 sendPackets : function (user, sp){
@@ -158,20 +152,12 @@
                     chatBox.scrollTop = chatBox.scrollHeight;
                 },
                 
-                makeNameInCapital : function(){
-                    
-                },
-                
                 alreadyExist : function (id){
                     var element = document.getElementById(id);
                     return (element != null) ? true : false;
                 },
                 
                 isChatAvailable : function (){
-                   //var chatCont = document.getElementById(this.commonChatId);
-//                   if(chatCont.childNodes.length > 0){
-//                       
-//                   }
                    return  (chatCont.childNodes.length > 0) ? true : false;
                 },
                 
@@ -182,29 +168,12 @@
                        while(chatCont.childNodes[0] != null ){
                           chatCont.childNodes[0].parentNode.removeChild(chatCont.childNodes[0]);
                        }
-                       
-//                        for(var i=0; i<nodes.length; i++){
-//                            if(nodes[i].tagName == 'DIV'){
-//                                alert(i);
-//                                nodes[i].parentNode.removeChild(nodes[i]);
-//                            }
-//                        }
-//                       var conTainerId = chatCont.id;
-//                       var parentId = chatCont.parentNode.id;
-//                       
-//                       chatCont.parentNode.removeChild(chatCont);
-//                       var createdDiv = document.createElement('div');
-//                       createdDiv.id = conTainerId;
-//                       
-//                       document.getElementById(parentId).appendChild(createdDiv);
                    }
                 }
             }
         }
         
         window.chat = chat;
-        
-        
     }
 )(window);
 

@@ -52,11 +52,6 @@
                     return;
                 }
                 
-//                if(this.objNo == 0){
-//                    var newTime = new.Date().getDate();
-//                    var repTime  = this.objs[this.objNo].mt
-//                }
-                
                 if (this.objs[this.objNo].hasOwnProperty('cmd')) {
                     vApp.wb.gObj.displayedObjId = this.objs[this.objNo].uid;
                     vApp.wb.toolInit(this.objs[this.objNo].cmd, 'fromFile', true);
@@ -108,11 +103,6 @@
                         }else{
                             vApp.wb.replayTime = this.objs[this.objNo + 1].mt - this.objs[this.objNo].mt;
                         }
-//                        if(this.objNo == 0){
-//                            vApp.wb.replayTime =  this.objs[this.objNo].mt - vApp.wb.pageEnteredTime;
-//                        }else{
-//                            vApp.wb.replayTime = this.objs[this.objNo + 1].mt - this.objs[this.objNo].mt;
-//                        }
                     }
 
                     this.objNo++;

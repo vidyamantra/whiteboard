@@ -38,7 +38,7 @@
                 
                 if(!this.hasOwnProperty('id')){
                     this.dc = window.dirtyCorner;
-                    this.sutil = window.sutil;
+                    //this.sutil = window.sutil;
                     
                     this.postFix = "Cont";
                     this.id =  config.hasOwnProperty('id') ? config.id  : "vAppScreenShare";
@@ -253,19 +253,8 @@
                                 var madeTime = new Date().getTime();
                                 var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}, mt : madeTime};
                                 vApp.recorder.items.push(imgObj);
-                                
-//                                localStorage.recObjs = JSON.stringify(vApp.recorder.items);
-                                
-                               // var data = JSON.stringify(vApp.recorder.items);
-                               // vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
-                               // vApp.rwitems = JSON.stringify(vApp.recorder.items);
-                               
-                                //vApp.storage.wholeStore(JSON.stringify(imgObj));
                                 vApp.storage.wholeStore(imgObj);
-                                //vApp.storage.wholeStore(JSON.stringify(vApp.recorder.items));
-                                
-                                vApp.wb.utility.beforeSend(imgObj);                                      
-                                sendobj=[];
+                                vApp.wb.utility.beforeSend(imgObj);                                                                  sendobj=[];
                             }
                         }
                     },
@@ -295,11 +284,6 @@
                 if(typeof this.vac == 'undefined'){
                     this.vac = true;
                     this.localCanvas = document.getElementById(vApp[app].local+"Video");
-//                    if(typeof vtype == 'undefined'){
-//                        this.localCanvas = document.getElementById(vApp[app].local+"Video");
-//                    }else{
-//                        this.localCanvas = document.getElementById(vApp[app].local+"TempVideo");
-//                    }
                     this.localCont = vApp[app].localCanvas.getContext('2d');
                 }
                 
@@ -391,7 +375,5 @@
             }
         }
     }
-    
     window.screenShare  = screenShare;
-        
 })(window);
