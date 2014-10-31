@@ -10,7 +10,8 @@
         var storage = {
             init : function (){
                 that = this;
-                this.tables = ["wbData", "allData", "audioData"];
+                //this.tables = ["wbData", "allData", "audioData"];
+                this.tables = ["wbData"];
                 
                 var openRequest = window.indexedDB.open("vidya_app", 2);
                 
@@ -44,7 +45,7 @@
                     that.db.onerror = function(event) {
                       console.dir(event.target);
                     };
-                    that.getAllObjs();
+                    that.getAllObjs(that.tables);
                 };
             },
             
@@ -80,7 +81,7 @@
                     dt.peTime = window.pageEnter;
                     var data = JSON.stringify((dt));
                     
-                    if(typeof window.prevTime != 'undefined' && currTime == window.prevTime){
+                    if(typeof this.prevTime != 'undefined' && currTime == this.prevTime){
                         currTime = currTime + 1;
                     }
 
@@ -89,15 +90,13 @@
                     if(typeof type == 'undefined'){
                         t.objectStore("allData").add({recObjs :data, timeStamp : currTime, id : 3});
                     }else{
-                        t.objectStore("allData").put({recObjs :data, timeStamp :window.prevTime, id : 3});
+                        t.objectStore("allData").put({recObjs :data, timeStamp :this.prevTime, id : 3});
                     }
                     
-
-                    window.wholeStoreData = data;
-                    window.prevTime = currTime;
+                    this.wholeStoreData = data;
+                    this.prevTime = currTime;
                 } 
             },
-            
             
             wholeStore : function (obj, type){
                 obj.peTime = window.pageEnter;
@@ -106,7 +105,7 @@
                 
                 var currTime = new Date().getTime();
                 
-                if(typeof window.prevTime != 'undefined' && currTime == window.prevTime){
+                if(typeof this.prevTime != 'undefined' && currTime == this.prevTime){
                     currTime = currTime + 1;
                 }
                 
@@ -115,11 +114,11 @@
                 if(typeof type == 'undefined'){
                     t.objectStore("allData").add({recObjs :data, timeStamp : currTime, id : 3});
                 }else{
-                    t.objectStore("allData").put({recObjs :data, timeStamp :window.prevTime, id : 3});
+                    t.objectStore("allData").put({recObjs :data, timeStamp :this.prevTime, id : 3});
                 }
                 
-                window.wholeStoreData = data;
-                window.prevTime = currTime;
+                this.wholeStoreData = data;
+                this.prevTime = currTime;
             },
             
             displayData : function (){
@@ -128,17 +127,27 @@
                 objectStore.openCursor().onsuccess =  that.handleResult;
             },
             
-            getAllObjs : function (){
-                for(var i=0; i<that.tables.length; i++){
-                    var transaction = that.db.transaction(that.tables[i], "readonly"); 
-                    var objectStore = transaction.objectStore(that.tables[i]);
+            getAllObjs : function (tables, callback){
+                
+                
+                var cb =  typeof callback != 'undefined' ? callback : "";
+                
+                for(var i=0; i<tables.length; i++){
+                    var transaction = that.db.transaction(tables[i], "readonly"); 
+                    var objectStore = transaction.objectStore(tables[i]);
+                    
                     objectStore.openCursor().onsuccess =  (
-                        function (val){
+                        function (val, cb){
                             return function (event){
-                                that[that.tables[val]].handleResult(event);
+                                if(typeof cb == 'function'){
+                                    
+                                    that[tables[val]].handleResult(event, cb);
+                                }else{
+                                    that[tables[val]].handleResult(event);
+                                }
                             }
                         }
-                    )(i);
+                    )(i, cb);
                 }
             },
             
@@ -156,7 +165,7 @@
             },
             
             audioData : {
-                handleResult : function (event){
+                handleResult : function (event, cb){
                     var cursor = event.target.result;  
                     if (cursor) {
                         if(cursor.value.hasOwnProperty('audiostream')){
@@ -166,23 +175,39 @@
                     } else {
                         if(adData.length > 1){
                             vApp.gObj.video.audio.recordingLength = 0;
-                            vApp.gObj.video.audio.assignFromLocal(adData);
+                            if(typeof cb == 'function'){
+                                vApp.gObj.video.audio.assignFromLocal(adData, cb);
+                            }else{
+                                vApp.gObj.video.audio.assignFromLocal(adData);
+                            }
+                            
+                            
+//                            if(typeof myAudRep != 'undefined'){
+//                                vApp.gObj.video.audio.assignFromLocal(adData, myAudRep);
+//                            }else{
+//                                vApp.gObj.video.audio.assignFromLocal(adData);
+//                            }
                         }
                     }
                  }
             },
             
             allData : {
-                handleResult : function (event){
+                handleResult : function (event, cb){
                     var cursor = event.target.result;  
                     if (cursor) {
                         if(cursor.value.hasOwnProperty('recObjs')){
                             vApp.recorder.items.push(JSON.parse(cursor.value.recObjs));
                         }
                         cursor.continue();    
-                    } 
+                    }else{
+                        if(typeof cb == 'function'){
+                            cb();
+                        }
+                    }
                 }
             },
+            
             shapesData : {
                 handleResult : function (){
                     vApp.recorder.items.push(JSON.parse(cursor.value.recObjs));
@@ -197,7 +222,6 @@
                         objectStore.clear();  
                     }
                 }
-
             },
             
             handleResultNoUsing : function (){

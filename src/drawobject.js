@@ -135,7 +135,7 @@
                                             wb.uid++;
                                             dataChunk[i].uid = wb.uid;
                                             vcan.main.replayObjs.push(dataChunk[i]);
-                                            vApp.recorder.items.push(dataChunk[i]);
+//                                            vApp.recorder.items.push(dataChunk[i]);
                                         }
                                         
                                         wb.utility.beforeSend({'repObj': dataChunk});
@@ -242,7 +242,7 @@
                                     wb.uid++;
                                     dataChunk[i].uid = wb.uid;
                                     vcan.main.replayObjs.push(dataChunk[i]);
-                                    vApp.recorder.items.push(dataChunk[i]);
+//                                    vApp.recorder.items.push(dataChunk[i]);
                                 }
                                 
                                 wb.utility.beforeSend({'repObj': dataChunk});

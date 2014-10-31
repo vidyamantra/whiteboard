@@ -12,36 +12,63 @@
             items : [],
             recImgPlay : false,
             
-            init: function(repMode, myfunc) {
-                  //localStorage.removeItem('recObjs');
-                 var vcan = vApp.wb.vcan;
-                 if(typeof myfunc != 'undefined'){
-                     this.objs = vcan.getStates('replayObjs'); 
-                 }else{
-                     
-                     //recorder.items;
-                     this.objs = recorder.items;
-                 }
-                 
-                 this.objNo = 0;
-                 this.repMode = repMode;
-                 this.callBkfunc = "";
-                 
-                 vApp.ss = "";
-                 vApp.wss = "";
-                 
-                 var allChildrens;
-                 var screenShare = document.getElementById('vApp'+ vApp.apps[1]);
-                 
-                 if(screenShare != null){
-                    screenShare.parentNode.removeChild(screenShare);
-                 }
-                 
-                 var wholeScreenShare = document.getElementById('vApp'+ vApp.apps[2]);
-                 
-                 if(wholeScreenShare != null){
-                     wholeScreenShare.parentNode.removeChild(wholeScreenShare);
-                 }
+            init: function(repMode) {
+                 //localStorage.removeItem('recObjs');
+                var vcan = vApp.wb.vcan;
+                if(typeof myfunc != 'undefined'){
+                    this.objs = vcan.getStates('replayObjs'); 
+                }else{
+                    //recorder.items;
+//                    this.objs = recorder.items;
+                    vApp.storage.getAllObjs(["allData"], repInit);
+                }
+                
+                var that = this;
+                
+                function repInit (){
+                    that.objs = vApp.recorder.items;
+                    that.objNo = 0;
+                    that.repMode = repMode;
+                    that.callBkfunc = "";
+
+                    vApp.ss = "";
+                    vApp.wss = "";
+
+                    var allChildrens;
+                    var screenShare = document.getElementById('vApp'+ vApp.apps[1]);
+
+                    if(screenShare != null){
+                       screenShare.parentNode.removeChild(screenShare);
+                    }
+
+                    var wholeScreenShare = document.getElementById('vApp'+ vApp.apps[2]);
+
+                    if(wholeScreenShare != null){
+                       wholeScreenShare.parentNode.removeChild(wholeScreenShare);
+                    }
+                    
+                    var obj = that.objs[0];
+                    var repTime = obj.mt - vApp.wb.pageEnteredTime;
+                   
+                    setTimeout(
+                        function (){
+                            vApp.recorder.renderObj();
+                        },
+                        repTime
+                    );
+                }
+                
+                var audioRepTime = vApp.wb.recordStarted - vApp.wb.pageEnteredTime;
+                
+                setTimeout(
+                    function (){
+                        if(typeof vApp.gObj.video != 'undefined'){
+                            //vApp.gObj.video.audio.replay(0, 0);
+                            vApp.gObj.video.audio.replayInit();
+                        }
+                    },
+                    audioRepTime
+                );
              },
                 
             renderObj : function(myfunc) {

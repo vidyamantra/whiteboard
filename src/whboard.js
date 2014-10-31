@@ -252,7 +252,7 @@
                         vApp.wb.uid++;
                         obj.uid = vApp.wb.uid;
                         vcan.main.replayObjs.push(obj);
-                        recorder.items.push(obj);
+                        //recorder.items.push(obj);
                         
                         vApp.storage.wholeStore(obj);
                         
@@ -423,33 +423,31 @@
 //                        }
                         
                         vApp.wb.recordAudio = true;
-                        var audioRepTime = vApp.wb.recordStarted - vApp.wb.pageEnteredTime;
+                        //var audioRepTime = vApp.wb.recordStarted - vApp.wb.pageEnteredTime;
                         
 //                        console.log("audioRepTime " + audioRepTime);
                         vApp.recorder.init();
                         
-                        var obj = vApp.recorder.objs[0];
-                        
-                        //var newTime = new Date().getTime();
-                        //vApp.wb.replayTime =  obj.mt - vApp.wb.pageEnteredTime;
-                        
-                        var repTime = obj.mt - vApp.wb.pageEnteredTime;
-                        //var repTime = newTime - obj.mt;
-                        setTimeout(
-                            function (){
-                                vApp.recorder.renderObj();
-                            },
-                            repTime
-                        );
-                        
-                        setTimeout(
-                            function (){
-                                if(typeof vApp.gObj.video != 'undefined'){
-                                    vApp.gObj.video.audio.replay(0, 0);
-                                }
-                            },
-                            audioRepTime
-                        );
+//                        var obj = vApp.recorder.objs[0];
+//                        var repTime = obj.mt - vApp.wb.pageEnteredTime;
+//                     
+//                        setTimeout(
+//                            function (){
+//                                vApp.recorder.renderObj();
+//                            },
+//                            repTime
+//                        );
+//                        
+//                        setTimeout(
+//                            function (){
+//                                if(typeof vApp.gObj.video != 'undefined'){
+//                                    //vApp.gObj.video.audio.replay(0, 0);
+//                                    vApp.gObj.video.audio.replayInit();
+//                                }
+//                            },
+//                            audioRepTime
+//                        );
+                
                     }else{
                         vApp.wb.replay = vApp.wb._replay();
                         if (typeof myfunc != 'undefined') {

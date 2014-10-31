@@ -69,7 +69,6 @@
                     });
                     
                     toggleBox.innerHTML = "-";
-                    //mainContainer.appendChild(toggleBox);
                     
                     var mainContainer = document.getElementById('mainContainer');
                     mainContainer.insertBefore(toggleBox, mainContainer.firstChild);

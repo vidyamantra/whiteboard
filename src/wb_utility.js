@@ -486,10 +486,10 @@
                     // it has to be done in function
                     vApp.gObj.video.audio.bufferSize = 0;
                     vApp.gObj.video.audio.encMode = "alaw";
-                    vApp.gObj.video.audio.an = -1;
+//                    vApp.gObj.video.audio.an = -1;
                     vApp.gObj.video.audio.rec = '';
                     vApp.gObj.video.audio.audioNodes = [];
-                    vApp.gObj.video.audio.tempAudArr = [];
+                   // vApp.gObj.video.audio.tempAudArr = [];
                     
                     vApp.gObj.video.audio.initAudioNode();
                     

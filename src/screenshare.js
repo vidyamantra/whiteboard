@@ -188,7 +188,6 @@
                         var video = document.getElementById(that.local+"Video");
                         that.width = video.clientWidth;
                         that.height = video.clientHeight;
-                        
                     }
                     
                     that.localtempCanvas.width = that.width ;
@@ -197,7 +196,6 @@
                     
                     var res = vApp.system.measureResoultion({'width': window.innerWidth, 'height': window.innerHeight});
                     
-            
                     //that.initAfterImg();
                     that.sharing();
                     vApp.vutil.setContainerWidth(res);
@@ -243,7 +241,6 @@
                                 sendobj.push(tempObj);    
                                 that.latestScreen[sl] = tempObj; 
                             }
-
                         }
 
                         if(sl ==  resA * resB){
@@ -252,9 +249,13 @@
                                 var contDimension = that.getContainerDimension();
                                 var madeTime = new Date().getTime();
                                 var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}, mt : madeTime};
-                                vApp.recorder.items.push(imgObj);
+                                
+//                                vApp.recorder.items.push(imgObj);
+                                
                                 vApp.storage.wholeStore(imgObj);
-                                vApp.wb.utility.beforeSend(imgObj);                                                                  sendobj=[];
+                                
+                                vApp.wb.utility.beforeSend(imgObj);                    
+                                sendobj=[];
                             }
                         }
                     },

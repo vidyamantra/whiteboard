@@ -123,7 +123,8 @@
                     if(typeof cevent == 'undefined'){
                         var madeTime = new Date().getTime();
                         var userMsg = {'cuser' : user, mt : madeTime};
-                        vApp.recorder.items.push(userMsg);
+                        
+                        //vApp.recorder.items.push(userMsg);
                     }
                     
                     msgBox.appendChild(msgCont);
@@ -138,7 +139,6 @@
                         var chatMissedPackets =  this.userChatList.slice(sp, this.userChatList.length);
                         vApp.wb.utility.beforeSend({"chatPackResponsed": chatMissedPackets, "byRequest": user });
                     }
-                    
                 },
                 
                 displayMissedChats : function (chatArray){
