@@ -46,11 +46,11 @@ include('js.debug.php');
 // Output starts here
 
 $r = 't';
-$sid = 12;
-$uid = 2;
+$sid = 100;
+$uid = 100;
 //$r = 's';
 
-$uname = "raju shree";
+$uname = "Teacher";
 ?>
 	
 <script type="text/javascript">
@@ -116,6 +116,7 @@ $uname = "raju shree";
 
     <div class="clear"></div>
   </div>
+    
 </div>
     
 <div id="widgetRightSide">
@@ -132,5 +133,6 @@ $uname = "raju shree";
     </div>
 </div> 
     
-    <div id="dummyResult"></div>
+<div id="dummyResult"></div>
+    
 </div>

@@ -207,7 +207,6 @@
                     }, 
                     
                     replayInit : function (){
-                        
                         vApp.storage.getAllObjs(["audioData"], repCallback); 
                         function repCallback(){
                             vApp.gObj.video.audio.replay(0, 0)
@@ -557,7 +556,7 @@
                     cthis.video.myVideo.onloadedmetadata = function (){
                         cthis.video.startToStream();
                         cthis.video.updateHightInSideBar(cthis.video.myVideo.offsetHeight);
-                        //cthis.video.justForDemo();
+//                        cthis.video.justForDemo();
                     }
                 },
                 

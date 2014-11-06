@@ -34,9 +34,9 @@ function my_curl_request($url, $post_data)
  
      
  $rid = my_curl_request("https://c.vidya.io", $post_data); // REMOVE HTTP
- //print_r( $rid);exit;//8000.vidya.io
+//print_r( $rid);exit;//8000.vidya.io
  
-// $rid = "8002.vidya.io";
+ //$rid = "8002.vidya.io";
 // $rid = "8002.vidya.io";
  
  if(empty($rid) or strlen($rid) > 32){

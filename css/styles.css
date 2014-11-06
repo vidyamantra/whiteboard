@@ -935,7 +935,9 @@ video:hover,  canvas:hover{
 }
 
 #vAppScreenShareLocalTempVideo, #vAppwholescreenShareLocalTempVideo  {
-    display:none;
+    
+/*    display:none;*/
+    
 }
 
 #commonChatBoardLabel{
@@ -1028,3 +1030,13 @@ canvas {
 #vAppOptionsCont{
     clear : both;
 }
+
+#commonChatBoard span{
+    line-height : 125%;
+}
+
+
+#canvas3{
+    border:2px solid red;
+}
+

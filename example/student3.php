@@ -47,21 +47,21 @@ include('js.debug.php');
 // Output starts here
 
 $r = 's';
-$sid = 2;
-$uname = "student2";
-$uid = 2;
+$sid = 3;
+$uname = "student3";
+$uid = 3;
 //$r = 's';
 ?>
 	
 	<script type="text/javascript">
-	<?php echo "wbUser.name='student2';"; ?>
-	<?php echo "wbUser.id=$uid;"; ?>
-	<?php echo "wbUser.socketOn='1';"; ?>
-	<?php echo "wbUser.dataInfo='1';"; ?>
-	<?php echo "wbUser.room='215';"; ?>
-	<?php echo "wbUser.sid='".$sid."';"; ?>
-	<?php echo "wbUser.role='".$r."';"; ?>
-	window.io = io;
+    <?php echo "wbUser.name='student3';"; ?>
+    <?php echo "wbUser.id=$uid;"; ?>
+    <?php echo "wbUser.socketOn='1';"; ?>
+    <?php echo "wbUser.dataInfo='1';"; ?>
+    <?php echo "wbUser.room='215';"; ?>
+    <?php echo "wbUser.sid='".$sid."';"; ?>
+    <?php echo "wbUser.role='".$r."';"; ?>
+    window.io = io;
     //the www path for whiteboard
     var whiteboardPath =  'https://192.168.1.114/whiteboard/';
     

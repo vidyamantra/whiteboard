@@ -47,14 +47,14 @@ include('js.debug.php');
 // Output starts here
 
 $r = 's';
-$sid = 2;
-$uname = "student2";
-$uid = 2;
+$sid = 4;
+$uname = "student4";
+$uid = 4;
 //$r = 's';
 ?>
 	
 	<script type="text/javascript">
-	<?php echo "wbUser.name='student2';"; ?>
+	<?php echo "wbUser.name='student4';"; ?>
 	<?php echo "wbUser.id=$uid;"; ?>
 	<?php echo "wbUser.socketOn='1';"; ?>
 	<?php echo "wbUser.dataInfo='1';"; ?>

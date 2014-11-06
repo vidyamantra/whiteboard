@@ -14,10 +14,14 @@ window.addEventListener('message', function (event) {
                 mandatory: {
                     chromeMediaSource: 'desktop',
                     chromeMediaSourceId: event.data.sourceId,
+                    maxWidth : 9999,
+                    maxHeight : 9999
                 },
+                
                 optional: [
-                    {maxWidth: window.screen.width},
-                    {maxHeight: window.screen.height},
+//                    {maxWidth: window.screen.width},
+//                    {maxHeight: window.screen.height},
+                    
                     {maxFrameRate: 3},
                     {googLeakyBucket: true},
                     {googTemporalLayeredScreencast: true}

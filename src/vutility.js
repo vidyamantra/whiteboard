@@ -120,13 +120,13 @@
                 var screenShareLocalWidth = screenShareLocal.offsetWidth;
                 var toBeLeft  = screenShareWidth-screenShareLocalWidth;
 
-                screenShareLocal.style.marginLeft = (toBeLeft/2) + "px";
+                //screenShareLocal.style.marginLeft = (toBeLeft/2) + "px";
 
                 var screenShareLocalVideo = document.getElementById(sId+"LocalVideo");
                 var screenShareLocalVideoWidth = screenShareLocalVideo.offsetWidth;
 
                 var screenShareLocalVideoWidth = screenShareLocalWidth - screenShareLocalVideoWidth
-                screenShareLocalVideo.style.marginLeft = (screenShareLocalVideoWidth/2) + "px";
+                //screenShareLocalVideo.style.marginLeft = (screenShareLocalVideoWidth/2) + "px";
             }
         }
         

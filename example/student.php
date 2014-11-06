@@ -47,10 +47,10 @@ include('js.debug.php');
 // Output starts here
 
 $r = 's';
-$sid = 12;
+$sid = 1;
 //$r = 's';
 $uname = "student1";
-$uid = 15;
+$uid = 1;
 ?>
 	
 	<script type="text/javascript">

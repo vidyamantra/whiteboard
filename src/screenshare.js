@@ -84,12 +84,14 @@
             wholeScreen : function (){
                 var  constraints = constraints || {audio: false, video: {
                     mandatory: {
-                        chromeMediaSource: 'screen'
+                        chromeMediaSource: 'screen',
+                        maxWidth: 9999,
+                        maxHeight: 9999
                     },
 
                     optional: [
-                        {maxWidth: window.screen.width},
-                        {maxHeight: window.screen.height},
+//                        {maxWidth: window.screen.width},
+//                        {maxHeight: window.screen.height},
                         {maxFrameRate: 3}
                     ]
                 
@@ -131,6 +133,8 @@
             },
 
             initializeRecorder : function (stream){
+                
+                changeonresize = 1;
 
                 if(this.prevStream){
                     this.ssByClick = false;
@@ -145,11 +149,13 @@
                 this.video = document.getElementById(this.local+"Video");
 
                 this.currentStream = stream;
-                 var that = this;
-
+                var that = this;
+                
+                console.log("video changed");
+                
                 vApp.adpt.attachMediaStream(this.video, stream);
                 this.prevStream = true;
-               
+                
                 this.currentStream.onended = function (name){
                     if(that.ssByClick){
                         that.video.src = "";
@@ -168,30 +174,47 @@
                 var container = {};
                 container.width = window.innerWidth;
                 container.height = window.innerHeight - 140;
-
-                var vidContainer = document.getElementById(this.local);
                 
+                var vidContainer = document.getElementById(this.local);
                 var dimension =  this.html.getDimension(container);
-                dimension.width = dimension.width - 100;
+                
+                
+                
+                //dimension.width = dimension.width - 100;
+                //dimension.width = dimension.width;
                 
                 vidContainer.style.width = Math.round(dimension.width) + "px";
                 vidContainer.style.height = Math.round(dimension.height) + "px";
 
                 //setStyleToElement(vidContainer, width, height);
                 var that = this;
+                var video;
                 this.video.onloadedmetadata = function (){
-                    if(dimension.width < that.video.offsetWidth){
+                   /* if(dimension.width < that.video.offsetWidth){
                         that.width = dimension.width;
                         that.height = dimension.height;
-                        that.video.style.maxWidth = (that.width - 5)  + "px";
+                        
+//                        that.video.style.maxWidth = (that.width - 5)  + "px";
+                        
                     }else{
-                        var video = document.getElementById(that.local+"Video");
+                        var  video = document.getElementById(that.local+"Video");
                         that.width = video.clientWidth;
                         that.height = video.clientHeight;
-                    }
+                    }*/
                     
-                    that.localtempCanvas.width = that.width ;
-                    that.localtempCanvas.height = that.height;
+//                    that.localtempCanvas.width = that.width;
+//                    that.localtempCanvas.height = that.height;
+                    
+                    
+                    that.width = dimension.width;
+                    that.height = dimension.height;
+                    
+                    that.localtempCanvas.width = that.video.offsetWidth;
+                    that.localtempCanvas.height = that.video.offsetHeight;
+                                        
+                    
+                    //that.localtempCanvas.width = 1000;
+                    //that.localtempCanvas.height = 500;   
                     vApp.prevApp = that;
                     
                     var res = vApp.system.measureResoultion({'width': window.innerWidth, 'height': window.innerHeight});
@@ -205,23 +228,72 @@
             sharing : function (){
                 var tempObj, encodedData, stringData, d, matched, imgData;
                 this.latestScreen = [];
-                
-                var resA = Math.round(this.height/12);
-                var resB = Math.round(this.width/12);
+                //this.localtempCanvas = [];
+                var resA = Math.round(this.localtempCanvas.height/12);
+                var resB = Math.round(this.localtempCanvas.width/12);
 
                 this.imageSlices = this.dc.getImageSlices(resA, resB, this);
                 var that = this;
+                var uniqcount = 0;
+                var uniqmax = (resA * resB)/5;
+                var sendObj;
+                //var changeonresize=1;
                 
+                if(vApp.hasOwnProperty('wholeImage')){
+                    clearInterval(vApp.wholeImage);
+                }
+                //*TODO this should be handle according to screen
+                // should create different instance for each screen
+                vApp.wholeImage = setInterval(
+                     function (){
+                         if(typeof prvVWidth != 'undefined' && typeof prvVHeight != 'undefined'){
+                             if(prvVWidth != that.video.offsetWidth || prvVHeight != that.video.offsetHeight){
+                                 changeonresize=1;
+                             }
+                         }
+                        prvVWidth = that.video.offsetWidth;
+                        prvVHeight = that.video.offsetHeight;
+
+                        //prvCWidth = that.localtempCont.width;
+                        //prvCHeight = that.localtempCont.height;
+                     },
+                     2000
+                );
                 
+                if(vApp.hasOwnProperty('clear')){
+                    clearInterval(vApp.clear);
+                }
+        
                 vApp.clear =  setInterval(
                     function (){
-                        that.localtempCont.drawImage(that.video, 0, 0, that.width, that.height);
-                        var sendobj = [];
+                        vresize = false;
+                        if (changeonresize == 1) {
+                            if(typeof that.localtempCont.width != 'undefined'){ //todo check if required
+                                that.localtempCont.clearRect(0, 0, that.localtempCont.width, that.localtempCont.height);
+//                                prvVWidth = that.video.offsetWidth;
+//                                prvVHeight = that.video.offsetHeight;
+                            }
+                            vresize = true;
+                            that.prevImageSlices = [];
+                            resA = Math.round(that.localtempCanvas.height/12);
+                            resB = Math.round(that.localtempCanvas.width/12);
+                            that.imageSlices = that.dc.getImageSlices(resA, resB, that);
+//                            changeonresize = 0;
+                        }
+                        
+                        that.localtempCanvas.width = that.video.offsetWidth;
+                        that.localtempCanvas.height = that.video.offsetHeight;
+                        that.localtempCont.drawImage(that.video, 0, 0, that.video.offsetWidth, that.video.offsetHeight);
+
+                        sendobj = [];
                         for (sl=0; sl<(resA * resB); sl++) {
-                                d = that.imageSlices[sl];
-                                imgData = that.localtempCont.getImageData(d.x,d.y,d.w,d.h);
+                            d = that.imageSlices[sl];
+                                
+                            imgData = that.localtempCont.getImageData(d.x,d.y,d.w,d.h);
+                                
                             if(typeof that.prevImageSlices[sl] != 'undefined'){
                                  matched = that.dc.matchWithPrevious(imgData.data, that.prevImageSlices[sl], d.w);
+//                                if(!matched || ( sl >= ((uniqcount*5)-4) && sl <= (uniqcount*5) )){
                                 if(!matched){
                                     //console.log("second");
                                     that.prevImageSlices[sl] = imgData.data;
@@ -242,24 +314,48 @@
                                 that.latestScreen[sl] = tempObj; 
                             }
                         }
+                        
+                        uniqcount++;
+                        if (uniqmax == uniqcount) {
+                            uniqcount=0;
+                        }
 
                         if(sl ==  resA * resB){
                             if(sendobj.length > 0){
-                                var encodedString = LZString.compressToBase64(JSON.stringify(sendobj));
+                                //var encodedString = LZString.compressToBase64(JSON.stringify(sendobj));
+                                var encodedString = JSON.stringify(sendobj);
                                 var contDimension = that.getContainerDimension();
                                 var madeTime = new Date().getTime();
-                                var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}, mt : madeTime};
+                                //var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}, mt : madeTime};
+//                                var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.video.offsetWidth, h:that.video.offsetHeight}, vc : {w:contDimension.width, h:contDimension.height}, mt : madeTime};
+                                if (changeonresize == 1) {
+                                    if(typeof prvVWidth != 'undefined' && typeof prvVHeight != 'undefined'){
+                                        var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:prvVWidth, h:prvVHeight}, vc : {w:contDimension.width, h:2000}};
+                                    }else{
+                                        var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.video.offsetWidth, h:that.video.offsetHeight}, vc : {w:contDimension.width, h:contDimension.height}};
+                                    }
+                                    changeonresize=0;
+                                } else {
+                                    var imgObj = {'si' : encodedString, 'st' : that.type};
+                                }
+                                
+                                
+//                                var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.video.offsetWidth, h:that.video.offsetHeight}, vc : {w:contDimension.width, h:2000}};
                                 
 //                                vApp.recorder.items.push(imgObj);
                                 
                                 vApp.storage.wholeStore(imgObj);
                                 
-                                vApp.wb.utility.beforeSend(imgObj);                    
+                                //that.drawImages(imgObj.si, true);
+                                vApp.wb.utility.beforeSend(imgObj);                 
                                 sendobj=[];
                             }
                         }
+                        
+                        //myFunction ();
                     },
                     300
+                            
                 );
             },
             
@@ -268,8 +364,16 @@
                 return {width : vidCont.offsetWidth, height:vidCont.offsetHeight};
             },
 
-            drawImages : function (rec){
-                var imgDataArr = LZString.decompressFromBase64(rec);
+            drawImages : function (rec, local){
+                
+                if(typeof local != 'undefined'){
+                    this.localCanvas = document.getElementById('canvas3');
+                    this.localCont = this.localCanvas.getContext('2d');
+                    
+                }
+                
+                //var imgDataArr = LZString.decompressFromBase64(rec);
+                var imgDataArr = rec;
                 imgDataArr = JSON.parse(imgDataArr);
                 for (i=0;i<imgDataArr.length;i++){
                      this.drawSingleImage(imgDataArr[i].si, imgDataArr[i].d);
@@ -288,8 +392,13 @@
                     this.localCont = vApp[app].localCanvas.getContext('2d');
                 }
                 
-                this.localCanvas.width = msg.d.w;
-                this.localCanvas.height = msg.d.h;
+                if (msg.hasOwnProperty('d')) {
+                    this.localCont.clearRect(0, 0, this.localCanvas.width, this.localCanvas.height);
+                    
+                    this.localCanvas.width = msg.d.w;
+                    this.localCanvas.height = msg.d.h;
+                }
+                
                 
                 if(msg.hasOwnProperty('vc')){
                     var vc  = document.getElementById(vApp[app].local);
@@ -322,7 +431,7 @@
                        css(locVidCont, "position:relative");
                        
                        //css(vidCont, "position : absolute; height : 99%");
-                       css(vidCont, "position : absolute; height : 99%");
+                       //css(vidCont, "position : absolute; height : 99%");
                        
                    }else{
                        var vidCont =  vApp.vutil.createDOM("canvas", this.local+"Video");
@@ -353,7 +462,12 @@
                    var aspectRatio = aspectRatio || (3 / 4),
                         height = (container.width * aspectRatio),
                         res = {};
-
+                
+                    return {
+                            height: container.height,
+                            width: container.width
+                        };
+/*
                     if (height > container.height) {
                         return {
                             height: container.height,
@@ -364,7 +478,7 @@
                             width: container.width,
                             height: container.width * aspectRatio
                         };
-                    }
+                    }*/
                },
                
             },

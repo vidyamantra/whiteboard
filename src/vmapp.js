@@ -262,25 +262,16 @@
               },
               
               initStudentScreen : function (msg, vtype){
-                var stool;
                 app = msg.st; 
-            
-                if(msg.st == 'ss'){
-                    stool = vApp.apps[1];
-                }else{
-                    stool = vApp.apps[2];
-                }
-
-
+                var stool = (msg.st == 'ss') ? stool = vApp.apps[1] : stool = vApp.apps[2];
                 if(typeof vApp[app] != 'object' ){
                     if(typeof vtype != 'undefined'){
-                        //vApp.repType = vtype;
                         vApp.recorder.recImgPlay = true;
                     }
-                    
+
                     vApp.makeAppReady(stool);
                     vApp[app].dimensionStudentScreen(msg);
-                    
+
                 }else{
                     var prvScreen = document.getElementById(vApp.previous);
                     if(prvScreen != null){
@@ -288,19 +279,22 @@
                         document.getElementById(vApp[app].id).style.display = 'block';
                     }
                 }
-
-                if(typeof prvWidth != 'undefined' && msg.d.w != prvWidth){
-                    vApp[app].dimensionStudentScreen(msg);
-                    
-                    if(typeof vtype == 'undefined'){
-                        vApp[app].dimensionStudentScreen(msg);
-                    }else{
-                        vApp[app].dimensionStudentScreen(msg, vtype);
+                if (msg.hasOwnProperty('d')) {
+                    if(typeof prvWidth != 'undefined' && msg.d.w != prvWidth){
+                        //vApp[app].dimensionStudentScreen(msg);
+                        if(typeof vtype == 'undefined'){
+                            vApp[app].dimensionStudentScreen(msg);
+                        }else{
+                            vApp[app].dimensionStudentScreen(msg, vtype);
+                        }
                     }
+                 }
+                
+                if (msg.hasOwnProperty('d')) {
+                    prvWidth = msg.d.w;
+                    prvHeight = msg.d.h;
                 }
                 
-                prvWidth = msg.d.w;
-                prvHeight = msg.d.h;
                 vApp.previous =  vApp[app].id;
                 vApp[app].drawImages(msg.si);
                 

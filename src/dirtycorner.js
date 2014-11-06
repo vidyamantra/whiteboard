@@ -7,6 +7,37 @@
 (
     function (window){
         var dirtyCorner =  {
+      /*      
+                decodeRGB : function(encodeDataArr, ctx, d){
+                    var imageData = ctx.createImageData(d.w, d.h); // TODO - Create empty Array
+                    var red, green, blue;    
+                    for(var i=0; i<encodeDataArr.length / 3; i++){
+                        imageData.data[(i * 4)+ 0] = encodeDataArr[(i * 3)+ 0];
+                        imageData.data[(i * 4)+ 1] = encodeDataArr[(i * 3)+ 1];
+                        imageData.data[(i * 4)+ 2] = encodeDataArr[(i * 3)+ 2];
+                        imageData.data[(i * 4)+ 3] = 255;
+                    }
+                    return imageData;
+                },
+                
+                encodeRGB : function(imgData){
+                    var length = imgData.length/4;
+                    var encodeDataArr = new Uint8ClampedArray(length*3);
+                    var red, green, blue, encodedData;
+
+                    for(var i=0; i<length; i++){
+                        red = imgData[(i * 4)+ 0];
+                        green = imgData[(i * 4)+ 1];
+                        blue = imgData[(i * 4)+ 2];
+
+                        encodeDataArr[(i * 3)+ 0]=red;
+                        encodeDataArr[(i * 3)+ 1]=green;
+                        encodeDataArr[(i * 3)+ 2]=blue;  
+                    }
+
+                    return encodeDataArr;
+                },*/
+            
                 decodeRGB : function(encodeDataArr, ctx, d){
                     var imageData = ctx.createImageData(d.w, d.h); // TODO - Create empty Array
                     var red, green, blue;    
@@ -26,7 +57,6 @@
                                     //(r*6/256)*36 + (g*6/256)*6 + (b*6/256)
                     var red, green, blue, encodedData;
 
-
                     for(var i=0; i<length; i++){
                         red = imgData[(i * 4)+ 0];
                         green = imgData[(i * 4)+ 1];
@@ -42,17 +72,17 @@
                     return encodeDataArr;
                 },
 
-                decodeRGB : function(encodeDataArr, ctx, d){
-                    var imageData = ctx.createImageData(d.w, d.h); // TODO - Create empty Array
-                    var red, green, blue;    
-                    for(var i=0; i<encodeDataArr.length * 4; i++){
-                        imageData.data[(i * 4)+ 0] = (encodeDataArr[i] >> 5) * 36.5; //red
-                        imageData.data[(i * 4)+ 1] = ((encodeDataArr[i] & 28) >> 2) * 36.5;
-                        imageData.data[(i * 4)+ 2] = (encodeDataArr[i] & 3) * 85;
-                        imageData.data[(i * 4)+ 3] = 255;
-                    }
-                    return imageData;
-                },
+//                decodeRGB : function(encodeDataArr, ctx, d){
+//                    var imageData = ctx.createImageData(d.w, d.h); // TODO - Create empty Array
+//                    var red, green, blue;    
+//                    for(var i=0; i<encodeDataArr.length * 4; i++){
+//                        imageData.data[(i * 4)+ 0] = (encodeDataArr[i] >> 5) * 36.5; //red
+//                        imageData.data[(i * 4)+ 1] = ((encodeDataArr[i] & 28) >> 2) * 36.5;
+//                        imageData.data[(i * 4)+ 2] = (encodeDataArr[i] & 3) * 85;
+//                        imageData.data[(i * 4)+ 3] = 255;
+//                    }
+//                    return imageData;
+//                },
 
                 str2ImageData : function (str, d) {
                     var imageData=  context2.createImageData(d.w, d.h);
@@ -72,8 +102,9 @@
                     //resA ==  x
                     var imgSlicesArr = [];
                     var totLen = resA * resB;
-                    var width =  Math.round( cApp.localtempCanvas.width / resB);
-                    var height = Math.round( cApp.localtempCanvas.height / resA);
+                    
+                    var width =  Math.round( (cApp.localtempCanvas.width) / resB);
+                    var height = Math.round( (cApp.localtempCanvas.height) / resA);
 
                     for(var i=0; i<totLen; i++){
                         var eachSlice  = this._getSingleSliceImg(i, width, height, resA, resB);
@@ -103,20 +134,20 @@
                     var l = oldI.length;
                     var w = width * 4;
                     for(var i=0; i<l; i=i+4){ // Quickly Check Forward Diagnal
-                       if ( (! this.matchI (oldI,newI,i)) || (! this.matchIShade (oldI,newI,i)) ) {
+                       if ( (! this.matchI (oldI,newI,i))  ) {
                            return false;
                        }
                        i = i + w;
                     }
                     for(var i=0; i<l; i=i-4){ // Quickly Check Backword Diagnal
                        i = i + w;
-                       if ( (! this.matchI (oldI,newI,i)) || (! this.matchIShade (oldI,newI,i)) ) {
+                       if ( (! this.matchI (oldI,newI,i))  ) {
                            return false;
                        }
                     }
-                    var jump = 5*4;
+                    var jump = 22;
                     for(var i=0; i<l; i=i+jump){ // Check (all/jump) pixals 
-                        if ( (! this.matchI (oldI,newI,i)) || (! this.matchIShade (oldI,newI,i)) ) {
+                        if ( (! this.matchI (oldI,newI,i)) ) {
                             return false;
                         }
                     }
@@ -124,19 +155,21 @@
                 },
 
                 matchI : function(oldImageArr,newImageArr,p) {
-                    var quality = 60; // Lower is better but will create more false positive
+                    var quality = 10; // Lower is better but will create more false positive
                     for (var c=0; c<=2; c++) {
                         var color = oldImageArr[p + c]; 
                         var pcolor = newImageArr[p + c];
                         if( ( Math.abs(color - pcolor) ) > quality ){
+                    //    if( color != pcolor){
                             return false;
                         }
                     }
                     return true;
                 },
-
+/*
                 matchIShade : function(oldImageArr,newImageArr,p) {
-                    var quality = 15; // Lower is better but will create more false positive
+                    return true;
+                    var quality = 10; // Lower is better but will create more false positive
                     var r = oldImageArr[p + 0]; 
                     var pr = newImageArr[p + 0];
                     var g = oldImageArr[p + 1]; 
@@ -153,7 +186,7 @@
                     }
 
                     return true;
-                }
+                }*/
         }
         
         window.dirtyCorner = dirtyCorner;
