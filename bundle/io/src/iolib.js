@@ -21,7 +21,7 @@ var io = {
     },
 
     wsconnect : function(){
-        io.wsuri = "wss://" + this.cfg.rid;
+        io.wsuri = "wss://"+this.cfg.rid;
         console.log(this.cfg.rid);
         if ("WebSocket" in window) {
             this.sock = new WebSocket(io.wsuri);
@@ -44,9 +44,12 @@ var io = {
             // user join chat room
             scope.addclient();
         }
-
+        this.sock.binaryType = 'arraybuffer';
         this.sock.onmessage = function(e) {
             try{
+                if(e.data instanceof ArrayBuffer){
+                    console.log(e.data);                                     
+                }
                 var r1 = JSON.parse(e.data);
 
                 if (r1.type == "joinroom"){
@@ -70,7 +73,7 @@ var io = {
                     });
                 }
 
-                if (r1.type == "broadcast"){
+                if (r1.type == "broadcastToAll"){
                     console.log("json  : display msg");
                     var userto = '';
                     if(r1.userto != undefined){ userto = r1.userto; }
@@ -172,7 +175,8 @@ var io = {
 
     send : function(msg){
         var obj = {
-                cfun : 'broadcast',
+                //cfun : 'broadcast',
+                cfun : 'broadcastToAll',
                 arg : {'msg':msg}
         }
         if(arguments.length > 1){
@@ -181,6 +185,15 @@ var io = {
         }
         var jobj = JSON.stringify(obj);
         this.sock.send(jobj);
+    },
+    sendBinary : function(msg){
+        //this.sock.binaryType = 'arraybuffer';
+        var myArray = new ArrayBuffer(8);
+	    var longInt8View = new Uint8Array(myArray);
+	    for (var i=0; i<longInt8View.length; i++) {
+		  longInt8View[i] = i;
+	    }
+        this.sock.send(longInt8View);
     },
 
     disconnect:function(){
