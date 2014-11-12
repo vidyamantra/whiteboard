@@ -89,7 +89,10 @@
                 }
                 
                 var appCont = document.getElementById(appId);
-                var rightOffSet = document.getElementById(vApp.rWidgetConfig.id).offsetWidth;
+                
+                //rightsidebar
+                //var rightOffSet = document.getElementById(vApp.rWidgetConfig.id).offsetWidth;
+                var rightOffSet = 0;
                 //alert(vApp.wb.utility.getElementRightOffSet);
                 
                 var extraWidth = 25;

@@ -84,15 +84,18 @@
             },
             
             checkUser: function(e, id, storageHasTeacher) {
+//                alert('ss');
+//                debugger;
                 var joinId = e.message.joinId;
-                if ((typeof vcan.teacher == 'undefined') && (!storageHasTeacher) && (e.fromUser.userid == id) && (e.fromUser.userid == joinId)) {
+           //     if ((typeof vcan.teacher == 'undefined') && (!storageHasTeacher) && (e.fromUser.userid == id) && (e.fromUser.userid == joinId)) {
+                if ((typeof vcan.teacher == 'undefined') && (!storageHasTeacher)) {
                     vApp.wb.utility.makeCanvasDisable();
                 }
                 
-                if (e.fromUser.userid == id ){
+                //if (e.fromUser.userid == id ){
                     vApp.wb.utility.initDefaultInfo(e, wbUser.role);
                     vApp.wb.utility.makeUserAvailable(e.message.checkUser.e.clientLen);
-                }
+                //}
             },
             
             clearAll: function(formUserId, id, eMessage, orginalTeacherId) {

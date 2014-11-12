@@ -41,9 +41,7 @@
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/keyboard.js"></script>
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/adapter.js"></script>
-
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/com.js"></script>
-
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/resampler.js"></script>
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/media.js"></script>
@@ -58,7 +56,7 @@
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/getscreen.js"></script>
 
-<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/chat.js"></script>
+<!--<script type="text/javascript" src="<?php //echo $whiteboard_path;?>src/chat.js"></script>-->
 
 <!--<script type="text/javascript" src="<?php echo $whiteboard_path;?>src/ss_utility.js"></script>-->
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/dirtycorner.js"></script>
@@ -68,6 +66,9 @@
 
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/recorder.js"></script>
 <script type="text/javascript" src="<?php echo $whiteboard_path;?>src/storage.js"></script>
+
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>bundle/jquery/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="<?php echo $whiteboard_path;?>bundle/jquery/jquery-ui.min.js"></script>
 
 <script type="text/javascript" src="../index.js"></script>
        

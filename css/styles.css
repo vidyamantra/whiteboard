@@ -10,6 +10,7 @@ body {
     margin:0;
     padding:0;
 }
+
 #commandToolsWrapper{
     float:left;
     width:200px;
@@ -786,9 +787,12 @@ video:hover,  canvas:hover{
 }
 
 .videoWrapper{
-    float:left;
+    
+/*    float:left;*/
+    
     z-index : 50;
     position : relative;
+    clear :both;
 }
 
 .videoSubWrapper{
@@ -935,20 +939,9 @@ video:hover,  canvas:hover{
 }
 
 #vAppScreenShareLocalTempVideo, #vAppwholescreenShareLocalTempVideo  {
-    
-/*    display:none;*/
-    
+    display:none;
 }
 
-#commonChatBoardLabel{
-/*    position: fixed;
-    top: 50%;
-    left: 82%;
-    width: 140px;
-    color : #ccc;
-    font-size : 20px;
-    opacity : 0.7;*/
-}
 
 #commonChatBoardLabel{
     position: relative;
@@ -1010,17 +1003,10 @@ video:hover,  canvas:hover{
     height : 24px;
 }
 
-#vAppCont{
-/*    float : left;*/
-}
-
-#vAppWhiteboard{
+#vAppWhiteboard, #vAppCont{
     float : left;
 }
 
-#vAppCont{
-    float:left;
-}
 
 canvas {
     padding : 0;
@@ -1036,7 +1022,58 @@ canvas {
 }
 
 
-#canvas3{
-    border:2px solid red;
+/*** footer chat start from here **/
+
+#chat_div .ui-memblist-usr{
+    height : 45px !important;
 }
 
+
+
+div.ui-memblist-usr video{
+/*    width : 60px;
+    height : 50px;*/
+    width: 60px;
+    height: 45px;
+    margin:0;
+    outline : 1px solid #5A5757;
+    margin-left :2px;
+    
+}
+
+div.ui-memblist-usr .userVideos{
+    width : 60px;
+    height : 45px;
+    margin : 3px 0 0 2px;
+    outline : 1px solid #5A5757;
+    
+}
+
+
+#chat_div .ui-memblist-usr span{
+    top : 19px !important;
+}
+
+#graphCanvas{
+    top : -5px !important;
+}
+
+
+
+div.ui-memblist-usr video, div.ui-memblist-usr .userVideos{
+    margin-top:6px;
+}
+
+#chat_div .ui-memblist-usr:first-child{
+    margin-top:-4px;
+}
+
+
+#chat_div.ui-memblist-log{
+    height : auto !important;      
+}
+
+#chat_div {
+    padding-bottom : 5px;
+/*    min-height : 230px;*/ // important when want to give minimum height
+}

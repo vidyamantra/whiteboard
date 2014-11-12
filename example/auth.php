@@ -43,6 +43,11 @@ function my_curl_request($url, $post_data)
   	echo "Chat server is unavailable!";
   	exit;
   }
+  
+setcookie('auth_user', $authusername, 0, '/');
+setcookie('auth_pass', $authpassword, 0, '/');
+setcookie('path', $rid, 0, '/');
+ 
   //$rid='8000.vidya.io';
 ?>
 
@@ -51,4 +56,17 @@ function my_curl_request($url, $post_data)
 <?php echo "wbUser.auth_user='".$authusername."';"; ?>
 <?php echo "wbUser.auth_pass='".$authpassword."';"; ?>
 <?php echo "wbUser.path='".$rid."';";?>
+</script>
+
+
+
+
+
+
+
+<script type="text/javascript">
+    <?php echo "auth_user='".$_COOKIE['auth_user']."';"; ?>
+    <?php echo "auth_pass='".$_COOKIE['auth_pass']."';"; ?>
+    <?php echo "path='".$_COOKIE['path']."';";?>
+    <?php echo "imageurl='./images/quality-support.png';";?>
 </script>

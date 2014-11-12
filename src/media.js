@@ -101,7 +101,7 @@
                                 videoParent.style.position = "relative"
                                 graphCanvas.style.position = "absolute"
                                 graphCanvas.style.left = 0;
-                                graphCanvas.style.top = 0;
+                                graphCanvas.style.top = -7;
                                 videoParent.appendChild(graphCanvas);
                             }
                         };
@@ -123,9 +123,9 @@
                     
                     recorderProcess : function (e) {
                         var currTime = new Date().getTime();
-                        console.log("out of recording");
+                        //console.log("out of recording");
                         if(!repMode){
-                            console.log("Audio recording");
+                          //  console.log("Audio recording");
                             this.calcAverage();
                             var left = e.inputBuffer.getChannelData(0);
                             var samples = this.resampler.resampler(left);
@@ -327,13 +327,15 @@
                     maxHeight : 250,
                     
                     init : function (){
-                        cthis.video.tempVid = document.getElementById('tempVideo');
-                        cthis.video.tempVid.width = cthis.video.width;
-                        cthis.video.tempVid.height = cthis.video.height;
-                        cthis.video.tempVidCont = cthis.video.tempVid.getContext('2d');  
+//                        cthis.video.tempVid = document.getElementById('tempVideo');
+//                        cthis.video.tempVid.width = cthis.video.width;
+//                        cthis.video.tempVid.height = cthis.video.height;
+//                        cthis.video.tempVidCont = cthis.video.tempVid.getContext('2d');  
                         this.videoCont = document.getElementById("allVideosCont");
+                        if(this.videoCont !=  null){
+                            this.videoCont.style.maxHeight = this.maxHeight + "px";
+                        }
                         
-                        this.videoCont.style.maxHeight = this.maxHeight + "px";
                     },
                     
                     calcDimension : function (){
@@ -350,13 +352,19 @@
                     
                     //createVideo
                     createElement : function (user){
+//                        alert('sss');
+//                        debugger;
+//                        alert('suman bogati');
+//                        debugger;
                         var videoWrapper = document.createElement('div');
                         videoWrapper.className = "videoWrapper";
 
                         var videoSubWrapper = document.createElement('div');
                         videoSubWrapper.className = "videoSubWrapper";
                         videoSubWrapper.id = "user" + user.id;
-                        videoSubWrapper.setAttribute("data-uname", user.name);
+                        
+//                        videoSubWrapper.setAttribute("data-uname", user.name);
+                        
                         videoWrapper.appendChild(videoSubWrapper);
                                         
                         vidId = user.id;
@@ -366,33 +374,42 @@
                         video.width = this.width;
                         video.height = this.height;
                         
+                        
+                        
                         var videoCont = this.videoCont;
-                        
-                        if(typeof videoCont == 'undefined'){
-                            var videoCont = document.getElementById("allVideosCont");
-                        }
-                        
-                        var prvContHeight = videoCont.offsetHeight;
                         videoSubWrapper.appendChild(video);
                         
-                        if(user.hasOwnProperty('role') && user.role == 't'){
-                            videoCont.insertBefore(videoWrapper, videoCont.firstChild);
-                        }else{
-                            videoCont.appendChild(videoWrapper);
-                        }
-                        
-                        var newContHeight = videoCont.offsetHeight;
+//                        if(typeof videoCont == 'undefined'){
+//                            var videoCont = document.getElementById("allVideosCont");
+//                        }
 
-                        if(newContHeight != prvContHeight){
-                            if(typeof cthis != 'undefined'){
-                                cthis.video.updateHightInSideBar(newContHeight);
-                            }
-                        }
+//                        if(typeof videoCont == 'undefined'){
+//                            var videoCont = document.getElementById("allVideosCont");
+//                        }
+
+                        videoCont =  videoWrapper;
+                        cthis.video.imageReplaceWithVideo(user.id, videoCont);
+                         
+//                        if(user.hasOwnProperty('role') && user.role == 't'){
+//                            videoCont.insertBefore(videoWrapper, videoCont.firstChild);
+//                        }else{
+//                            videoCont.appendChild(videoWrapper);
+//                        }
                         
-                        if(videoCont.style.overflowY != 'undefined' && videoCont.style.overflowY != "scroll"){
-                            videoCont.style.overflowY = "scroll";
-                            document.getElementById(vApp.gObj.chat.mainChatBoxId).style.borderTop = "3px solid #bbb";
-                        }
+                        
+//                        var prvContHeight = videoCont.offsetHeight;
+//                        var newContHeight = videoCont.offsetHeight;
+//
+//                        if(newContHeight != prvContHeight){
+//                            if(typeof cthis != 'undefined'){
+//                                cthis.video.updateHightInSideBar(newContHeight);
+//                            }
+//                        }
+//                        
+//                        if(videoCont.style.overflowY != 'undefined' && videoCont.style.overflowY != "scroll"){
+//                            videoCont.style.overflowY = "scroll";
+//                            document.getElementById(vApp.gObj.chat.mainChatBoxId).style.borderTop = "3px solid #bbb";
+//                        }
                     },
                     
                     updateHightInSideBar : function (videoHeight){
@@ -405,18 +422,23 @@
                     },
                     
                     send : function (){
+//                        alert("send function");
                         var cvideo = this;
                         var frame;
                         
-                        setInterval(
+                      vApp.gObj.video.smallVid =  setInterval(
                              function (){
                                     //canvasContext.clearRect(0, 0, canvas.width, canvas.height);		
                                 if(vApp.gObj.uRole == 't'){
                                     if(typeof graphCanvas == "undefined"){
                                         var graphCanvas = document.getElementById("graphCanvas");
-                                        cthis.audio.graph.cvCont = graphCanvas.getContext('2d');
+                                        if(graphCanvas != null){
+                                            cthis.audio.graph.cvCont = graphCanvas.getContext('2d');
+                                        }
                                     }
-                                    cthis.audio.graph.cvCont.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+                                    if(graphCanvas != null){
+                                        cthis.audio.graph.cvCont.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+                                    }
                                 }
 
                                 cvideo.tempVidCont.clearRect(0, 0, cvideo.tempVid.width, cvideo.tempVid.height);
@@ -493,10 +515,10 @@
                                     videoSubWrapper.appendChild(video);
                                     videoCont.appendChild(videoWrapper);
                                     var newContHeight = videoCont.offsetHeight;
-                                    
-                                    if(newContHeight != prvContHeight){
-                                        cthis.video.updateHightInSideBar(newContHeight);
-                                    }
+                                    //rightsidebar
+//                                    if(newContHeight != prvContHeight){
+//                                        cthis.video.updateHightInSideBar(newContHeight);
+//                                    }
                                     
                                     if(videoCont.offsetHeight >= maxHeight){
                                         if(videoCont.style.overflowY != 'undefined' && videoCont.style.overflowY != "scroll"){
@@ -508,10 +530,63 @@
                             },
                             200
                         );
+                    },
+                    
+                    
+                    
+                    createVideoElement : function (){
+                        //var vApp.gObj.uid = 
+                        
+                        var vTag = "video";
+                        
+//                        if(vApp.gObj.uRole == 't'){
+//                            var vTag = "video";
+//                        }else{
+//                            var vTag = "canvas";
+//                        }
+                        
+                        var parElement = document.createElement('div');
+                        parElement.className = 'videoWrapper';
+                        
+                        var childElement  = document.createElement('div');
+                        childElement.className = 'videoSubWrapper';
+                        parElement.appendChild(childElement);
+                        
+                        var videoTag = document.createElement(vTag);
+                        videoTag.id = "video" + vApp.gObj.uid;
+                        videoTag.autoplay = true;
+                        childElement.appendChild(videoTag);
+                        
+                        return parElement;
+                                
+                    },
+                  
+                    
+                    imageReplaceWithVideo : function (id, vidCont){
+                        var chatUser = document.getElementById("ml" + id);
+                        var childTag = chatUser.getElementsByTagName('a')[0];
+                        //if(childTag.href == '#' + vApp.gObj.uid){
+                            var imgTag = childTag.getElementsByTagName('img')[0];
+                            childTag.replaceChild(vidCont, imgTag);
+                        //}    
+                    },
+                    
+                    insertTempVideo : function (beforeInsert){
+                        var tempVideo = document.createElement('canvas');
+                            tempVideo.id = 'tempVideo';
+                            beforeInsert.parentNode.insertBefore(tempVideo, beforeInsert);
+                    }, 
+                    
+                    tempVideoInit : function (){
+                        cthis.video.tempVid = document.getElementById('tempVideo');
+                        cthis.video.tempVid.width = cthis.video.width;
+                        cthis.video.tempVid.height = cthis.video.height;
+                        cthis.video.tempVidCont = cthis.video.tempVid.getContext('2d');  
                     }
                 },
                 
                 init: function(vbool) {
+                    
                     cthis = this; //TODO there should be done work for cthis
                     vcan.oneExecuted = true;
                     
@@ -527,39 +602,150 @@
                     
                     var cNavigator =  vApp.adpt.init(navigator);
                     cNavigator.getUserMedia(session, this.handleUserMedia, this.handleUserMediaError);
+                    
                     if (vApp.system.wbRtc.peerCon) {
                         if (typeof localStorage.wbrtcMsg == 'undefined') {
                             vApp.wb.view.multiMediaMsg('WebRtc');
                             localStorage.wbrtcMsg = true;
                         }
                     }
-                    
                 },
-               
-                //equivalent to initializeRecorder
-                handleUserMedia: function(stream) {
+                
+                handleUserMedia : function(stream){
+//                    alert('this stream');
+//                    debugger;
+                    
+                    cthis.video.tempStream = stream;
                     cthis.audio.init();
-                    cthis.video.myVideo = document.getElementById("video"+ vApp.gObj.uid);
-                    vApp.adpt.attachMediaStream(cthis.video.myVideo, stream);
-                    cthis.video.myVideo.muted = true;
-                    
-                    stream.ontimeupdate = function () {
-                        console.log("raja" + stream.currentTime);
-                    };
-                    
-                    if(vApp.gObj.uRole == 't'){
-                        cthis.stream = stream;
-                        cthis.audio.manuPulateStream();
-                        cthis.audio.graph.canvasForVideo();
+                    var userDiv = document.getElementById("ml" + vApp.gObj.uid);
+                    if(userDiv != null){
+                        var vidTag = userDiv.getElementsByTagName('video');
+                        if(vidTag != null){
+                            cthis._handleUserMedia();
+                        }
                     }
                     
-                    cthis.video.myVideo.onloadedmetadata = function (){
-                        cthis.video.startToStream();
-                        cthis.video.updateHightInSideBar(cthis.video.myVideo.offsetHeight);
-//                        cthis.video.justForDemo();
+               //     var usrList = cthis.createDemoUserList();
+                    
+                    //memberUpdate({message : usrList});
+                    
+                },
+                
+                
+               
+                //equivalent to initializeRecorder
+                _handleUserMedia: function() {
+                    
+//                    alert('suman bogati');
+//                    debugger;
+                    
+//                    alert('suman bogati');
+//                    debugger;
+//                    cthis.video.tempStream = stream;
+//                    cthis.audio.init();
+                    var  stream = cthis.video.tempStream ;
+                    
+                    var userDiv = document.getElementById("ml" + vApp.gObj.uid);
+                    if(userDiv !=  null){
+                       userDiv.style.pointerEvents = "none";
+                    }
+                    
+                    
+                    if(typeof stream != 'undefined'){
+                        var vidContainer = cthis.video.createVideoElement();
+                    
+                        cthis.video.imageReplaceWithVideo(id, vidContainer);
+                        cthis.video.insertTempVideo(vidContainer);
+                        cthis.video.tempVideoInit();
+
+                        cthis.video.myVideo = document.getElementById("video"+ vApp.gObj.uid);
+        //                    alert(vApp.gObj.uid + 'bogati');
+                        vApp.adpt.attachMediaStream(cthis.video.myVideo, stream);
+                        cthis.video.myVideo.muted = true;
+                        //cthis.video.myVideo.play();
+
+                        stream.ontimeupdate = function () {
+                            console.log("raja" + stream.currentTime);
+                        };
+
+                        if(vApp.gObj.uRole == 't'){
+                            cthis.stream = stream;
+                            cthis.audio.manuPulateStream();
+                            cthis.audio.graph.canvasForVideo();
+                        }
+
+                        cthis.video.myVideo.onloadedmetadata = function (){
+                            cthis.video.startToStream();
+                            //rightsidebar
+
+        //                        cthis.video.updateHightInSideBar(cthis.video.myVideo.offsetHeight);
+        //                        cthis.video.justForDemo();
+                        }
+                    }
+                    
+                    
+                },
+                
+                updateVidContHeight : function (){
+                    var elem = document.getElementById("vAppCont");
+                    var offset = vcan.utility.getElementOffset(elem);
+                    var mh = window.innerHeight - (offset.y + 75);
+                    document.getElementById("chat_div").style.maxHeight = mh + "px";
+                },
+                
+                createDemoUserList : function (){
+                    var dumUserArr = [];
+                    var dummyUser;
+                    for(var i=5; i<15; i++){
+                         dummyUser = {
+                            img : "./images/quality-support.png",
+                            name : "Student " + i,
+                            userid : 100 + i
+                        }
+                        
+//                        alert('sss')
+//                        debugger;
+                        
+                        memberUpdate({message : [dummyUser]});
+                        //dumUserArr.push(dummyUser);
+                    }
+                    return dumUserArr;
+                },
+                
+                close : function (){
+                    if(vApp.gObj.video.hasOwnProperty('smallVid')){
+                        clearInterval(vApp.gObj.video.smallVid);
                     }
                 },
                 
+                dispAllVideo : function (id){
+                    setTimeout(
+                        function (){
+//                            
+//                            var allVideos = document.getElementById(id).getElementsByTagName("video");
+//                            for(var i=0; i<allVideos.length; i++){
+//                                allVideos[i].play();
+//                            }
+                            var chatCont = document.getElementById(id);
+                            if(chatCont != null){
+                                var allVideos = chatCont.getElementsByTagName("video");
+                                for(var i=0; i<allVideos.length; i++){
+                                    allVideos[i].play();
+                                }
+                            }
+                        },
+                        1040
+                    );
+                    
+//                    var chatCont = document.getElementById(id);
+//                    if(chatCont != null){
+//                        var allVideos = chatCont.getElementsByTagName("video");
+//                        for(var i=0; i<allVideos.length; i++){
+//                            allVideos[i].play();
+//                        }
+//                    }
+                },
+			    
                 sendMessage: function(message) {
                     if (arguments.length > 1) {
                         vApp.wb.utility.beforeSend({'video': message}, arguments[1]);

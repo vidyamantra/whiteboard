@@ -53,7 +53,7 @@
                     this.prevImageSlices = [];
 
                     var ssUI = this.html.UI.call(this, vApp.gObj.uRole);
-                    
+                    //critical
                     var beforeAppend = document.getElementById(vApp.rWidgetConfig.id);
                     document.getElementById(vApp.html.id).insertBefore(ssUI, beforeAppend);
                     

@@ -523,7 +523,8 @@
 
                     vApp.gObj.video.audio.updateInfo();
                 },
-                setOrginalTeacherContent: function(e) {
+                //setOrginalTeacherContent: function(e) {
+                setOrginalTeacherContent: function() {
                     localStorage.setItem('teacherId', vApp.gObj.uid);
                     window.vApp.wb.view.canvasDrawMsg('Canvas');
                     localStorage.setItem('canvasDrwMsg', true);
@@ -547,37 +548,44 @@
 //                        }
 //                    }
 //                },
-                initDefaultInfo: function(e, role) {
-                    var clientNum = e.message.checkUser.e.clientLen;
-                    var newuser = e.message.checkUser.e.newUser;
+                //initDefaultInfo: function(e, role) {
+                initDefaultInfo: function(role) {
+//                    var clientNum = e.message.checkUser.e.clientLen;
+//                    var newuser = e.message.checkUser.e.newUser;
                     if (role == 't') {
                         if (localStorage.getItem('orginalTeacherId') == null) {
-                            vApp.wb.utility.setOrginalTeacherContent(e);
+                            //vApp.wb.utility.setOrginalTeacherContent(e);
+                            vApp.wb.utility.setOrginalTeacherContent();
                             window.vApp.wb.attachToolFunction(vcan.cmdWrapperDiv, true);
                         }
-                    } else if (role == 's' && newuser == null) {
+                        //} else if (role == 's' && newuser == null) {
+                        } else if (role == 's') {
                         vcan.studentId = wbUser.id;
                         if (localStorage.getItem('studentId') == null) {
                             localStorage.setItem('studentId', wbUser.id);
                         }
                     }
 
-                    if (clientNum == 1) {
-                        vApp.gObj.video.init();
-                        vApp.gObj.video.isInitiator = true;
-                        vcan.oneExecuted = false;
-                    } else if (clientNum >= 2 && newuser == null) {
-                        console.log("browser number " + clientNum);
-    //                    if (clientNum > 2) {
-    //                        alert("there may be the problem because of user is more than 2");
-    //                    }
-
-                        //
-                        //vApp.wb.utility.beforeSend({'videoInt': true});
-                        //vApp.wb.utility.beforeSend({'isChannelReady': true, 'memberAdded': true});
-                        vcan.oneExecuted = false;
-                        vApp.gObj.video.init();
-                    }
+//                    if (clientNum == 1) {
+//                        vApp.gObj.video.init();
+//                        vApp.gObj.video.isInitiator = true;
+//                        vcan.oneExecuted = false;
+//                    } else if (clientNum >= 2 && newuser == null) {
+//                        console.log("browser number " + clientNum);
+//    //                    if (clientNum > 2) {
+//    //                        alert("there may be the problem because of user is more than 2");
+//    //                    }
+//
+//                        //
+//                        //vApp.wb.utility.beforeSend({'videoInt': true});
+//                        //vApp.wb.utility.beforeSend({'isChannelReady': true, 'memberAdded': true});
+//                        vcan.oneExecuted = false;
+//                        vApp.gObj.video.init();
+//                    }
+//                    
+                    vApp.gObj.video.init();
+                    vApp.gObj.video.isInitiator = true;
+                    vcan.oneExecuted = false;
                 },
                 checkWebRtcConnected: function() {
                     if (typeof cthis != 'undefined') {
@@ -738,7 +746,8 @@
                         }
                     }
                 },
-                makeUserAvailable: function(browerLength) {
+                //makeUserAvailable: function(browerLength) {
+                makeUserAvailable: function() {
                     //vApp.wb.utility.isUserConnected(browerLength);
                     
                     //if (vApp.wb.user.connected) {

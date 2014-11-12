@@ -83,7 +83,9 @@
                                 wb.obj.drawTextObj.textUtility(tool.startPosX, tool.startPosY);
                             }
                         } else {
-                            wb.obj.drawTextObj.textUtility(tool.startPosX, tool.startPosY);
+                            if(typeof wb.obj.drawTextObj == 'object'){
+                                wb.obj.drawTextObj.textUtility(tool.startPosX, tool.startPosY);
+                            }
                         }
                     }
                 }

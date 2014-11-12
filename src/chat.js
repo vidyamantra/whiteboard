@@ -51,8 +51,8 @@
                    var mainWrapper = document.getElementById(this.mainWrapperId);
                    mainWrapper.appendChild(chatBox);
                    mainWrapper.parentNode.appendChild(chatBox.appendChild(cbLabel));
-                   
-                   vApp.vutil.sidebarHeightInit();        
+                  //rightsidebar 
+                //   vApp.vutil.sidebarHeightInit();        
                 },
                 
                 loadChatFromLocal : function (){

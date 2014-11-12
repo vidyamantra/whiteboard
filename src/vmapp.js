@@ -37,7 +37,7 @@
                   this.lang.message = window.message;
                   this.vutil = window.vutil;
                   this.media = window.media; 
-                  this.chat = window.chat;
+              //    this.chat = window.chat;
                   this.system = window.system;
                   this.recorder = window.recorder;
                   this.clear = "";
@@ -64,29 +64,37 @@
                       this.system.setCanvasDimension();
                   }
                   
-                  this.vutil.sidebarHeightInit();
+                  // rightsidebar
+                //  this.vutil.sidebarHeightInit();
+                  
+                  
                   
                   this.gObj.video = new window.vApp.media();
-                  this.gObj.chat = new window.vApp.chat();
-                  this.gObj.chat.init();
+                  
+                  //this.gObj.chat = new window.vApp.chat();
+                  
+             //     this.gObj.chat.init();
                   
                   this.initSocketConn();                  
               },
               
               initSocketConn : function (){
+                  //window.imageurl = "http://localhost/whiteboard/images/quality-support.png";
                   if(this.system.webSocket){
                     var wbUser = window.wbUser;
-                    io.init({
+                    vApp.uInfo = {
                         'userid':wbUser.id, 
                         'sid':wbUser.sid,
                         'rid': wbUser.path,
                         'authuser':wbUser.auth_user,
                         'authpass':wbUser.auth_pass,
-                        'userobj': {'userid':wbUser.id,'name':wbUser.name},
+                        'userobj': {'userid':wbUser.id,'name':wbUser.name, 'img' : window.imageurl},
                         'fastchat_lasttime':'0',
                         'fastchatroom_title':'fastchat',
                         'fastchatroom_name':wbUser.room
-                        });
+                        };
+                        io.init(vApp.uInfo);
+                    window.userdata = vApp.uInfo;
                     }
         
               },

@@ -36,6 +36,7 @@ include('auth.php');
 <link rel="stylesheet" type="text/css" href="../css/styles.css">
 
 <?php
+
 //the www path for whiteboard
 $whiteboard_path = "https://192.168.1.114/whiteboard/";
 include('js.debug.php');
@@ -51,13 +52,23 @@ $uid = 100;
 //$r = 's';
 
 $uname = "Teacher";
+$fname = "Teacher";
+$lname = "Sharma";
+
 ?>
-	
+<script type="text/javascript">	
+    <?php echo "name='".$uname."';"; ?>
+    <?php echo "id='".$uid."';"; ?>
+    <?php echo "sid='".$sid."';";?>
+    <?php echo "fname='".$fname."';"; ?>
+    <?php echo "lname='".$lname."';"; ?>
+</script>
+
 <script type="text/javascript">
 	<?php echo "wbUser.name='$uname';"; ?>
 	<?php echo "wbUser.id='".$uid."';"; ?>
 	<?php echo "wbUser.socketOn='0';"; ?>
-	<?php echo "wbUser.dataInfo='1';"; ?>
+	<?php echo "wbUser.dataInfo='0';"; ?>
 	<?php echo "wbUser.room='215';"; ?>
 	<?php echo "wbUser.sid='".$sid."';"; ?>
 	<?php echo "wbUser.role='".$r."';"; ?>
@@ -119,20 +130,24 @@ $uname = "Teacher";
     
 </div>
     
-<div id="widgetRightSide">
+<!--<div id="widgetRightSide">
     <div id="allVideosCont">
         <canvas id="tempVideo"> </canvas> 
-        <div class="videoWrapper" >
-            <div class="videoSubWrapper" data-uname = "<?php echo $uname; ?>" id="<?php echo 'user'.$uid; ?>">
-                <video id="video<?php echo $uid?>"  autoplay>    </video>
+        
+             <div class="videoWrapper" >
+            <div class="videoSubWrapper" data-uname = "<?php //echo $uname; ?>" id="<?php //echo 'user'.$uid; ?>">
+                <video id="video<?php //echo $uid?>"  autoplay>    </video>
             </div>
         </div>
     </div>
 
     <div id="chatContainer">
     </div>
-</div> 
     
-<div id="dummyResult"></div>
+</div> -->
+
+<div id="chatWidget"> 
+    <div id = "stickycontainer"> </div>
+</div>   
     
 </div>
