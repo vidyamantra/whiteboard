@@ -92,7 +92,7 @@
                 
                 //rightsidebar
                 //var rightOffSet = document.getElementById(vApp.rWidgetConfig.id).offsetWidth;
-                var rightOffSet = 0;
+                var rightOffSet = 20;
                 //alert(vApp.wb.utility.getElementRightOffSet);
                 
                 var extraWidth = 25;

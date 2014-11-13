@@ -102,33 +102,33 @@ $lname = "Sharma";
 </script>
 
 
-<div id="vAppCont">
+<div id="vAppCont" class="teacher">
 
  
-<div id="vAppWhiteboard" class="vmApp">
-    
-   <div id="vcanvas" class="socketon teacher">
-       
-    <div id="containerWb">
-     
-    </div>
+    <div id="vAppWhiteboard" class="vmApp">
+
+       <div id="vcanvas" class="socketon teacher">
+
+        <div id="containerWb">
+
+        </div>
 
 
-    <div id="mainContainer">
+        <div id="mainContainer">
 
-      <div id="packetContainer">
-       
+          <div id="packetContainer">
+
+          </div>
+
+          <div id="informationCont">
+
+          </div>
+        </div>
+
+        <div class="clear"></div>
       </div>
 
-      <div id="informationCont">
-        
-      </div>
     </div>
-
-    <div class="clear"></div>
-  </div>
-    
-</div>
     
 <!--<div id="widgetRightSide">
     <div id="allVideosCont">

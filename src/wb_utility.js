@@ -987,15 +987,15 @@
 
 //                        vApp.wb.sentPackets = vApp.wb.sentPackets + jobj.length;
                         if (io.sock.readyState == 1) {
-                            io.sendBinary(msg);
+                            if (vApp.gObj.uRole == 't') {
+                                io.sendBinary(msg);
+                            }else{
+                                if(vApp.gObj.hasOwnProperty('audMouseDown') && vApp.gObj.audMouseDown == true){
+                                    io.sendBinary(msg);
+                                } 
+                            }
+                        
                         }
-
-//                        //TODO this should be enable
-//                        var tempObj = JSON.parse(jobj);
-//                        if (tempObj.hasOwnProperty('repObj')) {
-//                            vApp.wb.utility.updateSentInformation(jobj);
-//                        }
-//                    localStorage.sentPackets = vApp.wb.sentPackets;
                 },
                 /**
                  * the operation before send infor to server

@@ -1077,3 +1077,38 @@ div.ui-memblist-usr video, div.ui-memblist-usr .userVideos{
     padding-bottom : 5px;
 /*    min-height : 230px;*/ // important when want to give minimum height
 }
+
+/*#stickybar{
+    width : 97%;
+    margin-left : 3%;
+}
+
+#chatrm{
+    margin-left : 3% !important;
+}*/
+
+#chatWidget{
+    clear : both;
+}
+
+/*#speakerStudent{
+    position :relative;
+    top : -45px;
+    left : 1px;
+    left : 45%;
+    z-index : 5500;
+}
+
+
+#speakerStudent {
+    width : 35px;
+    cursor : pointer;
+}*/
+
+
+#speakerStudent {
+    width : 35px;
+    cursor : pointer;
+    float:right;
+    height : 100%;
+}

@@ -106,9 +106,47 @@
                                 videoParent.appendChild(graphCanvas);
                             }
                         };
+                        
+                        if(vApp.gObj.uRole == 's'){
+                            this.attachSpeakToStudent();
+                             this.makeIconNotDraggable();
+                        }
                     },
                     
                     
+                    makeIconNotDraggable : function (){
+                        var canvas = document.getElementById('speeakerStudentImage');
+                        var context = canvas.getContext('2d');
+                        var imageObj = new Image();
+
+                        imageObj.onload = function() {
+                          context.drawImage(imageObj, 0, 0);
+                        };
+                        imageObj.src = window.whiteboardPath + "images/speaker2.svg";
+                    },
+                    
+                    attachSpeakToStudent : function (){
+                        var speakerStudent  = document.getElementById("speakerStudent");
+                        speakerStudent.addEventListener('mousedown', this.studentSpeak);
+                        speakerStudent.addEventListener('mouseup', this.studentNotSpeak);
+                        
+                        document.body.addEventListener('mouseup', this.studentNotSpeak);
+                        window.addEventListener('mouseup', this.studentNotSpeak);
+                    },
+                    
+                    studentSpeak : function (){
+                        vApp.gObj.audMouseDown = true;
+                    },
+                    
+                    studentNotSpeak : function (){
+                        if(vApp.gObj.hasOwnProperty('audMouseDown')){
+                            vApp.gObj.audMouseDown = false;
+                        }
+                    },
+                    
+                    studentNotSpeak2 : function (){
+                        alert("hi");
+                    },
                     ab2str : function (buf) {
                         return String.fromCharCode.apply(null, new Int8Array(buf));
                     },
@@ -147,7 +185,7 @@
                                 if (vol < a) { vol = a; }
                                 if (a > 1000) { count++; }
                             }
-                            if ((vol > 1500 && count > 150)) {
+                            if ((vol > 1500 && count > 100)) {
                                 console.log('Vol '+vol+' Count '+count);
                                 if (audioWasSent==0 && preAudioSamp != 0) { // Send previous sound sample to avoid clicking noise
                                     vApp.wb.utility.audioSend(preAudioSamp);
@@ -620,7 +658,8 @@
                     cthis = this; //TODO there should be done work for cthis
                     vcan.oneExecuted = true;
                     
-                    var audio =  (vApp.gObj.uRole == 't') ?  true : false;
+                    //var audio =  (vApp.gObj.uRole == 't') ?  true : false;
+                 //   var audio =  (vApp.gObj.uRole == 't') ?  true : false;
                     var audio =  true;
                     var session = {
                         audio : audio,
@@ -698,11 +737,11 @@
                             console.log("raja" + stream.currentTime);
                         };
 
-                        if(vApp.gObj.uRole == 't'){
+                      //  if(vApp.gObj.uRole == 't'){
                             cthis.stream = stream;
                             cthis.audio.manuPulateStream();
                             cthis.audio.graph.canvasForVideo();
-                        }
+                       // }
 
                         cthis.video.myVideo.onloadedmetadata = function (){
                             cthis.video.startToStream();

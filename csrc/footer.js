@@ -17,14 +17,15 @@
         },
 
         _create: function(){
-
+            
             var self = this,
             options = self.options,
             offset = options.offset,
             title = options.title || "No Title",
             // footerbar
             uiFooterbar = (self.uiFooterbar = $('<div></div>'))
-            .appendTo(document.body)
+            .appendTo(document.getElementById('stickycontainer'))
+           // .appendTo(document.getElementById())
             .prop( "id", 'stickybar' )
             .addClass('maximize'),
             // close button tab
