@@ -238,7 +238,7 @@
                 var uniqmax = (resA * resB)/5;
                 var sendObj;
                 //var changeonresize=1;
-                
+                randomTime = Math.floor(Math.random() * (15000 - 5000 + 1)) + 5000;
                 if(vApp.hasOwnProperty('wholeImage')){
                     clearInterval(vApp.wholeImage);
                 }
@@ -263,100 +263,107 @@
                 if(vApp.hasOwnProperty('clear')){
                     clearInterval(vApp.clear);
                 }
-        
-                vApp.clear =  setInterval(
-                    function (){
-                        vresize = false;
-                        if (changeonresize == 1) {
-                            if(typeof that.localtempCont.width != 'undefined'){ //todo check if required
-                                that.localtempCont.clearRect(0, 0, that.localtempCont.width, that.localtempCont.height);
-//                                prvVWidth = that.video.offsetWidth;
-//                                prvVHeight = that.video.offsetHeight;
-                            }
-                            vresize = true;
-                            that.prevImageSlices = [];
-                            resA = Math.round(that.localtempCanvas.height/12);
-                            resB = Math.round(that.localtempCanvas.width/12);
-                            that.imageSlices = that.dc.getImageSlices(resA, resB, that);
-//                            changeonresize = 0;
+                
+                var screenIntervalTime=1000;
+                var pscreenIntervalTime=1000;
+                function myFunction2 (){
+                    clearInterval(vApp.clear);
+                    vresize = false;
+                    if (changeonresize == 1) {
+                        if(typeof that.localtempCont.width != 'undefined'){ //todo check if required
+                            that.localtempCont.clearRect(0, 0, that.localtempCont.width, that.localtempCont.height);
                         }
-                        
-                        that.localtempCanvas.width = that.video.offsetWidth;
-                        that.localtempCanvas.height = that.video.offsetHeight;
-                        that.localtempCont.drawImage(that.video, 0, 0, that.video.offsetWidth, that.video.offsetHeight);
+                        vresize = true;
+                        that.prevImageSlices = [];
+                        resA = Math.round(that.localtempCanvas.height/12);
+                        resB = Math.round(that.localtempCanvas.width/12);
+                        that.imageSlices = that.dc.getImageSlices(resA, resB, that);
+//                            changeonresize = 0;
+                    }
 
-                        sendobj = [];
-                        for (sl=0; sl<(resA * resB); sl++) {
-                            d = that.imageSlices[sl];
-                                
-                            imgData = that.localtempCont.getImageData(d.x,d.y,d.w,d.h);
-                                
-                            if(typeof that.prevImageSlices[sl] != 'undefined'){
-                                 matched = that.dc.matchWithPrevious(imgData.data, that.prevImageSlices[sl], d.w);
+                    that.localtempCanvas.width = that.video.offsetWidth;
+                    that.localtempCanvas.height = that.video.offsetHeight;
+                    that.localtempCont.drawImage(that.video, 0, 0, that.video.offsetWidth, that.video.offsetHeight);
+
+                    sendobj = [];
+                    for (sl=0; sl<(resA * resB); sl++) {
+                        d = that.imageSlices[sl];
+
+                        imgData = that.localtempCont.getImageData(d.x,d.y,d.w,d.h);
+
+                        if(typeof that.prevImageSlices[sl] != 'undefined'){
+                             matched = that.dc.matchWithPrevious(imgData.data, that.prevImageSlices[sl], d.w);
 //                                if(!matched || ( sl >= ((uniqcount*5)-4) && sl <= (uniqcount*5) )){
-                                if(!matched){
-                                    //console.log("second");
-                                    that.prevImageSlices[sl] = imgData.data;
-                                    //conslice.putImageData(imgData, d.x, d.y);
-                                    encodedData = that.dc.encodeRGB(imgData.data);
-                                    stringData = vApp.vutil.ab2str(encodedData);
-
-                                    tempObj = {'si' : stringData, 'd' : d};
-                                    sendobj.push(tempObj);    
-                                    that.latestScreen[sl] = tempObj; 
-                                }
-                            }else{
+                            if(!matched){
+                                //console.log("second");
                                 that.prevImageSlices[sl] = imgData.data;
+                                //conslice.putImageData(imgData, d.x, d.y);
                                 encodedData = that.dc.encodeRGB(imgData.data);
                                 stringData = vApp.vutil.ab2str(encodedData);
+
                                 tempObj = {'si' : stringData, 'd' : d};
                                 sendobj.push(tempObj);    
                                 that.latestScreen[sl] = tempObj; 
                             }
+                        }else{
+                            that.prevImageSlices[sl] = imgData.data;
+                            encodedData = that.dc.encodeRGB(imgData.data);
+                            stringData = vApp.vutil.ab2str(encodedData);
+                            tempObj = {'si' : stringData, 'd' : d};
+                            sendobj.push(tempObj);    
+                            that.latestScreen[sl] = tempObj; 
                         }
-                        
-                        uniqcount++;
-                        if (uniqmax == uniqcount) {
-                            uniqcount=0;
-                        }
+                    }
 
-                        if(sl ==  resA * resB){
-                            if(sendobj.length > 0){
-                                //var encodedString = LZString.compressToBase64(JSON.stringify(sendobj));
-                                var encodedString = JSON.stringify(sendobj);
-                                var contDimension = that.getContainerDimension();
-                                var madeTime = new Date().getTime();
-                                //var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.width, h:that.height}, vc : {w:contDimension.width, h:contDimension.height}, mt : madeTime};
-//                                var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.video.offsetWidth, h:that.video.offsetHeight}, vc : {w:contDimension.width, h:contDimension.height}, mt : madeTime};
-                                if (changeonresize == 1) {
-                                    if(typeof prvVWidth != 'undefined' && typeof prvVHeight != 'undefined'){
-                                        var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:prvVWidth, h:prvVHeight}, vc : {w:contDimension.width, h:2000}};
-                                    }else{
-                                        var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.video.offsetWidth, h:that.video.offsetHeight}, vc : {w:contDimension.width, h:contDimension.height}};
-                                    }
-                                    changeonresize=0;
-                                } else {
-                                    var imgObj = {'si' : encodedString, 'st' : that.type};
+                    uniqcount++;
+                    if (uniqmax == uniqcount) {
+                        uniqcount=0;
+                    }
+
+                    if(sl ==  resA * resB){
+                        if(sendobj.length > 0){
+                            //var encodedString = LZString.compressToBase64(JSON.stringify(sendobj));
+                            var encodedString = JSON.stringify(sendobj);
+                            var contDimension = that.getContainerDimension();
+                            var madeTime = new Date().getTime();
+                            if (changeonresize == 1) {
+                                if(typeof prvVWidth != 'undefined' && typeof prvVHeight != 'undefined'){
+                                    var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:prvVWidth, h:prvVHeight}, vc : {w:contDimension.width, h:2000}};
+                                }else{
+                                    var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.video.offsetWidth, h:that.video.offsetHeight}, vc : {w:contDimension.width, h:contDimension.height}};
                                 }
-                                
-                                
-//                                var imgObj = {'si' : encodedString, 'st' : that.type, d : {w:that.video.offsetWidth, h:that.video.offsetHeight}, vc : {w:contDimension.width, h:2000}};
-                                
-//                                vApp.recorder.items.push(imgObj);
-                                
-                                vApp.storage.wholeStore(imgObj);
-                                
-                                //that.drawImages(imgObj.si, true);
-                                vApp.wb.utility.beforeSend(imgObj);                 
-                                sendobj=[];
+                                changeonresize=0;
+                            } else {
+                                var imgObj = {'si' : encodedString, 'st' : that.type};
                             }
+                            // Calculate Bandwidth in Kbps
+                            var localBandwidth = ((encodedString.length/128) / (screenIntervalTime/1000))
+                            // Shape Bandwidth
+                            if (localBandwidth <= 300) {
+                                screenIntervalTime = 300;
+                            }else if (localBandwidth >= 10000) {
+                                screenIntervalTime=localBandwidth/2;
+                            } 
+                            else{
+                                screenIntervalTime=localBandwidth;
+                            }
+                            // Avoid Sharp Curve
+                            if ((pscreenIntervalTime * 4) < screenIntervalTime ) {
+                                screenIntervalTime = pscreenIntervalTime * 4;
+                            }
+                            pscreenIntervalTime = screenIntervalTime;
+//                            console.log('Bandwidth '+localBandwidth+ ' Interval '+screenIntervalTime);
+                            vApp.storage.wholeStore(imgObj);
+                            vApp.wb.utility.beforeSend(imgObj);                 
+                            sendobj=[];
                         }
-                        
-                        //myFunction ();
-                    },
-                    300
-                            
-                );
+                    }
+                    
+                    vApp.clear = setInterval(myFunction2, screenIntervalTime);
+                }
+                
+                vApp.clear = setInterval(myFunction2, screenIntervalTime);
+                
             },
             
             getContainerDimension : function (){

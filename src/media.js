@@ -15,7 +15,8 @@
       }
       
       var ar = 0;
-        
+      var audioWasSent = 0;
+      var preAudioSamp = 0;
       var  media = function() {
             return {
                 isChannelReady: '',
@@ -134,37 +135,39 @@
                                 //this.audioNodes.push(new Float32Array(samples)); 
                                 this.recordingLength += this.bufferSize;
                             }
-                            var send = this.audioInLocalStorage(samples);
                             
+                            var leftSix = convertFloat32ToInt16(samples);
+                            var send = this.audioInLocalStorage(leftSix);
                             
                             // Detect Volume and send if required
                             var vol = 0;
                             var count = 0;
-                            for (i=0;i<send.length;i++) {
-                                var a = Math.abs(send[i]);
+                            for (i=0;i<leftSix.length;i++) {
+                                var a = Math.abs(leftSix[i]);
                                 if (vol < a) { vol = a; }
-                                if (a > 64) { count++; }
+                                if (a > 1000) { count++; }
                             }
-                            if (vol > 127 || count > 1400) {
-                                  vApp.wb.utility.audioSend(send);
+                            if ((vol > 1500 && count > 150)) {
+                                console.log('Vol '+vol+' Count '+count);
+                                if (audioWasSent==0 && preAudioSamp != 0) { // Send previous sound sample to avoid clicking noise
+                                    vApp.wb.utility.audioSend(preAudioSamp);
+                                }
+                                vApp.wb.utility.audioSend(send);
+                                audioWasSent=1;
+                            }else if ( audioWasSent == 1){
+                                vApp.wb.utility.audioSend(send);  // Send next sound sample to avoid clicking noise
+                                audioWasSent=0;
+                            }else {
+                                console.log('NOT SENT Vol '+vol+' Count '+count);
+                                preAudioSamp = send;
                             }
                         }   
                     },
                     
-                    audioInLocalStorage : function (samples){
-                        var leftSix = convertFloat32ToInt16(samples);
-                        
+                    audioInLocalStorage : function (leftSix){
                         var encoded = G711.encode(leftSix, {
                             alaw: this.encMode == "alaw" ? true : false
-                        });
-
-//                        var sendstring = this.ab2str(encoded);
-//                        var send = LZString.compressToBase64(sendstring);
-//                        
-//                        //this.tempAudArr.push(send);
-//                        
-//                        vApp.storage.audioStore(JSON.stringify(send));
-//                        return send;    
+                        });  
                         return encoded;
                     },
                     
@@ -489,55 +492,10 @@
                              vApp.gObj.video.smallVid =  setInterval(myFunction, (5000 * vApp.gObj.totalUser) + randomTime);
                         }
                         vApp.gObj.video.smallVid =  setInterval(myFunction,
-                                
-//                             function (){
-//                                 myFunction();
-//                                clearInterval(vApp.gObj.video.smallVid)
-//
-//                                 console.log("send time " + ((5000 * parseInt(vApp.gObj.totalUser, 10)) + randomTime));
-//                                    //canvasContext.clearRect(0, 0, canvas.width, canvas.height);	
-//                                // intervalTime = (5000 * vApp.gObj.totalUser) + randomTime;
-//                                
-//                                
-//                                if(vApp.gObj.uRole == 't'){
-//                                    if(typeof graphCanvas == "undefined"){
-//                                        var graphCanvas = document.getElementById("graphCanvas");
-//                                        if(graphCanvas != null){
-//                                            cthis.audio.graph.cvCont = graphCanvas.getContext('2d');
-//                                        }
-//                                    }
-//                                    if(graphCanvas != null){
-//                                        cthis.audio.graph.cvCont.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
-//                                    }
-//                                }
-//
-//                                cvideo.tempVidCont.clearRect(0, 0, cvideo.tempVid.width, cvideo.tempVid.height);
-//                                cvideo.tempVidCont.drawImage(cvideo.myVideo, 0, 0, cvideo.width, cvideo.height);
-//
-//
-//                              //cthis.audio.audioInGraph();
-//                              if(vApp.gObj.uRole == 't'){
-//                                  cthis.audio.graph.display();
-//                              }
-//
-//
-//                             frame = cvideo.tempVid.toDataURL("image/jpg", 0.2);
-//                             var user = {
-//                                 name : vApp.gObj.uName,
-//                                 id : vApp.gObj.uid
-//                             }
-//
-//                             if(vApp.gObj.uRole == 't'){
-//                                 user.role = vApp.gObj.uRole;
-//                             }
-//                             vApp.wb.utility.beforeSend({user : user, 'videoByImage': frame});
-                             
-//                             },
-                             
-                             
-                             (5000 * vApp.gObj.totalUser) + randomTime
+                            (5000 * vApp.gObj.totalUser) + randomTime
                          );
                      },
+                     
                      startToStream : function (){
                         cthis.video.calcDimension();
                         cthis.video.send();

@@ -79,7 +79,9 @@
                     this.arrowInit();
                     var oldData = vApp.wb.sentPackets;
                     
-                    vApp.clear = setInterval(function() {
+                    // It's important
+                    // Earlier it was vApp.clear
+                    vApp.clear2 = setInterval(function() {
                         if (document.getElementById(vApp.wb.sentPackDivPS) != null) {
                             oldData = vApp.wb.utility.calcPsSentPackets(oldData);
                             document.getElementById(vApp.wb.sentPackDiv).innerHTML = vApp.wb.sentPackets;  //update total packets
