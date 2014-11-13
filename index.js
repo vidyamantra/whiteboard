@@ -157,7 +157,15 @@ $.when(
             
              //demoVideoTest(e); //for video demo
         });
-        
+
+        $(document).on("newaudio", function(e){
+            //var data_pack = e.message;
+            var data_pack = new Uint8Array(e.message);
+            vApp.gObj.video.audio.play(data_pack, 0 , 0);
+            return;
+        });
+            
+            
         $(document).on("newmessage", function(e){
             vApp.wb.view.removeElement('serverErrorCont');
             if(typeof e.message == 'string' || e.message.hasOwnProperty('msg')){

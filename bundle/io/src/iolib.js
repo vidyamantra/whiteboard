@@ -46,10 +46,13 @@ var io = {
         }
         this.sock.binaryType = 'arraybuffer';
         this.sock.onmessage = function(e) {
-            try{
+//            try{
                 if(e.data instanceof ArrayBuffer){
-                    console.log(e.data);                                     
-                }
+                    $.event.trigger({
+                        type: "newaudio",
+                        message: e.data,
+                    });
+                }else{
                 var r1 = JSON.parse(e.data);
 
                 if (r1.type == "joinroom"){
@@ -123,15 +126,16 @@ var io = {
                         type: "Multiple_login"
                     });
                 }
-
-            }catch(e){
-                console.log("Error catched   : " + e);
-                $.event.trigger({
-                    type: "error",
-                    message: e
-                });
-                return;
             }
+//
+//            }catch(e){
+//                console.log("Error catched   : " + e);
+//                $.event.trigger({
+//                    type: "error",
+//                    message: e
+//                });
+//                return;
+//            }
         }
 
         this.sock.onerror = function(e) {
@@ -188,12 +192,12 @@ var io = {
     },
     sendBinary : function(msg){
         //this.sock.binaryType = 'arraybuffer';
-        var myArray = new ArrayBuffer(8);
-	    var longInt8View = new Uint8Array(myArray);
-	    for (var i=0; i<longInt8View.length; i++) {
-		  longInt8View[i] = i;
-	    }
-        this.sock.send(longInt8View);
+//        var myArray = new ArrayBuffer(8);
+//	    var longInt8View = new Uint8Array(myArray);
+//	    for (var i=0; i<longInt8View.length; i++) {
+//		  longInt8View[i] = i;
+//	    }
+        this.sock.send(msg.buffer);
     },
 
     disconnect:function(){

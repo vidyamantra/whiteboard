@@ -16,6 +16,7 @@ function memberUpdate(e){
         //changed by suman
         //var count = userlist.length - 1;
         var count = userlist.length;
+        vApp.gObj.totalUser = count;
         
         $("#user_list .inner_bt #usertab_icon").css({'background': 'url(' + imgpath + ')no-repeat top left'});
     }
