@@ -14,7 +14,7 @@
 //              ssConfig : { id : "vApp" + appName[1], classes : "appOptions"},
 //              wssConfig :{ id : "vApp" + appName[2], classes : "appOptions"}, 
               apps : ["Whiteboard", "ScreenShare", "WholeScreenShare"],
-              rWidgetConfig : {id: 'widgetRightSide' },
+              rWidgetConfig : {id: 'chatWidget' },
               wb : "", 
               ss : "",
               wss: "",
@@ -165,8 +165,16 @@
               
               
               makeAppReady : function (app, cusEvent){
-                  
+                    if(app == 'Whiteboard'){
+                        if(vApp.hasOwnProperty('prevApp')){
+                            vApp.vutil.makeActiveApp("vApp" + app, vApp.prevApp);
+                        } else{
+                            vApp.vutil.makeActiveApp("vApp" + app);
+                        }
+                    }
+                    
                   if(app == this.apps[0]){
+                      
                       if(typeof this.ss == 'object'){
                             this.ss.prevStream = false;   
                        } 
@@ -216,12 +224,12 @@
                         
                         
                         
-                        if(typeof this.prevApp != 'undefined' && this.prevApp.hasOwnProperty('currentStream')){
-                            this.prevApp.unShareScreen();    
+                        if(typeof this.prevScreen != 'undefined' && this.prevScreen.hasOwnProperty('currentStream')){
+                            this.prevScreen.unShareScreen();    
                         }
                         
                         this.previous = this.wbConfig.id;
-                        
+                        this.prevApp = this.wbConfig.id;
                         
                   }else if(app == this.apps[1]){
                         if(typeof this.ss != 'object'){

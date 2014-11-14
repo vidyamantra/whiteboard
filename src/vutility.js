@@ -130,6 +130,18 @@
 
                 var screenShareLocalVideoWidth = screenShareLocalWidth - screenShareLocalVideoWidth
                 //screenShareLocalVideo.style.marginLeft = (screenShareLocalVideoWidth/2) + "px";
+            }, 
+            
+            makeActiveApp : function (app, prvTool){
+
+                if(typeof prvTool != 'undefined'){
+                     var prvTool = prvTool+'Tool';
+                     var classes = vApp.wb.utility.removeClassFromElement(prvTool, 'active');
+                     document.getElementById(prvTool).className = classes;
+                 }
+                 
+                document.getElementById(app + "Tool").className += ' active';
+                 
             }
         }
         

@@ -115,6 +115,8 @@
                     
                     
                     makeIconNotDraggable : function (){
+                        alert('sss');
+                        debugger;
                         var canvas = document.getElementById('speeakerStudentImage');
                         var context = canvas.getContext('2d');
                         var imageObj = new Image();

@@ -53,6 +53,10 @@
                     this.prevImageSlices = [];
 
                     var ssUI = this.html.UI.call(this, vApp.gObj.uRole);
+                    
+//                    alert(vApp.rWidgetConfig.id);
+//                    debugger;
+                    
                     //critical
                     var beforeAppend = document.getElementById(vApp.rWidgetConfig.id);
                     document.getElementById(vApp.html.id).insertBefore(ssUI, beforeAppend);
@@ -133,16 +137,21 @@
             },
 
             initializeRecorder : function (stream){
+              //  vApp.vutil.makeActiveApp(this.id);
                 
+                //alert(this.id);
+                 //if(app == 'Whiteboard'){
+//                      document.getElementById(this.id + "Tool").className += ' active';
+                //  }
                 changeonresize = 1;
 
                 if(this.prevStream){
                     this.ssByClick = false;
                 }
                 
-                if(typeof vApp.prevApp != 'undefined'){
-                    if(vApp.prevApp.hasOwnProperty('currentStream')){
-                       vApp.prevApp.unShareScreen();
+                if(typeof vApp.prevScreen != 'undefined'){
+                    if(vApp.prevScreen.hasOwnProperty('currentStream')){
+                       vApp.prevScreen.unShareScreen();
                     }
                 }
                 
@@ -164,7 +173,7 @@
                         that.prevImageSlices = [];
                         vApp.wb.utility.beforeSend({'unshareScreen' : true, st : that.type});
                         that.prevStream = false;
-                        that.prevApp = "";
+                        that.prevScreen = "";
                     }else{
                         that.ssByClick = true;
                     }
@@ -215,14 +224,23 @@
                     
                     //that.localtempCanvas.width = 1000;
                     //that.localtempCanvas.height = 500;   
-                    vApp.prevApp = that;
+                    vApp.prevScreen = that;
                     
                     var res = vApp.system.measureResoultion({'width': window.innerWidth, 'height': window.innerHeight});
                     
                     //that.initAfterImg();
                     that.sharing();
                     vApp.vutil.setContainerWidth(res);
+                    
+//                    alert('sss');
+//                    debugger;
+                    
+                    vApp.vutil.makeActiveApp(that.id, vApp.prevApp);
+                    vApp.prevApp = that.id;
+                    
                 }
+                
+                
             },
             
             sharing : function (){

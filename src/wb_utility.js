@@ -1082,6 +1082,52 @@
                     vcan.main.replayObjs.push(obj);
                     //localStorage.repObjs = JSON.stringify(vcan.main.replayObjs);
                     vApp.storage.store(JSON.stringify(vcan.main.replayObjs));
+                }, 
+                
+                removeClassFromElement : function (prvTool, className){
+//                    alert('sss');
+//                    debugger;
+
+
+                    
+                    var prvTool = document.getElementById(prvTool).className;
+                    var classes = prvTool.split(" ");
+                    var retClass = [];
+                    for(var i=0; i<classes.length; i++){
+                        if(classes[i] != className){
+                            retClass.push(classes[i]);
+                        }
+                    }
+                    if(retClass.length > 1){
+                        return retClass.join(" ");
+                    }else{
+                        return retClass[0];
+                    }
+                    
+                    
+                    
+//                    alert(allToolDivs.length);
+                    
+//                    for(i=0; i<allToolDivs.length; i++){
+//                        var strClasses = allToolDivs[i].className;
+//                        
+//                        var classes = allToolDivs[i].className.split(" ");
+//                        
+//                        retClass = [];
+//                        for(var j=0; j<classes.length; j++){
+//                            if(className != classes[j]){
+//                                retClass.push(classes[j]);
+//                            }else{
+//                               return retClass.join(" ");
+//                            }
+//                        }
+//                    }
+//                    
+//                    if(retClass.length > 1){
+//                        return retClass.join(" ");    
+//                    }else{
+//                        return retClass[0];
+//                    }
                 }
             };
         }

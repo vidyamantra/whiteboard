@@ -1112,3 +1112,11 @@ div.ui-memblist-usr video, div.ui-memblist-usr .userVideos{
     float:right;
     height : 100%;
 }
+
+#commandToolsWrapper .active a{
+    border : 1px solid green;
+}
+
+#vAppOptionsCont .active a {
+    border : 1px solid red;
+}
