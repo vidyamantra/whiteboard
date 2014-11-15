@@ -234,8 +234,10 @@
                     
 //                    alert('sss');
 //                    debugger;
+                    if(vApp.gObj.uRole == 't'){
+						vApp.vutil.makeActiveApp(that.id, vApp.prevApp);
+					}
                     
-                    vApp.vutil.makeActiveApp(that.id, vApp.prevApp);
                     vApp.prevApp = that.id;
                     
                 }

@@ -165,7 +165,7 @@
               
               
               makeAppReady : function (app, cusEvent){
-                    if(app == 'Whiteboard'){
+                    if(app == 'Whiteboard' && vApp.gObj.uRole == 't'){
                         if(vApp.hasOwnProperty('prevApp')){
                             vApp.vutil.makeActiveApp("vApp" + app, vApp.prevApp);
                         } else{
