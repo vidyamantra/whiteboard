@@ -278,6 +278,7 @@
                         //prvCHeight = that.localtempCont.height;
                      },
                      2000
+                   //  1000
                 );
                 
                 if(vApp.hasOwnProperty('clear')){
@@ -380,8 +381,14 @@
                     }
                     
                     vApp.clear = setInterval(myFunction2, screenIntervalTime);
+//                   vApp.clear = setInterval(myFunction2, 300);
+                   console.log('image is sending');
                 }
                 
+              //  alert('ssss')
+                
+			  // vApp.clear = setInterval(myFunction2, 300);
+
                 vApp.clear = setInterval(myFunction2, screenIntervalTime);
                 
             },
@@ -511,7 +518,8 @@
             },
             
             sendPackets : function (user){
-                var encodedString = LZString.compressToBase64(JSON.stringify(this.latestScreen));
+            //    var encodedString = LZString.compressToBase64(JSON.stringify(this.latestScreen));
+                var encodedString =JSON.stringify(this.latestScreen);
                 var contDimension = this.getContainerDimension();
                 vApp.wb.utility.beforeSend({'resimg' : true, 'si' : encodedString, 'st' : this.type, d : {w:this.width, h:this.height}, vc : {w:contDimension.width, h:contDimension.height}, 'byRequest' : user });                                      
             }

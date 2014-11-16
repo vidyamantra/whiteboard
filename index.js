@@ -155,6 +155,14 @@ $.when(
                 vApp.gObj.updateHeight = true;
             }
             
+            
+            if(joinId == vApp.gObj.uid && vApp.gObj.uRole != 't'){
+				
+       //         var sp = (vApp.gObj.chat.userChatList.length == 0 ) ? 0 : vApp.gObj.chat.userChatList.length;
+         //       vApp.wb.utility.beforeSend({'requestPacketBy' : joinId, sp: sp});
+                vApp.wb.utility.beforeSend({'requestImagesBy' : joinId});
+            }
+            
              //demoVideoTest(e); //for video demo
         });
 
@@ -185,10 +193,14 @@ $.when(
                // }
             } else if(e.message.hasOwnProperty('si')){ //screen share start
                 if(vApp.gObj.uRole == 's'){
+					
                    if(!e.message.hasOwnProperty('resimg')){
                       vApp.initStudentScreen(e.message);
                    }else{
+					   						 //  alert('requested image is received');
+
                        if(e.message.byRequest == vApp.gObj.uid){
+						 //  alert('requested image is received');
                             vApp.initStudentScreen(e.message);
                         }
                    }
