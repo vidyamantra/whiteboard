@@ -1128,6 +1128,20 @@
 //                    }else{
 //                        return retClass[0];
 //                    }
+                },
+                
+                makeActiveTool : function (byReload){
+                 var tag = document.getElementById(byReload);
+                    var classes;
+                    if(vApp.wb.hasOwnProperty('prvTool')){
+                        classes = vApp.wb.utility.removeClassFromElement(vApp.wb.prvTool,  "active");
+                        document.getElementById(vApp.wb.prvTool).className = classes;
+                    }else{
+                        classes =  tag.className; 
+                        //classes =  this.parentNode.className; 
+                    }
+                    tag.className = classes + " active";
+                    localStorage.activeTool = tag.id;
                 }
             };
         }

@@ -236,18 +236,19 @@
                  * @param expects the mouse down event.
                  */
                 objInit: function(evt) {
-                    var classes;
-                    if(vApp.wb.hasOwnProperty('prvTool')){
-                        classes = vApp.wb.utility.removeClassFromElement(vApp.wb.prvTool,  "active");
-                        document.getElementById(vApp.wb.prvTool).className = classes;
-                    }else{
-                        classes =  this.parentNode.className; 
-                    }
                     
-                    //var classes = vApp.wb.utility.removeClassFromElement(this.parentNode.parentNode.id,  "active");
+//                    var classes;
+//                    if(vApp.wb.hasOwnProperty('prvTool')){
+//                        classes = vApp.wb.utility.removeClassFromElement(vApp.wb.prvTool,  "active");
+//                        document.getElementById(vApp.wb.prvTool).className = classes;
+//                    }else{
+//                        classes =  this.parentNode.className; 
+//                    }
+//                    this.parentNode.className = classes + " active";
                     
                     
-                    this.parentNode.className = classes + " active";
+                    vApp.wb.utility.makeActiveTool(this.parentNode.id);
+                    
                     var anchorNode = this;
                     /**important **/
                     if (anchorNode.parentNode.id == 't_replay') {
