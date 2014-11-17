@@ -17,6 +17,11 @@
       var ar = 0;
       var audioWasSent = 0;
       var preAudioSamp = 0;
+      var preAvg=0
+      var curAvg=0;
+      var minthreshold=65535;
+      var maxthreshold=0;
+      var audiotime=0;
       var  media = function() {
             return {
                 isChannelReady: '',
@@ -179,14 +184,43 @@
                             
                             // Detect Volume and send if required
                             var vol = 0;
-                            var count = 0;
+                            var sum=0;
+                            var rate=0;
+
                             for (i=0;i<leftSix.length;i++) {
+//                                alert(leftSix[i]);
                                 var a = Math.abs(leftSix[i]);
                                 if (vol < a) { vol = a; }
-                                if (a > 1000) { count++; }
+                                sum=sum+a;
                             }
-                            if ((vol > 1500 && count > 100)) {
-                                console.log('Vol '+vol+' Count '+count);
+                            
+                            curAvg=sum/leftSix.length;
+                            rate= Math.abs(curAvg^2 - preAvg^2);
+                            preAvg=curAvg;
+                            
+                            if (minthreshold>vol) { minthreshold=vol; }
+                            if (maxthreshold<vol) { maxthreshold=vol; }
+                            if (minthreshold*10 < maxthreshold)  { minthreshold=minthreshold*2; }
+                            if (maxthreshold/10 > minthreshold) { maxthreshold=vol; }
+                            if (rate < 5) { minthreshold=vol; } // If rate is close to zero, it is likely to be noise.
+                            var thdiff = maxthreshold/minthreshold;
+                            
+                            switch(true) {
+                                case (thdiff>8):
+                                    var th = 2.5;
+                                    break;
+                                case (thdiff>5):
+                                    var th = 2.0;
+                                    break;
+                                case (thdiff>3):
+                                    var th = 1.2;
+                                    break;
+                                default:
+                                    th=1;
+                            }
+                            
+                            if (thdiff >= 2 && vol>=minthreshold*th) {
+                                console.log('Current '+vol+' Min '+minthreshold+' Max '+maxthreshold+' rate '+rate+' thdiff '+thdiff+' th '+th);
                                 if (audioWasSent==0 && preAudioSamp != 0) { // Send previous sound sample to avoid clicking noise
                                     vApp.wb.utility.audioSend(preAudioSamp);
                                 }
@@ -195,9 +229,12 @@
                             }else if ( audioWasSent == 1){
                                 vApp.wb.utility.audioSend(send);  // Send next sound sample to avoid clicking noise
                                 audioWasSent=0;
+                            }else if (thdiff < 2) {
+                                console.log('Current '+vol+' Min '+minthreshold+' Max '+maxthreshold+' rate '+rate+' thdiff '+thdiff);
+                                vApp.wb.utility.audioSend(send);
                             }else {
-                                console.log('NOT SENT Vol '+vol+' Count '+count);
-                                preAudioSamp = send;
+                                console.log('NOT SENT Vol '+vol+' Min '+minthreshold+' Max '+maxthreshold+' rate '+rate+' thdiff '+thdiff);
+                                preAudioSamp = send;;
                             }
                         }   
                     },
