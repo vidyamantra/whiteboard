@@ -58,7 +58,14 @@
 //                    debugger;
                     
                     //critical
-                    var beforeAppend = document.getElementById(vApp.rWidgetConfig.id);
+                    if(vApp.gObj.uRole == 't'){
+                        var beforeAppend = document.getElementById(vApp.rWidgetConfig.id);
+                    }else{
+                        var beforeAppend = document.getElementById("speakerStudent");
+                    }
+                    
+                    
+                    
                     document.getElementById(vApp.html.id).insertBefore(ssUI, beforeAppend);
                     
                    // if(vApp.gObj.uRole == 't' && !vApp.hasOwnProperty('repType')){
